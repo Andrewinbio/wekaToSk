@@ -56,13 +56,13 @@ attr_imp_bool = bool(argv[4])
 
 inputFilename = rootDir + "/data.arff"
 
-classifierString = argv[5:-1]
+classifierString = argv[5..-1]
 classifierName = classifierString[0]
-shortClassifierName = classifierName.split("\\.")[-1]
+shortClassiiferOptions = classifierName.split("\\.")[-1]
 classifierOptions = []
-if (len(classifierString) > 1):
+if (len(classifierString) > 1) {
 	classifierOptions = classifierString[1:-1]
-
+	}
 
 # load data parameters from properties file
 p = configparser.ConfigParser()
@@ -72,7 +72,6 @@ idAttribute = p.get("sk", "idAttribute")
 classAttribute = p.get("sk", "classAttribute")
 balanceTraining = bool(p.get("sk", "balanceTraining"))
 balanceTest = bool(p.get("sk", "balanceTest")) #this parameter doesn't appear to be in existing properties files but I have it here anyways
-classLabel = p.get("sk", "classLabel")
 
 assert p.has_option("sk", "foldCount") or p.has_option("sk", "foldAttribute")
 
@@ -97,15 +96,6 @@ data = shuffle(data) #shuffles data without replacement
 setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute)) 
 #pd.DataFrame([q.val for q in data], columns = [classAttribute] )
 if (not regression):
-	predictClassIndex = data[data[classAttribute] == predictClassValue].index
-	assert predictClassIndex != -1
-	print ("[%s] %s, generating probabilities for class %s (index %d)\n" %(shortClassifierName, classAttribute, predictClassValue, predictClassIndex))
-	
-else:
-	print("[%s] %s, generating predictions\n" %(shortClassifierName, classAttribute))
+	predictClassIndex = 
 
-#add ids if not specified
-
-if (idAttribute == ""):
-    idAttribute = "ID"
 
