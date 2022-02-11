@@ -15,6 +15,8 @@ import arff #documentation for this: https://pythonhosted.org/liac-arff/
 # The following replaces [import weka.classifers.*] and [import weka.classifiers.meta.*]
 
 import numpy as np
+from random import random
+from imlearn.under_sampling import RandomUnderSampler
 
 import sklearn.naive_bayes
 from sklearn.linear_model import LogisticRegression
@@ -26,12 +28,13 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 ###import needed for rules.PART
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
 
 ##need an alternative for weka.core.*
 ##need an alternative for weka.core.converters.ConverterUtils.DataSource
 
 #feature_selection replaces weka.filters
-import sklearn.feature_selection.*
+import sklearn.feature_selection
 
 
 def dump(instances, filename):
@@ -119,10 +122,7 @@ if (idAttribute == ""): #***I am unsure if I did this right.
 	#Here a uniform distribution is being made in the absence 
 	#of an ID being given
     idAttribute = "ID"
-	#idFilter = AddID()
-	#idFilter.setIDIndex("last")
-	#idFilter.setInputFormat(data)
-	data = balance(data)
+	uniformData = balance(data)
 
 #generate folds
 if (foldAttribute != ""):
@@ -130,6 +130,31 @@ if (foldAttribute != ""):
 	foldAttibuteIndex = str(data[foldAttribute].index + 1)
 	foldAttributeValueIndex = str(data[data[foldAttribute] == currentFold].index + 1)
 	print("[%s] generating %s folds for leave-one-value-out CV\n" %(shortClassifierName,foldCount))
+	# need to add equivalents of lines 123 to 137 from base.groovy here
 
+else: #train test split is done here
+	print("[%s] generating folds for %s-fold CV \n" %(shortClassifierName, foldCount))
 	
+	X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
+	#sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
+	test = pd.concat([Y_train, Y_test])
+	train = pd.concat([X_train, X_test], axis=1)
+	
+	#resample and balance training of fold if necessary
+	if (bagCount > 0):
+		print(" [%s] generating bag %d\n" %(shortClassifierName,currentBag))
+		#train = train.resample(random.randrange(currentBag)) #unsure if the newRandom(currentbag)) argument is necessary
+		rus = RandomUnderSampler(random_state=0)
+		X_resampled, y_resampled = rus.fit_resample(train[:-1], train[-1])
+		train = pd.concat([X_resampled,y_resampled], axis=1)
+	
+	if((not regression) and balanceTraining):
+		print("[%s] blancing training samples \n" %(shortClassifierName))
+		train = balance(train)
 
+	if((not regression) and balanceTest):
+		print("[%s] balancing test samples\n" %(shortClassifierName))
+		test = balance(test)
+
+	#init filtered classifier
+	classifier = 
