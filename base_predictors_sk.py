@@ -14,6 +14,8 @@ import arff #documentation for this: https://pythonhosted.org/liac-arff/
 #from scipy.io.arff import loadarff
 # The following replaces [import weka.classifers.*] and [import weka.classifiers.meta.*]
 
+import numpy as np
+
 import sklearn.naive_bayes
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -40,14 +42,21 @@ def dump(instances, filename):
 	w.close()
 
 
+#the balance function below serves the purpose of subsampling
+# of a random uniform distribution of 
+# the data and is later used on the train and test sets
+def balance(instances):
+	tempnp = instances.to_numpy()
+	tempnp.random.uniform(low = 0.0, high = 1.0) #uni
+	return pd.DataFrame(tempnp)
+	
 
-def balance(instances)
+	#return instances.ix[random.sample(instances.index, frac = 0.60)] # I am unsure if this is too big of a sample
 	#	use sklearn.utils.resample here
 	#	use sklearn.feature_selection here in place of Filter from weka
 
 
 #parse options
-
 parentDir = dirname(abspath(argv[0]))
 rootDir = dirname(abspath(argv[1]))
 currentFold = dirname(abspath(argv[2]))
@@ -106,6 +115,21 @@ else:
 
 #add ids if not specified
 
-if (idAttribute == ""):
+if (idAttribute == ""): #***I am unsure if I did this right.
+	#Here a uniform distribution is being made in the absence 
+	#of an ID being given
     idAttribute = "ID"
+	#idFilter = AddID()
+	#idFilter.setIDIndex("last")
+	#idFilter.setInputFormat(data)
+	data = balance(data)
+
+#generate folds
+if (foldAttribute != ""):
+	foldCount = data[foldAttribute].value_counts()
+	foldAttibuteIndex = str(data[foldAttribute].index + 1)
+	foldAttributeValueIndex = str(data[data[foldAttribute] == currentFold].index + 1)
+	print("[%s] generating %s folds for leave-one-value-out CV\n" %(shortClassifierName,foldCount))
+
+	
 
