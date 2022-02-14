@@ -1,6 +1,7 @@
 from os.path import abspath, dirname, exists, join, isdir, listdir, mkdir
 from sys import argv
 from time import time
+import csv
 
 import argparse
 #import sklearn.utils.resample
@@ -174,4 +175,9 @@ else: #train test split is done here
 		mkdir(classifierDir)
 	
 	outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
-	#with open(os.path.join(workingDir, classifierDir), 'wb')
+	outFile = open(classifierDir + outputPrefix + ".csv.gz", 'w')
+	
+	if(writeModel):
+		open("")
+
+	writer = csv.writer(outFile)
