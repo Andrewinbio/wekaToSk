@@ -1,9 +1,6 @@
-#	imports:
-
-from os.path import isdir
-from os.path import listdir
-from os.path import abspath, dirname, exists
+from os.path import abspath, dirname, exists, join, isdir, listdir, mkdir
 from sys import argv
+from time import time
 
 import argparse
 #import sklearn.utils.resample
@@ -117,13 +114,11 @@ else:
 	print("[%s] %s, generating predictions\n" %(shortClassifierName, classAttribute))
 
 #add ids if not specified
-
-if (idAttribute == ""): #***I am unsure if I did this right.
-	#Here a uniform distribution is being made in the absence 
-	#of an ID being given
-    idAttribute = "ID"
-	uniformData = balance(data)
-
+if (idAttribute == ""):
+	#id's are automatically speciified however as the data is ina 
+	#pandas data frame as opposed to prior state in java
+	idAttribtue = data.index
+	
 #generate folds
 if (foldAttribute != ""):
 	foldCount = data[foldAttribute].value_counts()
@@ -156,5 +151,27 @@ else: #train test split is done here
 		print("[%s] balancing test samples\n" %(shortClassifierName))
 		test = balance(test)
 
-	#init filtered classifier
-	classifier = 
+	# init filtered classifier
+	#classifier (as Abstract Classifier was a class that all 
+	# weka classifiers are built upon this is no longer needed for 
+	# sklearin) and removeFilter no longer needed
+
+	# lines 159-172 equivalent no longer needed from base_predictors.groovy
+	
+	# train, store duration
+	print("[%s] fold: %s bag: %s training size: %d test size: %d\n" %(shortClassifierName, currentFold, "none"  if (bagCount == 0) else currentBag, train.numInstances(), test.numInstances()))
+	start = time()
+
+	#*******need to build classifier here*******
+
+	duration = time() - start
+	durationMinutes = duration / (1e3 * 60)
+	print ("[%s] trained in %.2f minutes, evaluating\n" %(shortClassifierName, durationMinutes))
+
+	# write predictions to csv
+	classifierDir = os.path.join(workingDir, classifierName)
+	if (not exists(classifierDir)):
+		mkdir(classifierDir)
+	
+	outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
+	#with open(os.path.join(workingDir, classifierDir), 'wb')
