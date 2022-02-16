@@ -154,7 +154,7 @@ if __name__ == "__main__":
 
         for parameters in all_parameters:
             project_path, classifier, fold, bag = parameters
-            jf.write('python %s/base_predictors.sk %s %s %s %s %s %s\n' % (
+            jf.write('python %s/base_predictors_sk.py %s %s %s %s %s %s\n' % (
                 working_dir, data_path, project_path, fold, bag, args.rank, classifier))
 
         if not args.hpc:

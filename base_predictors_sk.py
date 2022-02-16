@@ -1,4 +1,5 @@
-from os.path import abspath, dirname, exists, join, isdir, listdir, mkdir
+from os.path import abspath, dirname, exists, join, isdir, listdir, mkdir, expanduser
+from socket import socket
 from sys import argv
 from time import time
 import csv
@@ -167,17 +168,18 @@ else: #train test split is done here
 
 	#*******need to build classifier here*******
 
-	classifier = {
-                     "RF.S": RandomForestClassifier(),
-                     "SVM.S": SVC(kernel='linear', probability=True),
-                     "NB.S": GaussianNB(),
-                     "LR.S": LogisticRegression(),
-                     "AdaBoost.S": AdaBoostClassifier(),
-                     "DT.S": DecisionTreeClassifier(),
-                     "GradientBoosting.S": GradientBoostingClassifier(),
-                     "KNN.S": KNeighborsClassifier(),
-                     "XGB.S": XGBClassifier()
+	classifiers = {
+                     "RF": RandomForestClassifier(),
+                     "SVM": SVC(kernel='linear', probability=True),
+                     "NB": GaussianNB(),
+                     "LR": LogisticRegression(),
+                     "AdaBoost": AdaBoostClassifier(),
+                     "DT": DecisionTreeClassifier(),
+                     "GradientBoosting": GradientBoostingClassifier(),
+                     "KNN": KNeighborsClassifier(),
+                     "XGB": XGBClassifier()
                     }
+	classifier = classifiers.get(classifierName)
 	
 
 	duration = time() - start
@@ -190,11 +192,16 @@ else: #train test split is done here
 		mkdir(classifierDir)
 	
 	outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
-	outFile = open(classifierDir + outputPrefix + ".csv", 'w')
-	#outFile = open(classifierDir + outputPrefix + ".csv.gz", 'w')
-	# *****need to gzip this*****
 	
+	writer = open(classifierDir + outputPrefix + ".csv", 'w')
+	#writer = csv.writer(open(classifierDir + outputPrefix + ".csv", 'w'))
+	#writer = csv.writer(open(classifierDir + outputPrefix + ".csv.gz", 'w'))
+	# *****need to gzip this*****
 	if(writeModel):
-		pickle.dump(model, open(classifierDir + outputPrefix + ".sav", 'wb'))
-
-	writer = csv.writer(outFile)
+		pickle.dump(classifier, open(classifierDir + outputPrefix + ".sav", 'wb'))
+	
+	
+	header = print("# %s@%s %.2f minutes %s\n" %(os.path.expanduser, socket.gethostname(), durationMinutes, classifierString.join(" "))) 
+	#writer = csv.writer(outFile)
+	writer.write("header")
+	writer.write("id,label,prediction,fold,bag,classifier\n")
