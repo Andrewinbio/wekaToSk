@@ -2,6 +2,8 @@ from os.path import abspath, dirname, exists, join, isdir, listdir, mkdir
 from sys import argv
 from time import time
 import csv
+import gzip
+import pickle
 
 import argparse
 #import sklearn.utils.resample
@@ -165,6 +167,19 @@ else: #train test split is done here
 
 	#*******need to build classifier here*******
 
+	classifier = {
+                     "RF.S": RandomForestClassifier(),
+                     "SVM.S": SVC(kernel='linear', probability=True),
+                     "NB.S": GaussianNB(),
+                     "LR.S": LogisticRegression(),
+                     "AdaBoost.S": AdaBoostClassifier(),
+                     "DT.S": DecisionTreeClassifier(),
+                     "GradientBoosting.S": GradientBoostingClassifier(),
+                     "KNN.S": KNeighborsClassifier(),
+                     "XGB.S": XGBClassifier()
+                    }
+	
+
 	duration = time() - start
 	durationMinutes = duration / (1e3 * 60)
 	print ("[%s] trained in %.2f minutes, evaluating\n" %(shortClassifierName, durationMinutes))
@@ -175,9 +190,11 @@ else: #train test split is done here
 		mkdir(classifierDir)
 	
 	outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
-	outFile = open(classifierDir + outputPrefix + ".csv.gz", 'w')
+	outFile = open(classifierDir + outputPrefix + ".csv", 'w')
+	#outFile = open(classifierDir + outputPrefix + ".csv.gz", 'w')
+	# *****need to gzip this*****
 	
 	if(writeModel):
-		open("")
+		pickle.dump(model, open(classifierDir + outputPrefix + ".sav", 'wb'))
 
 	writer = csv.writer(outFile)

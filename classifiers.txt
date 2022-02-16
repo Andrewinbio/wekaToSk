@@ -1,0 +1,9 @@
+RF.S
+SVM.S
+NB.S
+LR.S
+AdaBoost.S
+DT.S
+GradientBoosting.S
+KNN.S
+XGB.S
