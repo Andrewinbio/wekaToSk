@@ -1,4 +1,5 @@
-from os.path import abspath, dirname, exists, join, isdir, listdir, mkdir, expanduser
+from os import listdir, mkdir
+from os.path import abspath, dirname, exists, join, isdir, expanduser
 from socket import socket
 from sys import argv
 from time import time
@@ -7,7 +8,7 @@ import gzip
 import pickle
 
 import argparse
-#import sklearn.utils.resample
+# import sklearn.utils.resample
 import sklearn.utils
 import configparser #this is for reading the properties file on lines 69-77
 import pandas as pd
@@ -205,3 +206,4 @@ else: #train test split is done here
 	#writer = csv.writer(outFile)
 	writer.write("header")
 	writer.write("id,label,prediction,fold,bag,classifier\n")
+
