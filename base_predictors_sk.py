@@ -31,6 +31,8 @@ from sklearn.ensemble import RandomForestClassifier
 ###import needed for rules.PART
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import KFold
 
 ##need an alternative for weka.core.*
 ##need an alternative for weka.core.converters.ConverterUtils.DataSource
@@ -120,7 +122,7 @@ else:
 
 #add ids if not specified
 if (idAttribute == ""):
-	#id's are automatically speciified however as the data is ina 
+	#id's are automatically speciified however as the data is in a 
 	#pandas data frame as opposed to prior state in java
 	idAttribtue = data.index
 	
@@ -130,80 +132,138 @@ if (foldAttribute != ""):
 	foldAttibuteIndex = str(data[foldAttribute].index + 1)
 	foldAttributeValueIndex = str(data[data[foldAttribute] == currentFold].index + 1)
 	print("[%s] generating %s folds for leave-one-value-out CV\n" %(shortClassifierName,foldCount))
-	# need to add equivalents of lines 123 to 137 from base.groovy here
+	# *****need to add equivalents of lines 123 to 137 from base.groovy here*****
+	#X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
+	#sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
+	
+	# prelootest = pd.concat([Y_train, Y_test])
+	# prelootrain = pd.concat([X_train, X_test], axis=1)
+	
+	# lootest = LeaveOneOut().get_n_splits(prelootest)
+	# lootrain = LeaveOneOut.get_n_splits(prelootrain)
+
+	# test = data[lootest]
+	# train = data[lootrain]
+
+	X = data[:-1]
+	Y = data [-1]
+
+	loo = LeaveOneOut()
+
+	for train_index, test_index in loo.split(data[:-1]):
+		looX_train, looX_test = X[train_index], X[test_index]
+		looY_train, looY_test = Y[train_index], Y[test_index]
+
+	test = pd.concat([looY_train, looY_test])
+	train = pd.concat([looX_train, looX_test], axis=1)
+	
+	
 
 else: #train test split is done here
 	print("[%s] generating folds for %s-fold CV \n" %(shortClassifierName, foldCount))
 	
-	X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
-	#sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
-	test = pd.concat([Y_train, Y_test])
-	train = pd.concat([X_train, X_test], axis=1)
+	# X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
+	# #sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
+	# prektest = pd.concat([Y_train, Y_test])
+	# prektrain = pd.concat([X_train, X_test], axis=1)
+
+	# ktest = KFold(n_splits = foldCount).get_n_splits(prektest)
+	# ktrain = KFold(n_splits = foldCount).get_n_splits(prektrain)
+	
+	# test = data[ktest]
+	# train = data[ktrain]
+
+	X = data[:-1]
+	Y = data [-1]
+
+	kFold = KFold(n_splits=foldCount)
+
+	for train_index, test_index in kFold.split(data[:-1]):
+		kFoldX_train, kFoldX_test = X[train_index], X[test_index]
+		kFoldY_train, kFoldY_test = Y[train_index], Y[test_index]
+
+	test = pd.concat([kFoldY_train, kFoldY_test])
+	train = pd.concat([kFoldX_train, kFoldX_test], axis=1)
 	
 	#resample and balance training of fold if necessary
-	if (bagCount > 0):
-		print(" [%s] generating bag %d\n" %(shortClassifierName,currentBag))
-		#train = train.resample(random.randrange(currentBag)) #unsure if the newRandom(currentbag)) argument is necessary
-		rus = RandomUnderSampler(random_state=0)
-		X_resampled, y_resampled = rus.fit_resample(train[:-1], train[-1])
-		train = pd.concat([X_resampled,y_resampled], axis=1)
+if (bagCount > 0):
+	print(" [%s] generating bag %d\n" %(shortClassifierName,currentBag))
+	#train = train.resample(random.randrange(currentBag)) #unsure if the newRandom(currentbag)) argument is necessary
+	rus = RandomUnderSampler(random_state=0)
+	X_resampled, y_resampled = rus.fit_resample(train[:-1], train[-1])
+	train = pd.concat([X_resampled,y_resampled], axis=1)
 	
-	if((not regression) and balanceTraining):
-		print("[%s] blancing training samples \n" %(shortClassifierName))
-		train = balance(train)
+if((not regression) and balanceTraining):
+	print("[%s] blancing training samples \n" %(shortClassifierName))
+	train = balance(train)
 
-	if((not regression) and balanceTest):
-		print("[%s] balancing test samples\n" %(shortClassifierName))
-		test = balance(test)
+if((not regression) and balanceTest):
+	print("[%s] balancing test samples\n" %(shortClassifierName))
+	test = balance(test)
 
-	# init filtered classifier
-	#classifier (as Abstract Classifier was a class that all 
-	# weka classifiers are built upon this is no longer needed for 
-	# sklearin) and removeFilter no longer needed
+# init filtered classifier
+#classifier (as Abstract Classifier was a class that all 
+# weka classifiers are built upon this is no longer needed for 
+# sklearin) and removeFilter no longer needed
 
-	# lines 159-172 equivalent no longer needed from base_predictors.groovy
+# lines 159-172 equivalent no longer needed from base_predictors.groovy
+
+# train, store duration
+print("[%s] fold: %s bag: %s training size: %d test size: %d\n" %(shortClassifierName, currentFold, "none"  if (bagCount == 0) else currentBag, train.numInstances(), test.numInstances()))
+start = time()
+
+#*******need to build classifier here*******
+
+classifiers = {
+					"RF": RandomForestClassifier(),
+					"SVM": SVC(kernel='linear', probability=True),
+					"NB": GaussianNB(),
+					"LR": LogisticRegression(),
+					"AdaBoost": AdaBoostClassifier(),
+					"DT": DecisionTreeClassifier(),
+					"GradientBoosting": GradientBoostingClassifier(),
+					"KNN": KNeighborsClassifier(),
+					"XGB": XGBClassifier()
+				}
+classifier = classifiers.get(classifierName)
 	
-	# train, store duration
-	print("[%s] fold: %s bag: %s training size: %d test size: %d\n" %(shortClassifierName, currentFold, "none"  if (bagCount == 0) else currentBag, train.numInstances(), test.numInstances()))
-	start = time()
 
-	#*******need to build classifier here*******
+duration = time() - start
+durationMinutes = duration / (1e3 * 60)
+print ("[%s] trained in %.2f minutes, evaluating\n" %(shortClassifierName, durationMinutes))
 
-	classifiers = {
-                     "RF": RandomForestClassifier(),
-                     "SVM": SVC(kernel='linear', probability=True),
-                     "NB": GaussianNB(),
-                     "LR": LogisticRegression(),
-                     "AdaBoost": AdaBoostClassifier(),
-                     "DT": DecisionTreeClassifier(),
-                     "GradientBoosting": GradientBoostingClassifier(),
-                     "KNN": KNeighborsClassifier(),
-                     "XGB": XGBClassifier()
-                    }
-	classifier = classifiers.get(classifierName)
-	
+# write predictions to csv
+classifierDir = os.path.join(workingDir, classifierName)
+if (not exists(classifierDir)):
+	mkdir(classifierDir)
 
-	duration = time() - start
-	durationMinutes = duration / (1e3 * 60)
-	print ("[%s] trained in %.2f minutes, evaluating\n" %(shortClassifierName, durationMinutes))
+outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
 
-	# write predictions to csv
-	classifierDir = os.path.join(workingDir, classifierName)
-	if (not exists(classifierDir)):
-		mkdir(classifierDir)
-	
-	outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
-	
-	writer = open(classifierDir + outputPrefix + ".csv", 'w')
-	#writer = csv.writer(open(classifierDir + outputPrefix + ".csv", 'w'))
-	#writer = csv.writer(open(classifierDir + outputPrefix + ".csv.gz", 'w'))
-	# *****need to gzip this*****
-	if(writeModel):
-		pickle.dump(classifier, open(classifierDir + outputPrefix + ".sav", 'wb'))
-	
-	
-	header = print("# %s@%s %.2f minutes %s\n" %(os.path.expanduser, socket.gethostname(), durationMinutes, classifierString.join(" "))) 
-	#writer = csv.writer(outFile)
-	writer.write("header")
-	writer.write("id,label,prediction,fold,bag,classifier\n")
+writer = open(classifierDir + outputPrefix + ".csv", 'w')
+#writer = csv.writer(open(classifierDir + outputPrefix + ".csv", 'w'))
+#writer = csv.writer(open(classifierDir + outputPrefix + ".csv.gz", 'w'))
+# *****need to gzip this*****
+if(writeModel):
+	pickle.dump(classifier, open(classifierDir + outputPrefix + ".sav", 'wb'))
 
+
+header = print("# %s@%s %.2f minutes %s\n" %(os.path.expanduser, socket.gethostname(), durationMinutes, classifierString.join(" "))) 
+#writer = csv.writer(outFile)
+writer.write("header")
+writer.write("id,label,prediction,fold,bag,classifier\n")
+for instance in test:
+	id = str(data[idAttribtue])
+	if (not regression): #I don't think the if and else statements are no longer needed here
+		label = instance[-1]
+		prediction = classifier.predict(instance[:-1])
+	else:
+		label = float(instance[-1])
+		prediction = classifier.predict(instance[:-1])
+row = print("%s,%s,%f,%s,%s,%s\n" %(id, label, prediction, currentFold, currentBag, shortClassifierName))
+writer.write(row)
+
+writer.flush()
+writer.close()
+
+if (nestedFoldCount == 0):
+	SystemExit
