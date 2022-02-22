@@ -20,19 +20,23 @@ import numpy as np
 from random import random
 from imlearn.under_sampling import RandomUnderSampler
 
-import sklearn.naive_bayes
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.linear_model import Perceptron
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestClassifier
-###import needed for rules.PART
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
+from sklearn.naive_bayes import GaussianNB  # Naive Bayes
+from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
+from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor  # Adaboost
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor  # Decision Tree
+from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor  # Logit Boost with parameter(loss='deviance')
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor  # KNN
+
+from sklearn.metrics import fbeta_score, make_scorer
+from xgboost import XGBClassifier, XGBRegressor # XGB
+from sklearn.svm import SVC, LinearSVR
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import LeaveOneOut, LeaveOneGroupOut
 from sklearn.model_selection import KFold
+import common
+from sklearn.utils import shuffle, resample
+import os
 
 ##need an alternative for weka.core.*
 ##need an alternative for weka.core.converters.ConverterUtils.DataSource
@@ -40,6 +44,7 @@ from sklearn.model_selection import KFold
 #feature_selection replaces weka.filters
 import sklearn.feature_selection
 
+random_seed = 1
 
 def dump(instances, filename):
 	w = open(filename, 'w')
@@ -62,22 +67,82 @@ def balance(instances):
 	#	use sklearn.utils.resample here
 	#	use sklearn.feature_selection here in place of Filter from weka
 
+def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_name, fold_count):
+	if fold_col_exist:
+		fold_count = len(data_df[fold_col].unique())
+		fold_outertestbool = (data[fold_col] == current_fold)
+		test = data.loc[fold_outertestbool, :]
+		train = data.loc[~fold_outertestbool, :]
+		print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
+	else:  # train test split is done here
+		print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
+		kFold = KFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
+		kf_nth_split = list(kFold.split(data))[current_fold]
+		test = data.loc[kf_nth_split[1], :]
+		train = data.loc[kf_nth_split[0], :]
+
+	return train, test, fold_count
+
+def multiidx_dataframe_balance_sampler(dataf):
+	# UnderSampling majority label
+	rus = RandomUnderSampler(random_state=random_seed)
+	# X_resampled, y_resampled = rus.fit_resample(train.values, train[classAttribute])
+	# Create a numeric index to for undersampler, which will be used to index the dataframe
+	numeric_df_index = range(dataf.shape[0])
+	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index, outer_train[classAttribute])
+	return dataf.iloc[numeric_df_index_resampled, :]
+
+def multiidx_dataframe_resampler_wr(dataf):
+	# Resample with replacement
+	numeric_df_index = range(dataf.shape[0])
+	numeric_df_index_resampled = resample(numeric_df_index)
+	return dataf.iloc[numeric_df_index_resampled, :]
+
+def balance_or_resample(dataf_train, dataf_test, bag_count,
+						regression_bool, bl_training_bool,
+						bl_test_bool, clf_name, current_bag):
+	if (bag_count > 0):
+		# TODO: with replacement
+		print(" [%s] generating bag %d\n" % (clf_name, current_bag))
+		dataf_train = multiidx_dataframe_resampler_wr(dataf_train)
+
+	if ((not regression_bool) and bl_training_bool):
+		print("[%s] blancing training samples \n" % (classifierName))
+		dataf_train = balance(dataf_train)
+
+	if ((not regression_bool) and bl_test_bool):
+		print("[%s] balancing test samples\n" % (classifierName))
+		dataf_test = balance(dataf_test)
+
+	return dataf_train, dataf_test
+
+
+
+import argparse
+parser = argparse.ArgumentParser(description='Base predictor skip')
+parser.add_argument('--parentDir', type=str, required=True, help='Path of parent')
+parser.add_argument('--rootDir', type=str, required=True, help='Path of root')
+parser.add_argument('--currentFold', type=str, required=True, help='Outer fold')
+parser.add_argument('--currentBag', type=int, default=1, help='if aggregate is needed, feed bagcount, else 1')
+parser.add_argument('--attr_imp_bool', type=common.str2bool, default=False, help='Run Feature importance or not')
+parser.add_argument('--classifierName', type=str, required=True, help='Name of the classifier in classifier.py')
+args = parser.parse_args()
 
 #parse options
-parentDir = dirname(abspath(argv[0]))
-rootDir = dirname(abspath(argv[1]))
-currentFold = dirname(abspath(argv[2]))
-currentBag = int(argv[3])
-attr_imp_bool = bool(argv[4])
+parentDir = dirname(abspath(args.parentDir))
+rootDir = dirname(abspath(args.rootDir))
+currentFold = args.currentFold
+currentBag = args.currentBag
+attr_imp_bool = args.attr_imp_bool
 
 inputFilename = rootDir + "/data.arff"
 
-classifierString = argv[5:-1]
-classifierName = classifierString[0]
-shortClassifierName = classifierName.split("\\.")[-1]
-classifierOptions = []
-if (len(classifierString) > 1):
-	classifierOptions = classifierString[1:-1]
+# classifierString = argv[5:-1]
+classifierName = args.classifierName
+# shortClassifierName = classifierName.split("\\.")[-1]
+# classifierOptions = []
+# if (len(classifierString) > 1):
+# 	classifierOptions = classifierString[1:-1]
 
 
 # load data parameters from properties file
@@ -94,6 +159,8 @@ assert p.has_option("sk", "foldCount") or p.has_option("sk", "foldAttribute")
 
 if (p.has_option("foldCount")):
 	foldCount = int(p.get("sk", "foldCount"))
+else:
+	foldCount = None
 
 foldAttribute = p.get("sk", "foldAttribute")
 nestedFoldCount = int(p.get("sk", "nestedFoldCount"))
@@ -101,105 +168,143 @@ bagCount = int(p.get("bagCount"))
 writeModel = bool(p.get("sk", "writeModel"))
 
 # load data, determine if regression or classification
-source = arff.load(open(inputFilename)) # the arff is now a dictionary
-data = pd.DataFrame(source['data']) #data stored in pandas dataframe
-regression = isinstance(source['data'][0][0], float) or isinstance(source['data'][0][0], int) #checks the data to see if it is numeric
+# source = arff.load(open(inputFilename)) # the arff is now a dictionary
+# replace by the custom function to load arff
+data = common.read_arff_to_pandas_df(inputFilename) #
+# data = pd.DataFrame(source['data']) #data stored in pandas dataframe
+# regression = isinstance(data['data'][0][0], float) or isinstance(source['data'][0][0], int) #checks the data to see if it is numeric
+regression = len(data[classAttribute].unique()) > 2  #checks the data to see if it is numeric
 
 if (not regression):
 	predictClassValue = p.get("sk", "predictClassValue")
 
 #shuffle data, set class variable
-data = shuffle(data) #shuffles data without replacement
-setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute)) 
+data = shuffle(data, random_state=random_seed) #shuffles data without replacement
+
+foldAttribute_exist = (foldAttribute != "")
+index_cols = [idAttribute, classAttribute]
+if foldAttribute_exist:
+	index_cols.append(foldAttribute)
+
+data.set_index(index_cols, replace=True)
+
+# setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute))
 #pd.DataFrame([q.val for q in data], columns = [classAttribute] )
 if (not regression):
 	predictClassIndex = data[data[classAttribute] == predictClassValue].index
 	assert predictClassIndex != -1
-	print ("[%s] %s, generating probabilities for class %s (index %d)\n" %(shortClassifierName, classAttribute, predictClassValue, predictClassIndex))
+	print ("[%s] %s, generating probabilities for class %s (index %d)\n" %(classifierName, classAttribute, predictClassValue, predictClassIndex))
 	
 else:
-	print("[%s] %s, generating predictions\n" %(shortClassifierName, classAttribute))
+	print("[%s] %s, generating predictions\n" %(classifierName, classAttribute))
 
 #add ids if not specified
-if (idAttribute == ""):
-	#id's are automatically speciified however as the data is in a 
-	#pandas data frame as opposed to prior state in java
-	idAttribtue = data.index
+# if (idAttribute == ""):
+# 	#id's are automatically speciified however as the data is in a
+# 	#pandas data frame as opposed to prior state in java
+# 	idAttribtue = data.index
 	
 #generate folds
-if (foldAttribute != ""):
-	foldCount = data[foldAttribute].value_counts()
-	foldAttibuteIndex = str(data[foldAttribute].index + 1)
-	foldAttributeValueIndex = str(data[data[foldAttribute] == currentFold].index + 1)
-	print("[%s] generating %s folds for leave-one-value-out CV\n" %(shortClassifierName,foldCount))
-	# *****need to add equivalents of lines 123 to 137 from base.groovy here*****
-	#X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
-	#sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
-	
-	# prelootest = pd.concat([Y_train, Y_test])
-	# prelootrain = pd.concat([X_train, X_test], axis=1)
-	
-	# lootest = LeaveOneOut().get_n_splits(prelootest)
-	# lootrain = LeaveOneOut.get_n_splits(prelootrain)
+# if (foldAttribute != ""):
+# if foldAttribute_exist:
+# 	foldCount = len(data[foldAttribute].unique())
+# 	fold_outertestbool = (data[foldAttribute] == currentFold)
+# 	outer_test = data.loc[fold_outertestbool, :]
+# 	outer_train = data.loc[~fold_outertestbool, :]
+# 	# foldAttibuteIndex = str(data[foldAttribute].index + 1)
+# 	# foldAttributeValueIndex = str(data[data[foldAttribute] == currentFold].index + 1)
+# 	print("[%s] generating %s folds for leave-one-value-out CV\n" %(classifierName,foldCount))
+# 	# *****need to add equivalents of lines 123 to 137 from base.groovy here*****
+# 	#X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
+# 	#sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
+#
+# 	# prelootest = pd.concat([Y_train, Y_test])
+# 	# prelootrain = pd.concat([X_train, X_test], axis=1)
+#
+# 	# lootest = LeaveOneOut().get_n_splits(prelootest)
+# 	# lootrain = LeaveOneOut.get_n_splits(prelootrain)
+#
+# 	# test = data[lootest]
+# 	# train = data[lootrain]
+#
+# 	# X = data.values
+# 	# Y = data[classAttribute]
+#
+# 	# loo = LeaveOneOut()
+# 	# logo = LeaveOneGroupOut()
+#
+# 	# for train_index, test_index in logo.split(data[:-1]):
+# 	# 	looX_train, looX_test = X[train_index], X[test_index]
+# 	# 	looY_train, looY_test = Y[train_index], Y[test_index]
+# 	#
+# 	# test = pd.concat([looY_train, looY_test])
+# 	# train = pd.concat([looX_train, looX_test], axis=1)
+#
+#
+#
+# else: #train test split is done here
+# 	print("[%s] generating folds for %s-fold CV \n" %(classifierName, foldCount))
+#
+# 	# X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
+# 	# #sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
+# 	# prektest = pd.concat([Y_train, Y_test])
+# 	# prektrain = pd.concat([X_train, X_test], axis=1)
+#
+# 	# ktest = KFold(n_splits = foldCount).get_n_splits(prektest)
+# 	# ktrain = KFold(n_splits = foldCount).get_n_splits(prektrain)
+#
+# 	# test = data[ktest]
+# 	# train = data[ktrain]
+#
+# 	# X = data[:-1]
+# 	# Y = data [-1]
+#
+# 	kFold = KFold(n_splits=foldCount, random_state=random_seed)
+# 	kf_nth_split = list(kFold.split(data))[currentFold]
+# 	outer_test = data.loc[kf_nth_split[1],:]
+# 	outer_train = data.loc[kf_nth_split[0],:]
 
-	# test = data[lootest]
-	# train = data[lootrain]
+	# for train_index, test_index in kFold.split(data[:-1]):
+	# 	kFoldX_train, kFoldX_test = X[train_index], X[test_index]
+	# 	kFoldY_train, kFoldY_test = Y[train_index], Y[test_index]
+	#
+	# test = pd.concat([kFoldY_train, kFoldY_test])
+	# train = pd.concat([kFoldX_train, kFoldX_test], axis=1)
 
-	X = data[:-1]
-	Y = data [-1]
+outer_train, outer_test, foldCount = split_train_test_by_fold(fold_col_exist=foldAttribute_exist,
+												   data_df=data,
+												   fold_col=foldAttribute,
+												   current_fold=currentFold,
+												   clf_name=classifierName,
+												   fold_count=foldCount
+												   )
 
-	loo = LeaveOneOut()
-
-	for train_index, test_index in loo.split(data[:-1]):
-		looX_train, looX_test = X[train_index], X[test_index]
-		looY_train, looY_test = Y[train_index], Y[test_index]
-
-	test = pd.concat([looY_train, looY_test])
-	train = pd.concat([looX_train, looX_test], axis=1)
-	
-	
-
-else: #train test split is done here
-	print("[%s] generating folds for %s-fold CV \n" %(shortClassifierName, foldCount))
-	
-	# X_train, X_test, Y_train, Y_test = train_test_split(data[:-1],data[-1], test_size = 0.2)
-	# #sklearn.cross_validation.KFold(n= int(data.shape[0]), n_folds=foldCount, shuffle=False, random_state=None)
-	# prektest = pd.concat([Y_train, Y_test])
-	# prektrain = pd.concat([X_train, X_test], axis=1)
-
-	# ktest = KFold(n_splits = foldCount).get_n_splits(prektest)
-	# ktrain = KFold(n_splits = foldCount).get_n_splits(prektrain)
-	
-	# test = data[ktest]
-	# train = data[ktrain]
-
-	X = data[:-1]
-	Y = data [-1]
-
-	kFold = KFold(n_splits=foldCount)
-
-	for train_index, test_index in kFold.split(data[:-1]):
-		kFoldX_train, kFoldX_test = X[train_index], X[test_index]
-		kFoldY_train, kFoldY_test = Y[train_index], Y[test_index]
-
-	test = pd.concat([kFoldY_train, kFoldY_test])
-	train = pd.concat([kFoldX_train, kFoldX_test], axis=1)
-	
-	#resample and balance training of fold if necessary
-if (bagCount > 0):
-	print(" [%s] generating bag %d\n" %(shortClassifierName,currentBag))
-	#train = train.resample(random.randrange(currentBag)) #unsure if the newRandom(currentbag)) argument is necessary
-	rus = RandomUnderSampler(random_state=0)
-	X_resampled, y_resampled = rus.fit_resample(train[:-1], train[-1])
-	train = pd.concat([X_resampled,y_resampled], axis=1)
-	
-if((not regression) and balanceTraining):
-	print("[%s] blancing training samples \n" %(shortClassifierName))
-	train = balance(train)
-
-if((not regression) and balanceTest):
-	print("[%s] balancing test samples\n" %(shortClassifierName))
-	test = balance(test)
+#resample and balance training of fold if necessary
+outer_train, outer_test = balance_or_resample(dataf_train=outer_train,
+											  dataf_test=outer_test,
+											  bag_count=bagCount,
+											  regression_bool=regression,
+											  bl_training_bool=balanceTraining,
+											  bl_test_bool=balanceTest,
+											  clf_name=classifierName,
+											  current_bag=currentBag)
+# if (bagCount > 0):
+# 	print(" [%s] generating bag %d\n" %(classifierName,currentBag))
+# 	#train = train.resample(random.randrange(currentBag)) #unsure if the newRandom(currentbag)) argument is necessary
+# 	rus = RandomUnderSampler(random_state=random_seed)
+# 	# X_resampled, y_resampled = rus.fit_resample(train.values, train[classAttribute])
+# 	# Create a numeric index to for undersampler, which will be used to index the dataframe
+# 	numeric_train_index = range(outer_train.shape[0])
+# 	numeric_train_index_resampled, outer_y_train_resampled = rus.fit_resample(numeric_index_X, outer_train[classAttribute])
+# 	outer_train = outer_train.iloc[numeric_train_index_resampled,:]
+#
+# if((not regression) and balanceTraining):
+# 	print("[%s] blancing training samples \n" %(classifierName))
+# 	outer_train = balance(outer_train)
+#
+# if((not regression) and balanceTest):
+# 	print("[%s] balancing test samples\n" %(classifierName))
+# 	outer_test = balance(outer_test)
 
 # init filtered classifier
 #classifier (as Abstract Classifier was a class that all 
@@ -226,18 +331,18 @@ classifiers = {
 					"XGB": XGBClassifier()
 				}
 classifier = classifiers.get(classifierName)
-	
+classifier.fit(X=outer_train.values, y=outer_train[classAttribute])
 
 duration = time() - start
 durationMinutes = duration / (1e3 * 60)
-print ("[%s] trained in %.2f minutes, evaluating\n" %(shortClassifierName, durationMinutes))
+print ("[%s] trained in %.2f minutes, evaluating\n" %(classifierName, durationMinutes))
 
 # write predictions to csv
 classifierDir = os.path.join(workingDir, classifierName)
 if (not exists(classifierDir)):
 	mkdir(classifierDir)
 
-outputPrefix = print("priedictions-%s-%02d" %(currentFold, currentBag))
+outputPrefix = "predictions-%s-%02d" %(currentFold, currentBag)
 
 writer = open(classifierDir + outputPrefix + ".csv", 'w')
 #writer = csv.writer(open(classifierDir + outputPrefix + ".csv", 'w'))
@@ -247,23 +352,93 @@ if(writeModel):
 	pickle.dump(classifier, open(classifierDir + outputPrefix + ".sav", 'wb'))
 
 
-header = print("# %s@%s %.2f minutes %s\n" %(os.path.expanduser, socket.gethostname(), durationMinutes, classifierString.join(" "))) 
+header = print("# %s@%s %.2f minutes\n" %(os.path.expanduser, socket.gethostname(), durationMinutes))
 #writer = csv.writer(outFile)
-writer.write("header")
-writer.write("id,label,prediction,fold,bag,classifier\n")
-for instance in test:
-	id = str(data[idAttribtue])
-	if (not regression): #I don't think the if and else statements are no longer needed here
-		label = instance[-1]
-		prediction = classifier.predict(instance[:-1])
-	else:
-		label = float(instance[-1])
-		prediction = classifier.predict(instance[:-1])
-row = print("%s,%s,%f,%s,%s,%s\n" %(id, label, prediction, currentFold, currentBag, shortClassifierName))
-writer.write(row)
+# writer.write("header")
+output_cols = ["id","label","prediction","fold","bag","classifier"]
+outer_test_prediction = common.generic_classifier_predict(clf=classifier,
+														  regression_bool=regression,
+														  input_data=outer_test.values
+														  )
 
-writer.flush()
-writer.close()
+outer_test_result_df = pd.DataFrame({'id':outer_test[idAttribute].
+									 'label':outer_test[classAttribute],
+									 'prediction': outer_test_prediction,
+									 'fold':outer_test[foldAttribute]})
+
+outer_test_result_df['bag'] = currentBag
+outer_test_result_df['classifier'] = classifierName
+outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix))
+# writer.write("id,label,prediction,fold,bag,classifier\n")
+# for instance in test:
+# 	id = str(data[idAttribtue])
+# 	if (not regression): #I don't think the if and else statements are no longer needed here
+# 		label = instance[-1]
+# 		prediction = classifier.predict(instance[:-1])
+# 	else:
+# 		label = float(instance[-1])
+# 		prediction = classifier.predict(instance[:-1])
+# row = print("%s,%s,%f,%s,%s,%s\n" %(id, label, prediction, currentFold, currentBag, shortClassifierName))
+# writer.write(row)
+#
+# writer.flush()
+# writer.close()
 
 if (nestedFoldCount == 0):
 	SystemExit
+
+# Richard:
+
+outer_train, outer_test, foldCount = split_train_test_by_fold(fold_col_exist=foldAttribute_exist,
+												   data_df=data,
+												   fold_col=foldAttribute,
+												   current_fold=currentFold,
+												   clf_name=classifierName,
+												   fold_count=foldCount
+												   )
+
+inner_cv_kf = KFold(n_splits=nestedFoldCount,shuffle=True, random_state=random_seed)
+inner_cv_split = inner_cv_kf.split(outer_train)
+for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_split):
+	inner_test = outer_train.loc[inner_test_idx,:]
+	inner_train = outer_train.loc[inner_train_idx,:]
+
+	inner_train, inner_test = balance_or_resample(dataf_train=inner_train,
+												  dataf_test=inner_test,
+												  bag_count=bagCount,
+												  regression_bool=regression,
+												  bl_training_bool=balanceTraining,
+												  bl_test_bool=balanceTest,
+												  clf_name=classifierName,
+												  current_bag=currentBag)
+
+	print("[{} inner {}] fold: {} bag: {} training size: {} test size: {}\n".format(classifierName,
+																					currentNestedFold,
+																					currentFold,
+																					currentBag,
+																					inner_train.shape[0],
+																					inner_test.shape[0]))
+
+	start = time()
+	classifier = classifiers.get(classifierName)
+	classifier.fit(inner_train.values, inner_train[classAttribute])
+	inner_test_prediction = common.generic_classifier_predict(clf=classifier,
+															  regression_bool=regression,
+															  input_data=inner_test.values
+															  )
+	end = time()
+	time_spent = end - start
+	print("[{} inner {}] trained and evaluated in {:2f} minutes".format(classifierName, currentNestedFold, time_spent/60))
+
+	outputPrefix = "validation-%s-%02d-%02d.csv.gz" % (currentFold, currentNestedFold, currentBag)
+	nested_cols = ['id','label','prediction','fold','nested_fold','bag','classifier']
+	result_df = pd.DataFrame({'id': inner_test[idAttribute],
+							  'label': inner_test[classAttribute],
+							  'prediction':inner_test_prediction,
+							  'fold': inner_test[foldAttribute],
+							  })
+	result_df['nested_fold'] = currentNestedFold
+	result_df['bag'] = currentBag
+	result_df['classifier'] = classifierName
+
+	result_df.to_csv(os.path.join(classifierDir, outputPrefix))

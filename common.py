@@ -9,6 +9,17 @@ from sys import argv
 from os import listdir,environ
 import pandas as pd
 import argparse
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
+from sklearn.naive_bayes import GaussianNB  # Naive Bayes
+from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
+from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor  # Adaboost
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor  # Decision Tree
+from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor  # Logit Boost with parameter(loss='deviance')
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor  # KNN
+
+from sklearn.metrics import fbeta_score, make_scorer
+from xgboost import XGBClassifier, XGBRegressor # XGB
+from sklearn.svm import SVC, LinearSVR
 
 
 def str2bool(v):
@@ -18,6 +29,29 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
+
+classifiers = {
+					"RF": RandomForestClassifier(),
+					"SVM": SVC(kernel='linear', probability=True),
+					"NB": GaussianNB(),
+					"LR": LogisticRegression(),
+					"AdaBoost": AdaBoostClassifier(),
+					"DT": DecisionTreeClassifier(),
+					"GradientBoosting": GradientBoostingClassifier(),
+					"KNN": KNeighborsClassifier(),
+					"XGB": XGBClassifier()
+				}
+
+def generic_classifier_predict(clf, regression_bool, input_data):
+    if hasattr(clf, "predict_proba") and (not regression_bool):
+        test_predictions = clf.predict_proba(input_data)[:, 1]
+    else:
+        test_predictions = clf.predict(input_data)
+        if regression_bool is False:
+            test_predictions = test_predictions[:, 1]
+
+    return test_predictions
+
 
 def argsortbest(x):
     return argsort(x) if greater_is_better else argsort(x)[::-1]
