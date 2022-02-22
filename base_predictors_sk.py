@@ -120,7 +120,7 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
 
 import argparse
 parser = argparse.ArgumentParser(description='Base predictor skip')
-parser.add_argument('--parentDir', type=str, required=True, help='Path of parent')
+# parser.add_argument('--parentDir', type=str, required=True, help='Path of parent')
 parser.add_argument('--rootDir', type=str, required=True, help='Path of root')
 parser.add_argument('--currentFold', type=str, required=True, help='Outer fold')
 parser.add_argument('--currentBag', type=int, default=1, help='if aggregate is needed, feed bagcount, else 1')
@@ -129,7 +129,7 @@ parser.add_argument('--classifierName', type=str, required=True, help='Name of t
 args = parser.parse_args()
 
 #parse options
-parentDir = dirname(abspath(args.parentDir))
+# parentDir = dirname(abspath(args.parentDir))
 rootDir = dirname(abspath(args.rootDir))
 currentFold = args.currentFold
 currentBag = args.currentBag
