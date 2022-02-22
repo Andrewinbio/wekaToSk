@@ -160,7 +160,7 @@ classLabel = p.get("sk", "classLabel")
 
 assert p.has_option("sk", "foldCount") or p.has_option("sk", "foldAttribute")
 
-if (p.has_option("foldCount")):
+if (p.has_option("sk", "foldCount")):
 	foldCount = int(p.get("sk", "foldCount"))
 else:
 	foldCount = None
