@@ -159,9 +159,9 @@ balanceTraining = bool(p_sk.get("balanceTraining"))
 balanceTest = bool(p_sk.get("balanceTest")) #this parameter doesn't appear to be in existing properties files but I have it here anyways
 classLabel = p_sk.get("classLabel")
 
-assert p_sk.has_option("foldCount") or p_sk.has_option("foldAttribute")
+assert ("foldCount" in p_sk) or ("foldAttribute" in p_sk)
 
-if (p_sk.has_option("sk", "foldCount")):
+if ("foldCount" in p_sk):
 	foldCount = int(p_sk.get("foldCount"))
 else:
 	foldCount = None
