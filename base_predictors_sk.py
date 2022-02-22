@@ -18,7 +18,7 @@ import arff #documentation for this: https://pythonhosted.org/liac-arff/
 
 import numpy as np
 from random import random
-from imlearn.under_sampling import RandomUnderSampler
+from imblearn.under_sampling import RandomUnderSampler
 
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
 from sklearn.naive_bayes import GaussianNB  # Naive Bayes
