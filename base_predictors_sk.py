@@ -148,7 +148,7 @@ classifierName = args.classifierName
 # load data parameters from properties file
 p = configparser.ConfigParser()
 p.read(os.path.join(parentDir,'sk.properties')) #formerly weka.properties
-workingDir = rootDir + "/" + p.get("sk", ".")
+workingDir = parentDir
 idAttribute = p.get("sk", "idAttribute")
 classAttribute = p.get("sk", "classAttribute")
 balanceTraining = bool(p.get("sk", "balanceTraining"))
