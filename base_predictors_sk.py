@@ -135,7 +135,7 @@ currentFold = args.currentFold
 currentBag = args.currentBag
 attr_imp_bool = args.attr_imp_bool
 
-inputFilename = rootDir + "/data.arff"
+inputFilename = os.path.join(rootDir + "data.arff")
 
 # classifierString = argv[5:-1]
 classifierName = args.classifierName
@@ -361,7 +361,7 @@ outer_test_prediction = common.generic_classifier_predict(clf=classifier,
 														  input_data=outer_test.values
 														  )
 
-outer_test_result_df = pd.DataFrame({'id':outer_test[idAttribute].
+outer_test_result_df = pd.DataFrame({'id':outer_test[idAttribute],
 									 'label':outer_test[classAttribute],
 									 'prediction': outer_test_prediction,
 									 'fold':outer_test[foldAttribute]})
