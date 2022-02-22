@@ -37,6 +37,7 @@ from sklearn.model_selection import KFold
 import common
 from sklearn.utils import shuffle, resample
 import os
+from sklearn.inspection import permutation_importance
 
 ##need an alternative for weka.core.*
 ##need an alternative for weka.core.converters.ConverterUtils.DataSource
@@ -194,6 +195,7 @@ data.set_index(index_cols, inplace=True)
 
 # setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute))
 #pd.DataFrame([q.val for q in data], columns = [classAttribute] )
+print(data)
 if (not regression):
 	predictClassIndex = data[data[classAttribute] == predictClassValue].index
 	assert predictClassIndex != -1
@@ -446,3 +448,31 @@ for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_s
 	result_df['classifier'] = classifierName
 
 	result_df.to_csv(os.path.join(classifierDir, outputPrefix))
+
+# Jamie's code
+# Attribute Importance
+if attr_imp_bool:
+	outer_train, outer_test, foldCount = split_train_test_by_fold(fold_col_exist=foldAttribute_exist,
+																  data_df=data,
+																  fold_col=foldAttribute,
+																  current_fold=currentFold,
+																  clf_name=classifierName,
+																  fold_count=foldCount
+																  )
+	attribute_importance = dict(permutation_importance(estimator=classifierName,
+													   X=outer_train.values,
+													   y=outer_train[classAttribute],
+													   njobs=-1))
+	# print(f{classifierName})
+	# Export Attribute Importance as pandas DataFrame
+	outputPrefix = "attribute_imp-%s-%02d" % (currentFold, currentBag)
+	# classifierDir, outputPrefix + ".csv.gz")
+	importances = attribute_importance.pop("importances")  # importances are vector valued so remove and add as rows
+	attribute_importances_df = pd.DataFrame.from_dict(attribute_importance)
+	for i in range(importances.shape[-1]):  # loop over importance permutation results
+		attribute_importances_df[f"importance_{i + 1}"] = importances[:, i]  # add importances as new columns
+	attribute_importances_df.currentFold = currentFold  # attach additional info as metadata
+	attribute_importances_df.currentBag = currentBag
+	attribute_importances_df.shortClassifierName = classifierName
+
+	attribute_importances_df.to_csv(os.path.join(classifierDir, outputPrefix))
