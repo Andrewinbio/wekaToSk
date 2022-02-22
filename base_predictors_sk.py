@@ -136,7 +136,7 @@ currentFold = args.currentFold
 currentBag = args.currentBag
 attr_imp_bool = args.attr_imp_bool
 
-inputFilename = os.path.join(rootDir + "data.arff")
+inputFilename = os.path.join(rootDir, "data.arff")
 
 # classifierString = argv[5:-1]
 classifierName = args.classifierName
