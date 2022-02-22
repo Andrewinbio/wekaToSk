@@ -130,6 +130,7 @@ args = parser.parse_args()
 
 #parse options
 parentDir = dirname(abspath(args.parentDir))
+print(parentDir)
 rootDir = dirname(abspath(args.rootDir))
 currentFold = args.currentFold
 currentBag = args.currentBag
