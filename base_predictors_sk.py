@@ -151,24 +151,25 @@ classifierName = args.classifierName
 p = configparser.ConfigParser()
 p.read(os.path.join(parentDir,'sk.properties')) #formerly weka.properties
 print(p['sk'])
+p_sk = p['sk']
 workingDir = parentDir
-idAttribute = p.get("sk", "idAttribute")
-classAttribute = p.get("sk", "classAttribute")
-balanceTraining = bool(p.get("sk", "balanceTraining"))
-balanceTest = bool(p.get("sk", "balanceTest")) #this parameter doesn't appear to be in existing properties files but I have it here anyways
-classLabel = p.get("sk", "classLabel")
+idAttribute = p_sk.get("idAttribute")
+classAttribute = p_sk.get("classAttribute")
+balanceTraining = bool(p_sk.get("balanceTraining"))
+balanceTest = bool(p_sk.get("balanceTest")) #this parameter doesn't appear to be in existing properties files but I have it here anyways
+classLabel = p_sk.get("classLabel")
 
-assert p.has_option("sk", "foldCount") or p.has_option("sk", "foldAttribute")
+assert p_sk.has_option("foldCount") or p_sk.has_option("foldAttribute")
 
-if (p.has_option("sk", "foldCount")):
-	foldCount = int(p.get("sk", "foldCount"))
+if (p_sk.has_option("sk", "foldCount")):
+	foldCount = int(p_sk.get("foldCount"))
 else:
 	foldCount = None
 
-foldAttribute = p.get("sk", "foldAttribute")
-nestedFoldCount = int(p.get("sk", "nestedFoldCount"))
-bagCount = int(p.get("bagCount"))
-writeModel = bool(p.get("sk", "writeModel"))
+foldAttribute = p_sk.get("foldAttribute")
+nestedFoldCount = int(p_sk.get("nestedFoldCount"))
+bagCount = int(p_sk.get("bagCount"))
+writeModel = bool(p_sk.get("writeModel"))
 
 # load data, determine if regression or classification
 # source = arff.load(open(inputFilename)) # the arff is now a dictionary
@@ -179,7 +180,7 @@ data = common.read_arff_to_pandas_df(inputFilename) #
 regression = len(data[classAttribute].unique()) > 2  #checks the data to see if it is numeric
 
 if (not regression):
-	predictClassValue = p.get("sk", "predictClassValue")
+	predictClassValue = p_sk.get("predictClassValue")
 
 #shuffle data, set class variable
 data = shuffle(data, random_state=random_seed) #shuffles data without replacement
