@@ -139,6 +139,7 @@ inputFilename = os.path.join(rootDir + "data.arff")
 
 # classifierString = argv[5:-1]
 classifierName = args.classifierName
+
 # shortClassifierName = classifierName.split("\\.")[-1]
 # classifierOptions = []
 # if (len(classifierString) > 1):
