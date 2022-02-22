@@ -190,7 +190,7 @@ index_cols = [idAttribute, classAttribute]
 if foldAttribute_exist:
 	index_cols.append(foldAttribute)
 
-data.set_index(index_cols, replace=True)
+data.set_index(index_cols, inplace=True)
 
 # setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute))
 #pd.DataFrame([q.val for q in data], columns = [classAttribute] )
