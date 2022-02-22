@@ -129,9 +129,9 @@ parser.add_argument('--classifierName', type=str, required=True, help='Name of t
 args = parser.parse_args()
 
 #parse options
-parentDir = dirname(abspath(args.parentDir))
+parentDir = abspath(args.parentDir)
 print(parentDir)
-rootDir = dirname(abspath(args.rootDir))
+rootDir = abspath(args.rootDir)
 currentFold = args.currentFold
 currentBag = args.currentBag
 attr_imp_bool = args.attr_imp_bool
