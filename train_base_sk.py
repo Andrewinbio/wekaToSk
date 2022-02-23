@@ -154,8 +154,8 @@ if __name__ == "__main__":
 
         for parameters in all_parameters:
             project_path, classifier, fold, bag = parameters
-            jf.write('python %s/base_predictors_sk.py %s %s %s %s %s %s\n' % (
-                working_dir, data_path, project_path, fold, bag, args.rank, classifier))
+            jf.write('python base_predictors_sk.py --parentDir {} --rootDir {} --currentFold {} --currentBag {} --classifierName {} --attr_imp_bool {}\n' % (
+                data_path, project_path, fold, bag, classifier, args.rank))
 
         if not args.hpc:
             jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
