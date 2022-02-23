@@ -105,6 +105,7 @@ def multiidx_dataframe_resampler_wr(dataf):
 	# Resample with replacement
 	numeric_df_index = data.index.get_level_values(idAttribute)
 	numeric_df_index_resampled = resample(numeric_df_index, random_state=random_seed)
+	print(numeric_df_index_resampled)
 	return dataf.loc[numeric_df_index_resampled]
 
 def balance_or_resample(dataf_train, dataf_test, bag_count,
@@ -114,6 +115,7 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
 		# TODO: with replacement
 		print(" [%s] generating bag %d\n" % (clf_name, current_bag))
 		dataf_train = multiidx_dataframe_resampler_wr(dataf_train)
+		print(dataf_train)
 
 	if ((not regression_bool) and bl_training_bool):
 		print("[%s] blancing training samples \n" % (classifierName))
