@@ -72,15 +72,15 @@ def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_n
 	if fold_col_exist:
 		fold_count = len(data.index.get_level_values(fold_col).unique())
 		fold_outertestbool = (data.index.get_level_values(fold_col) == current_fold)
-		test = data.loc[fold_outertestbool, :]
-		train = data.loc[~fold_outertestbool, :]
+		test = data.iloc[fold_outertestbool, :]
+		train = data.iloc[~fold_outertestbool, :]
 		print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
 	else:  # train test split is done here
 		print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
 		kFold = KFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
 		kf_nth_split = list(kFold.split(data))[current_fold]
-		test = data.loc[kf_nth_split[1], :]
-		train = data.loc[kf_nth_split[0], :]
+		test = data.iloc[kf_nth_split[1], :]
+		train = data.iloc[kf_nth_split[0], :]
 
 	return train, test, fold_count
 
