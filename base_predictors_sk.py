@@ -385,7 +385,8 @@ outer_test_result_df = pd.DataFrame({'id':outer_test.index.get_level_values(idAt
 
 outer_test_result_df['bag'] = currentBag
 outer_test_result_df['classifier'] = classifierName
-outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix))
+# outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix + 'csv.gz'))
+outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix + 'csv'))
 # writer.write("id,label,prediction,fold,bag,classifier\n")
 # for instance in test:
 # 	id = str(data[idAttribtue])
@@ -447,7 +448,8 @@ for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_s
 	time_spent = end - start
 	print("[{} inner {}] trained and evaluated in {:2f} minutes".format(classifierName, currentNestedFold, time_spent/60))
 
-	outputPrefix = "validation-%s-%02d-%02d.csv.gz" % (currentFold, currentNestedFold, currentBag)
+	# outputPrefix = "validation-%s-%02d-%02d.csv.gz" % (currentFold, currentNestedFold, currentBag)
+	outputPrefix = "validation-%s-%02d-%02d.csv" % (currentFold, currentNestedFold, currentBag)
 	nested_cols = ['id','label','prediction','fold','nested_fold','bag','classifier']
 	result_df = pd.DataFrame({'id': inner_test.index.get_level_values(idAttribute),
 							  'label': inner_test.index.get_level_values(classAttribute),
@@ -458,7 +460,7 @@ for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_s
 	result_df['bag'] = currentBag
 	result_df['classifier'] = classifierName
 
-	result_df.to_csv(os.path.join(classifierDir, outputPrefix))
+	result_df.to_csv(os.path.join(classifierDir, outputPrefix), index=False)
 
 # Jamie's code
 # Attribute Importance
@@ -486,4 +488,4 @@ if attr_imp_bool:
 	attribute_importances_df.currentBag = currentBag
 	attribute_importances_df.shortClassifierName = classifierName
 
-	attribute_importances_df.to_csv(os.path.join(classifierDir, outputPrefix))
+	attribute_importances_df.to_csv(os.path.join(classifierDir, outputPrefix), index=False)
