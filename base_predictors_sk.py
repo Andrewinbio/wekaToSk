@@ -331,7 +331,7 @@ outer_train, outer_test = balance_or_resample(dataf_train=outer_train,
 # lines 159-172 equivalent no longer needed from base_predictors.groovy
 
 # train, store duration
-print("[%s] fold: %s bag: %s training size: %d test size: %d\n" %(shortClassifierName, currentFold, "none"  if (bagCount == 0) else currentBag, train.numInstances(), test.numInstances()))
+print("[%s] fold: %s bag: %s training size: %d test size: %d\n" %(classifierName, currentFold, "none"  if (bagCount == 0) else currentBag, outer_train.shape[0], outer_test.shape[0]))
 start = time()
 
 #*******need to build classifier here*******
