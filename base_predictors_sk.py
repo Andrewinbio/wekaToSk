@@ -76,7 +76,7 @@ def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_n
 		print(fold_outertestbool)
 		test = data.loc[idx[fold_outertestbool]]
 		# test = data.iloc[fold_outertestbool, :]
-		train = data.loc[idx[fold_outertestbool]]
+		train = data.loc[idx[~fold_outertestbool]]
 		print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
 	else:  # train test split is done here
 		print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
@@ -99,7 +99,7 @@ def multiidx_dataframe_balance_sampler(dataf):
 	y = dataf.index.get_level_values(classAttribute).values
 	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index.reshape(-1, 1), y)
 
-	return dataf.loc[numeric_df_index_resampled,:]
+	return dataf.loc[numeric_df_index_resampled]
 
 def multiidx_dataframe_resampler_wr(dataf):
 	# Resample with replacement
