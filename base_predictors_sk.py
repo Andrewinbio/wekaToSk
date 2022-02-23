@@ -104,8 +104,8 @@ def multiidx_dataframe_balance_sampler(dataf):
 def multiidx_dataframe_resampler_wr(dataf):
 	# Resample with replacement
 	numeric_df_index = data.index.get_level_values(idAttribute)
-	numeric_df_index_resampled = resample(numeric_df_index)
-	return dataf.loc[numeric_df_index_resampled,:]
+	numeric_df_index_resampled = resample(numeric_df_index, random_state=random_seed)
+	return dataf.loc[numeric_df_index_resampled]
 
 def balance_or_resample(dataf_train, dataf_test, bag_count,
 						regression_bool, bl_training_bool,
