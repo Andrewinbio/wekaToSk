@@ -98,8 +98,8 @@ def multiidx_dataframe_balance_sampler(dataf):
 	numeric_df_index = dataf.index.get_level_values(idAttribute).values
 	y = dataf.index.get_level_values(classAttribute).values
 	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index.reshape(-1, 1), y)
-
-	return dataf.loc[numeric_df_index_resampled]
+	print(numeric_df_index_resampled.shape)
+	return dataf.loc[numeric_df_index_resampled.reshape(-1)]
 
 def multiidx_dataframe_resampler_wr(dataf):
 	# Resample with replacement
