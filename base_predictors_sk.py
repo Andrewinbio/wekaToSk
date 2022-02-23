@@ -386,7 +386,7 @@ outer_test_result_df = pd.DataFrame({'id':outer_test.index.get_level_values(idAt
 outer_test_result_df['bag'] = currentBag
 outer_test_result_df['classifier'] = classifierName
 # outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix + 'csv.gz'))
-outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix + 'csv'))
+outer_test_result_df.to_csv(os.path.join(classifierDir, outputPrefix + '.csv'),index=False)
 # writer.write("id,label,prediction,fold,bag,classifier\n")
 # for instance in test:
 # 	id = str(data[idAttribtue])
