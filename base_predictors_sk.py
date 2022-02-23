@@ -70,8 +70,8 @@ def balance(instances):
 
 def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_name, fold_count):
 	if fold_col_exist:
-		fold_count = len(data_df[fold_col].unique())
-		fold_outertestbool = (data[fold_col] == current_fold)
+		fold_count = len(data.index.get_level_values(fold_col).unique())
+		fold_outertestbool = (data.index.get_level_values(fold_col) == current_fold)
 		test = data.loc[fold_outertestbool, :]
 		train = data.loc[~fold_outertestbool, :]
 		print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
@@ -90,7 +90,7 @@ def multiidx_dataframe_balance_sampler(dataf):
 	# X_resampled, y_resampled = rus.fit_resample(train.values, train[classAttribute])
 	# Create a numeric index to for undersampler, which will be used to index the dataframe
 	numeric_df_index = range(dataf.shape[0])
-	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index, outer_train[classAttribute])
+	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index, dataf.index.get_level_values(classAttribute))
 	return dataf.iloc[numeric_df_index_resampled, :]
 
 def multiidx_dataframe_resampler_wr(dataf):
@@ -109,11 +109,11 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
 
 	if ((not regression_bool) and bl_training_bool):
 		print("[%s] blancing training samples \n" % (classifierName))
-		dataf_train = balance(dataf_train)
+		dataf_train = multiidx_dataframe_balance_sampler(dataf_train)
 
 	if ((not regression_bool) and bl_test_bool):
 		print("[%s] balancing test samples\n" % (classifierName))
-		dataf_test = balance(dataf_test)
+		dataf_test = multiidx_dataframe_balance_sampler(dataf_test)
 
 	return dataf_train, dataf_test
 
@@ -196,13 +196,14 @@ data.set_index(index_cols, inplace=True)
 # setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute))
 #pd.DataFrame([q.val for q in data], columns = [classAttribute] )
 print(data)
-if (not regression):
-	predictClassIndex = data[data[classAttribute] == predictClassValue].index
-	assert predictClassIndex != -1
-	print ("[%s] %s, generating probabilities for class %s (index %d)\n" %(classifierName, classAttribute, predictClassValue, predictClassIndex))
-	
-else:
-	print("[%s] %s, generating predictions\n" %(classifierName, classAttribute))
+# if (not regression):
+# 	# predictClassIndex = data[data.loc[classAttribute] == predictClassValue].index
+# 	predictClassIndex = data[data.loc[classAttribute] == predictClassValue].index
+# 	assert predictClassIndex != -1
+# 	print ("[%s] %s, generating probabilities for class %s (index %d)\n" %(classifierName, classAttribute, predictClassValue, predictClassIndex))
+#
+# else:
+# 	print("[%s] %s, generating predictions\n" %(classifierName, classAttribute))
 
 #add ids if not specified
 # if (idAttribute == ""):
@@ -337,7 +338,7 @@ classifiers = {
 					"XGB": XGBClassifier()
 				}
 classifier = classifiers.get(classifierName)
-classifier.fit(X=outer_train.values, y=outer_train[classAttribute])
+classifier.fit(X=outer_train.values, y=outer_train.index.get_level_values(classAttribute))
 
 duration = time() - start
 durationMinutes = duration / (1e3 * 60)
@@ -367,10 +368,10 @@ outer_test_prediction = common.generic_classifier_predict(clf=classifier,
 														  input_data=outer_test.values
 														  )
 
-outer_test_result_df = pd.DataFrame({'id':outer_test[idAttribute],
-									 'label':outer_test[classAttribute],
+outer_test_result_df = pd.DataFrame({'id':outer_test.index.get_level_values(idAttribute),
+									 'label':outer_test.index.get_level_values(classAttribute),
 									 'prediction': outer_test_prediction,
-									 'fold':outer_test[foldAttribute]})
+									 'fold':outer_test.index.get_level_values(foldAttribute)})
 
 outer_test_result_df['bag'] = currentBag
 outer_test_result_df['classifier'] = classifierName
@@ -406,8 +407,8 @@ outer_train, outer_test, foldCount = split_train_test_by_fold(fold_col_exist=fol
 inner_cv_kf = KFold(n_splits=nestedFoldCount,shuffle=True, random_state=random_seed)
 inner_cv_split = inner_cv_kf.split(outer_train)
 for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_split):
-	inner_test = outer_train.loc[inner_test_idx,:]
-	inner_train = outer_train.loc[inner_train_idx,:]
+	inner_test = outer_train.iloc[inner_test_idx,:]
+	inner_train = outer_train.iloc[inner_train_idx,:]
 
 	inner_train, inner_test = balance_or_resample(dataf_train=inner_train,
 												  dataf_test=inner_test,
@@ -427,7 +428,7 @@ for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_s
 
 	start = time()
 	classifier = classifiers.get(classifierName)
-	classifier.fit(inner_train.values, inner_train[classAttribute])
+	classifier.fit(inner_train.values, inner_train.index.get_level_values(classAttribute))
 	inner_test_prediction = common.generic_classifier_predict(clf=classifier,
 															  regression_bool=regression,
 															  input_data=inner_test.values
@@ -438,10 +439,10 @@ for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_s
 
 	outputPrefix = "validation-%s-%02d-%02d.csv.gz" % (currentFold, currentNestedFold, currentBag)
 	nested_cols = ['id','label','prediction','fold','nested_fold','bag','classifier']
-	result_df = pd.DataFrame({'id': inner_test[idAttribute],
-							  'label': inner_test[classAttribute],
+	result_df = pd.DataFrame({'id': inner_testindex.get_level_values(idAttribute),
+							  'label': inner_testindex.get_level_values(classAttribute),
 							  'prediction':inner_test_prediction,
-							  'fold': inner_test[foldAttribute],
+							  'fold': inner_testindex.get_level_values(foldAttribute),
 							  })
 	result_df['nested_fold'] = currentNestedFold
 	result_df['bag'] = currentBag
