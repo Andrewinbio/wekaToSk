@@ -366,7 +366,7 @@ outputPrefix = "predictions-%s-%02d" %(currentFold, currentBag)
 #writer = csv.writer(open(classifierDir + outputPrefix + ".csv.gz", 'w'))
 # *****need to gzip this*****
 if(writeModel):
-	pickle.dump(classifier, open(os.path.join(classifierDir,outputPrefix + ".sav", 'wb'))
+	pickle.dump(classifier, open(os.path.join(classifierDir,outputPrefix + ".sav", 'wb')))
 
 
 # header = print("# %s@%s %.2f minutes\n" %(os.path.expanduser, socket.gethostname(), durationMinutes))
