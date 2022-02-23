@@ -163,7 +163,7 @@ p = configparser.ConfigParser()
 p.read(os.path.join(parentDir,'sk.properties')) #formerly weka.properties
 print(p['sk'])
 p_sk = p['sk']
-workingDir = parentDir
+workingDir = rootDir
 idAttribute = p_sk.get("idAttribute")
 classAttribute = p_sk.get("classAttribute")
 balanceTraining = bool(p_sk.get("balanceTraining"))
@@ -361,12 +361,12 @@ if (not exists(classifierDir)):
 
 outputPrefix = "predictions-%s-%02d" %(currentFold, currentBag)
 
-writer = open(classifierDir + outputPrefix + ".csv", 'w')
+# writer = open(classifierDir + outputPrefix + ".csv", 'w')
 #writer = csv.writer(open(classifierDir + outputPrefix + ".csv", 'w'))
 #writer = csv.writer(open(classifierDir + outputPrefix + ".csv.gz", 'w'))
 # *****need to gzip this*****
 if(writeModel):
-	pickle.dump(classifier, open(classifierDir + outputPrefix + ".sav", 'wb'))
+	pickle.dump(classifier, open(os.path.join(classifierDir,outputPrefix + ".sav", 'wb'))
 
 
 # header = print("# %s@%s %.2f minutes\n" %(os.path.expanduser, socket.gethostname(), durationMinutes))
