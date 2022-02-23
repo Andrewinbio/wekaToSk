@@ -45,7 +45,7 @@ from sklearn.inspection import permutation_importance
 #feature_selection replaces weka.filters
 import sklearn.feature_selection
 
-random_seed = 1
+random_seed = 42
 
 def dump(instances, filename):
 	w = open(filename, 'w')
@@ -95,15 +95,16 @@ def multiidx_dataframe_balance_sampler(dataf):
 	rus = RandomUnderSampler(random_state=random_seed)
 	# X_resampled, y_resampled = rus.fit_resample(train.values, train[classAttribute])
 	# Create a numeric index to for undersampler, which will be used to index the dataframe
-	numeric_df_index = range(dataf.shape[0])
+	numeric_df_index = data.index.get_level_values(idAttribute)
 	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index, dataf.index.get_level_values(classAttribute))
-	return dataf.iloc[numeric_df_index_resampled, :]
+
+	return dataf.loc[numeric_df_index_resampled]
 
 def multiidx_dataframe_resampler_wr(dataf):
 	# Resample with replacement
-	numeric_df_index = range(dataf.shape[0])
+	numeric_df_index = data.index.get_level_values(idAttribute)
 	numeric_df_index_resampled = resample(numeric_df_index)
-	return dataf.iloc[numeric_df_index_resampled, :]
+	return dataf.loc[numeric_df_index_resampled]
 
 def balance_or_resample(dataf_train, dataf_test, bag_count,
 						regression_bool, bl_training_bool,
