@@ -369,7 +369,7 @@ if(writeModel):
 	pickle.dump(classifier, open(classifierDir + outputPrefix + ".sav", 'wb'))
 
 
-header = print("# %s@%s %.2f minutes\n" %(os.path.expanduser, socket.gethostname(), durationMinutes))
+# header = print("# %s@%s %.2f minutes\n" %(os.path.expanduser, socket.gethostname(), durationMinutes))
 #writer = csv.writer(outFile)
 # writer.write("header")
 output_cols = ["id","label","prediction","fold","bag","classifier"]
