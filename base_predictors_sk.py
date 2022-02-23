@@ -72,7 +72,7 @@ def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_n
 	idx = pd.IndexSlice
 	if fold_col_exist:
 		fold_count = len(data.index.get_level_values(fold_col).unique())
-		fold_outertestbool = (data.index.get_level_values(fold_col).isin(current_fold))
+		fold_outertestbool = (data.index.get_level_values(fold_col).isin([current_fold]))
 		print(fold_outertestbool)
 		test = data.loc[idx[fold_outertestbool]]
 		# test = data.iloc[fold_outertestbool, :]
