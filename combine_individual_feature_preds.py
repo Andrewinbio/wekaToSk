@@ -13,7 +13,7 @@ from common import load_arff_headers, load_properties, data_dir_list, read_arff_
 from pandas import concat, read_csv
 
 def merged_base_innerCV_by_outerfold(f_list, path):
-    dirnames = sorted(filter(isdir, glob('%s/weka.classifiers.*' % path)))
+    dirnames = sorted(filter(isdir, glob('%s/base-predictor-*' % path)))
     for fold in f_list:
         dirname_dfs = []
         for dirname in dirnames:

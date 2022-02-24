@@ -355,7 +355,7 @@ durationMinutes = duration / (1e3 * 60)
 print ("[%s] trained in %.2f minutes, evaluating\n" %(classifierName, durationMinutes))
 
 # write predictions to csv
-classifierDir = os.path.join(workingDir, classifierName)
+classifierDir = os.path.join(workingDir, 'base-predictor-'+classifierName)
 if (not exists(classifierDir)):
 	mkdir(classifierDir)
 
