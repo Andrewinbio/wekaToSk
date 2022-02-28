@@ -150,7 +150,7 @@ def load_properties(dirname):
     return d
 
 def load_properties_sk(dirname):
-    sk_p_path = os.path.join(dirname, '/sk.properties')
+    sk_p_path = os.path.join(dirname, 'sk.properties')
     p = configparser.ConfigParser()
     p.read(sk_p_path)
     p_sk = p['sk']
