@@ -71,22 +71,22 @@ def balance(instances):
 def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_name, fold_count):
 	idx = pd.IndexSlice
 	if fold_col_exist:
-		fold_count = len(data.index.get_level_values(fold_col).unique())
-		fold_outertestbool = (data.index.get_level_values(fold_col).isin([current_fold]))
+		fold_count = len(data_df.index.get_level_values(fold_col).unique())
+		fold_outertestbool = (data_df.index.get_level_values(fold_col).isin([current_fold]))
 		print(fold_outertestbool)
-		test = data.loc[idx[fold_outertestbool]]
-		# test = data.iloc[fold_outertestbool, :]
-		train = data.loc[idx[~fold_outertestbool]]
+		test = data_df.loc[idx[fold_outertestbool]]
+		# test = data_df.iloc[fold_outertestbool, :]
+		train = data_df.loc[idx[~fold_outertestbool]]
 		print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
 	else:  # train test split is done here
 		print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
 		kFold = KFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
-		kf_nth_split = list(kFold.split(data))[current_fold]
-		fold_mask = np.array(range.data.shape[0]) == kf_nth_split[1]
-		# test = data.iloc[kf_nth_split[1], :]
-		# train = data.iloc[kf_nth_split[0], :]
-		test = data.loc[idx[fold_mask]]
-		train = data.loc[idx[~fold_mask]]
+		kf_nth_split = list(kFold.split(data_df))[current_fold]
+		fold_mask = np.array(range.data_df.shape[0]) == kf_nth_split[1]
+		# test = data_df.iloc[kf_nth_split[1], :]
+		# train = data_df.iloc[kf_nth_split[0], :]
+		test = data_df.loc[idx[fold_mask]]
+		train = data_df.loc[idx[~fold_mask]]
 
 	return train, test, fold_count
 
