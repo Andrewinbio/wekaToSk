@@ -99,6 +99,7 @@ if __name__ == "__main__":
     assert exists(classifiers_fn)
     classifiers = filter(lambda x: not x.startswith('#'), open(classifiers_fn).readlines())
     classifiers = [_.strip() for _ in classifiers]
+    print('Base Classifiers:', classifiers)
 
     ### get paths of the list of features
     fns = listdir(data_path)
