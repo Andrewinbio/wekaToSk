@@ -9,11 +9,12 @@ import gzip
 from os.path import abspath, exists, isdir
 from os import listdir
 from sys import argv
-from common import load_arff_headers, load_properties, data_dir_list, read_arff_to_pandas_df
+from common import load_arff_headers, load_properties, load_properties_sk, data_dir_list, read_arff_to_pandas_df
 from pandas import concat, read_csv
 
 def merged_base_innerCV_by_outerfold(f_list, path):
     dirnames = sorted(filter(isdir, glob('%s/base-predictor-*' % path)))
+    print(dirnames)
     for fold in f_list:
         dirname_dfs = []
         for dirname in dirnames:
@@ -84,7 +85,7 @@ feature_folders = data_dir_list(data_folder)
 
 
 
-p = load_properties(data_folder)
+p = load_properties_sk(data_folder)
 # fold_count = int(p['foldCount'])
 if 'foldAttribute' in p:
     # input_fn = '%s/%s' % (feature_folders[0], 'data.arff')
