@@ -11,7 +11,7 @@ from os import system
 import os
 from os.path import abspath, dirname, exists
 from sys import argv
-from common import load_properties, read_arff_to_pandas_df
+from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
@@ -91,11 +91,13 @@ if __name__ == "__main__":
     working_dir = dirname(abspath(argv[0]))
 
     ### get scikit-learn properties from sk.properties
-    p = load_properties(data_path)
+    p = load_properties_sk(data_path)
     bag_values = range(int(p['bagCount']))
 
+
+
     ### get the list of base classifiers
-    classifiers_fn = data_path + '/classifiers.txt'
+    classifiers_fn = data_path + '/classifiers_sk.txt'
     assert exists(classifiers_fn)
     classifiers = filter(lambda x: not x.startswith('#'), open(classifiers_fn).readlines())
     classifiers = [_.strip() for _ in classifiers]

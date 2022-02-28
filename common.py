@@ -20,6 +20,7 @@ from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor  # KNN
 from sklearn.metrics import fbeta_score, make_scorer
 from xgboost import XGBClassifier, XGBRegressor # XGB
 from sklearn.svm import SVC, LinearSVR
+import configparser
 
 
 def str2bool(v):
@@ -147,6 +148,13 @@ def load_properties(dirname):
     for key, value in properties:
         d[key.strip()] = value.strip()
     return d
+
+def load_properties_sk(dirname):
+    sk_p_path = os.path.join(dirname, '/sk.properties')
+    p = configparser.ConfigParser()
+    p.read(sk_p_path)
+    p_sk = p['sk']
+    return p_sk
 
 
 def read_fold(path, fold):
