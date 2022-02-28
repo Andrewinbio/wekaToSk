@@ -357,7 +357,7 @@ print ("[%s] trained in %.2f minutes, evaluating\n" %(classifierName, durationMi
 # write predictions to csv
 classifierDir = os.path.join(workingDir, 'base-predictor-'+classifierName)
 if (not exists(classifierDir)):
-	mkdir(classifierDir)
+	mkdir(classifierDir, exist_ok=True)
 
 outputPrefix = "predictions-%s-%02d" %(currentFold, currentBag)
 
