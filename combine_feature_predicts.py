@@ -6,7 +6,7 @@ Date:  12/27/2018
 from os.path import exists,abspath,isdir,dirname
 from sys import argv
 from os import listdir,environ
-from common import load_properties, load_arff_headers, data_dir_list, read_arff_to_pandas_df
+from common import load_properties, load_properties_sk, load_arff_headers, data_dir_list, read_arff_to_pandas_df
 import pandas as pd
 import numpy as np
 
@@ -21,7 +21,7 @@ attr_imp_bool = argv[2]
 feature_folders = data_dir_list(data_folder)
 
 # foldValues = range(int(argv[2]))
-p = load_properties(data_folder)
+p = load_properties_sk(data_folder)
 # fold_count = int(p['foldCount'])
 if 'foldAttribute' in p:
 	# input_fn = '%s/%s' % (feature_folders[0], 'data.arff')
