@@ -1,4 +1,4 @@
-from os import listdir, mkdir
+from os import listdir, mkdir, makedirs
 from os.path import abspath, dirname, exists, join, isdir, expanduser
 from socket import socket
 from sys import argv
@@ -401,7 +401,7 @@ if __name__ == "__main__":
     # write predictions to csv
     classifierDir = os.path.join(workingDir, 'base-predictor-' + classifierName)
     if (not exists(classifierDir)):
-        mkdir(classifierDir, exist_ok=True)
+        makedirs(classifierDir, exist_ok=True)
 
     outputPrefix = "predictions-%s-%02d" % (currentFold, currentBag)
 
