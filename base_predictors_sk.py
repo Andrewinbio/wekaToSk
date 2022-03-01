@@ -319,7 +319,8 @@ if __name__ == "__main__":
                                                                   fold_col=foldAttribute,
                                                                   current_fold=currentFold,
                                                                   clf_name=classifierName,
-                                                                  fold_count=foldCount
+                                                                  fold_count=foldCount,
+                                                                  y_col=classAttribute
                                                                   )
 
     # resample and balance training of fold if necessary
@@ -453,7 +454,8 @@ if __name__ == "__main__":
                                                                   fold_col=foldAttribute,
                                                                   current_fold=currentFold,
                                                                   clf_name=classifierName,
-                                                                  fold_count=foldCount
+                                                                  fold_count=foldCount,
+                                                                  y_col=classAttribute
                                                                   )
 
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
@@ -537,7 +539,8 @@ if __name__ == "__main__":
                                                                       fold_col=foldAttribute,
                                                                       current_fold=currentFold,
                                                                       clf_name=classifierName,
-                                                                      fold_count=foldCount
+                                                                      fold_count=foldCount,
+                                                                      y_col=classAttribute
                                                                       )
         attribute_importance = dict(permutation_importance(estimator=classifierName,
                                                            X=outer_train.values,
