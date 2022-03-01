@@ -147,8 +147,9 @@ def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col, reg_bool, pred_class_va
 
     y = dataf.loc[:, y_col]
     if not reg_bool:
+        y.loc[~(y == pred_class_val)] = 0
         y.loc[y==pred_class_val] = 1
-        y.loc[~(y==pred_class_val)] = 0
+
 
     indices = dataf.loc[:, id_col]
     return X, y.astype(int), indices
