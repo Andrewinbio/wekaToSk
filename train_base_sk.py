@@ -184,7 +184,7 @@ if __name__ == "__main__":
         data_path, args.rank, data_path, args.rank))
         fn.close()
         system('bsub < %s' % lsf_fn)
-        system('rm %s' % lsf_fn)
+        # system('rm %s' % lsf_fn)
 
     ### run it sequentially otherwise
     else:
