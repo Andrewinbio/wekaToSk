@@ -200,6 +200,7 @@ if __name__ == "__main__":
 	foldAttribute_exist = (foldAttribute != "")
 	index_cols = [idAttribute, classAttribute]
 	if foldAttribute_exist:
+		data[foldAttribute] = data[foldAttribute].astype(str)
 		index_cols.append(foldAttribute)
 
 	data.set_index(index_cols, inplace=True)
@@ -366,7 +367,7 @@ if __name__ == "__main__":
 	#writer = csv.writer(open(classifierDir + outputPrefix + ".csv", 'w'))
 	#writer = csv.writer(open(classifierDir + outputPrefix + ".csv.gz", 'w'))
 	# *****need to gzip this*****
-	if(writeModel):
+	if (writeModel):
 		pickle.dump(classifier, open(os.path.join(classifierDir,outputPrefix + ".sav", 'wb')))
 
 
