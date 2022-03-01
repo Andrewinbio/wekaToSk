@@ -146,7 +146,7 @@ def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col, reg_bool, pred_class_va
     X = dataf.drop(columns=nonfeat_cols)
 
     y = dataf.loc[:, y_col]
-    if reg_bool:
+    if not reg_bool:
         y[y==pred_class_val] = 1
         y[~(y==pred_class_val)] = 0
 
@@ -421,7 +421,7 @@ if __name__ == "__main__":
                                                               )
 
     outer_test_result_df = pd.DataFrame({'id': outer_test[idAttribute],
-                                         'label': outer_test[classAttribute],
+                                         'label': outer_test_y,
                                          'prediction': outer_test_prediction,
                                          'fold': outer_test[foldAttribute]})
 
@@ -520,7 +520,7 @@ if __name__ == "__main__":
         # outputPrefix = "validation-%s-%02d-%02d.csv" % (currentFold, currentNestedFold, currentBag)
         nested_cols = ['id', 'label', 'prediction', 'fold', 'nested_fold', 'bag', 'classifier']
         result_df = pd.DataFrame({'id': inner_test[idAttribute],
-                                  'label': inner_test[classAttribute],
+                                  'label': inner_test_y,
                                   'prediction': inner_test_prediction,
                                   'fold': inner_test[foldAttribute],
                                   })
@@ -544,7 +544,7 @@ if __name__ == "__main__":
                                                                       )
         attribute_importance = dict(permutation_importance(estimator=classifierName,
                                                            X=outer_train.values,
-                                                           y=outer_train[classAttribute],
+                                                           y=outer_train_y,
                                                            njobs=-1))
         # print(f{classifierName})
         # Export Attribute Importance as pandas DataFrame
