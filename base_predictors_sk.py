@@ -101,12 +101,14 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # Create a numeric index to for undersampler, which will be used to index the dataframe
     # numeric_df_index = dataf.index.get_level_values(idAttribute).values
     # y = dataf.index.get_level_values(classAttribute).values
-    numeric_df_index = dataf.index.values
+    numeric_df_index = dataf.index.values.reshape()
     y = dataf.loc[:, y_col]
-    numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index, y)
+    resampled_df, _ = rus.fit_resample(dataf, y)
     # print(numeric_df_index_resampled.shape)
     # numeric_df_index_resampled
-    return dataf.loc[numeric_df_index_resampled].reset_index()
+    # return dataf.loc[numeric_df_index_resampled].reset_index()
+    return pd.DataFrame(data=resampled_df, columns=dataf.columns)
+    # return dataf.loc[numeric_df_index_resampled].reset_index()
 
 
 def multiidx_dataframe_resampler_wr(dataf):
