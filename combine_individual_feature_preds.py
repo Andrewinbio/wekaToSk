@@ -40,7 +40,7 @@ def merged_base_innerCV_by_outerfold(f_list, path):
         dirname_dfs = []
         dirname_attribute_imp_dfs = []
         for dirname in dirnames:
-            classifier = dirname.split('.')[-1]
+            classifier = dirname.split('-')[-1]
             bag_dfs = []
             attribute_imp_dfs = []
             for bag in range(bag_count):
