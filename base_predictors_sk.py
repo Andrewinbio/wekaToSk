@@ -406,9 +406,16 @@ if __name__ == "__main__":
     # writer = csv.writer(outFile)
     # writer.write("header")
     output_cols = ["id", "label", "prediction", "fold", "bag", "classifier"]
+    outer_test_X, outer_test_y, outer_test_id = split_df_X_y_idx(outer_test,
+                                                                nonfeat_cols=index_cols,
+                                                                y_col=classAttribute,
+                                                                id_col=idAttribute,
+                                                                reg_bool=regression,
+                                                                pred_class_val=predictClassValue
+                                                                )
     outer_test_prediction = common.generic_classifier_predict(clf=classifier,
                                                               regression_bool=regression,
-                                                              input_data=outer_test.values
+                                                              input_data=outer_test_X
                                                               )
 
     outer_test_result_df = pd.DataFrame({'id': outer_test[idAttribute],
@@ -482,9 +489,16 @@ if __name__ == "__main__":
                                                                         )
         classifier.fit(X=inner_train_X, y=inner_train_y)
         # classifier.fit(inner_train.values, inner_train.index.get_level_values(classAttribute))
+        inner_test_X, inner_test_y, inner_test_id = split_df_X_y_idx(inner_test,
+                                                                        nonfeat_cols=index_cols,
+                                                                        y_col=classAttribute,
+                                                                        id_col=idAttribute,
+                                                                        reg_bool=regression,
+                                                                        pred_class_val=predictClassValue
+                                                                        )
         inner_test_prediction = common.generic_classifier_predict(clf=classifier,
                                                                   regression_bool=regression,
-                                                                  input_data=inner_test.values
+                                                                  input_data=inner_test_X
                                                                   )
         end = time()
         time_spent = end - start
