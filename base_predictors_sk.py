@@ -152,7 +152,8 @@ def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col, reg_bool, pred_class_va
 
 
     indices = dataf.loc[:, id_col]
-    return X, y.astype(int), indices
+    # return X, y.astype(int), indices
+    return X, y, indices
 
 
 if __name__ == "__main__":
@@ -228,10 +229,10 @@ if __name__ == "__main__":
         data[foldAttribute] = data[foldAttribute].astype(str)
         index_cols.append(foldAttribute)
 
-    if regression:
+    if not regression:
         y_ = data[classAttribute]
         y_.loc[~(y_ == predictClassValue)] = 0
-        y_.loc[y_==predictClassValue] = 1
+        y_.loc[y_ == predictClassValue] = 1
         data[classAttribute] = y_
 
     # data.set_index(index_cols, inplace=True)
