@@ -26,6 +26,7 @@ def merged_base_innerCV_by_outerfold(f_list, path):
                     filename = '%s/validation-%s-%02i-%02i.csv.gz' % (dirname, fold, nested_fold, bag)
                     try:
                         df = read_csv(filename, skiprows=1, index_col=[0, 1], compression='gzip', engine='python')
+                        print(df)
                         df = df[['prediction']]
                         df.rename(columns={'prediction': '%s.%s' % (classifier, bag)}, inplace=True)
                         bag_dfs.append(df)
