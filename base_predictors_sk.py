@@ -116,7 +116,7 @@ def multiidx_dataframe_resampler_wr(dataf):
 
 def balance_or_resample(dataf_train, dataf_test, bag_count,
 						regression_bool, bl_training_bool,
-						bl_test_bool, clf_name, current_bag):
+						bl_test_bool, clf_name, current_bag, y_col):
 	if (bag_count > 0):
 		# TODO: with replacement
 		print(" [%s] generating bag %d\n" % (clf_name, current_bag))
@@ -125,11 +125,11 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
 
 	if ((not regression_bool) and bl_training_bool):
 		print("[%s] balancing training samples \n" % (classifierName))
-		dataf_train = multiidx_dataframe_balance_sampler(dataf_train)
+		dataf_train = multiidx_dataframe_balance_sampler(dataf_train, y_col)
 
 	if ((not regression_bool) and bl_test_bool):
 		print("[%s] balancing test samples\n" % (classifierName))
-		dataf_test = multiidx_dataframe_balance_sampler(dataf_test)
+		dataf_test = multiidx_dataframe_balance_sampler(dataf_test, y_col)
 
 	return dataf_train, dataf_test
 
@@ -316,7 +316,8 @@ if __name__ == "__main__":
 												  bl_training_bool=balanceTraining,
 												  bl_test_bool=balanceTest,
 												  clf_name=classifierName,
-												  current_bag=currentBag)
+												  current_bag=currentBag,
+												  y_col=classAttribute)
 	# if (bagCount > 0):
 	# 	print(" [%s] generating bag %d\n" %(classifierName,currentBag))
 	# 	#train = train.resample(random.randrange(currentBag)) #unsure if the newRandom(currentbag)) argument is necessary
@@ -444,7 +445,8 @@ if __name__ == "__main__":
 													  bl_training_bool=balanceTraining,
 													  bl_test_bool=balanceTest,
 													  clf_name=classifierName,
-													  current_bag=currentBag)
+													  current_bag=currentBag,
+													  y_col=classAttribute)
 
 		print("[{} inner {}] fold: {} bag: {} training size: {} test size: {}\n".format(classifierName,
 																						currentNestedFold,
