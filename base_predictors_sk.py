@@ -141,9 +141,14 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
     return dataf_train, dataf_test
 
 
-def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col):
+def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col, reg_bool, pred_class_val):
     X = dataf.drop(columns=nonfeat_cols)
+
     y = dataf.loc[:, y_col]
+    if reg_bool:
+        y[y==pred_class_val] = 1
+        y[~(y==pred_class_val)] = 0
+
     indices = dataf.loc[:, id_col]
     return X, y, indices
 
@@ -373,7 +378,10 @@ if __name__ == "__main__":
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
-                                                                    id_col=idAttribute)
+                                                                    id_col=idAttribute,
+                                                                    reg_bool=regression,
+                                                                    pred_class_val=predictClassValue
+                                                                    )
     classifier.fit(X=outer_train_X, y=outer_train_y)
 
     duration = time() - start
@@ -468,7 +476,10 @@ if __name__ == "__main__":
         inner_train_X, inner_train_y, inner_train_id = split_df_X_y_idx(inner_train,
                                                                         nonfeat_cols=index_cols,
                                                                         y_col=classAttribute,
-                                                                        id_col=idAttribute)
+                                                                        id_col=idAttribute,
+                                                                        reg_bool=regression,
+                                                                        pred_class_val=predictClassValue
+                                                                        )
         classifier.fit(X=inner_train_X, y=inner_train_y)
         # classifier.fit(inner_train.values, inner_train.index.get_level_values(classAttribute))
         inner_test_prediction = common.generic_classifier_predict(clf=classifier,
