@@ -72,12 +72,12 @@ def balance(instances):
 def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_name, fold_count):
 	idx = pd.IndexSlice
 	if fold_col_exist:
-		fold_count = len(data_df.index.get_level_values(fold_col).unique())
-		fold_outertestbool = (data_df.index.get_level_values(fold_col).isin([current_fold]))
+		fold_count = len(data_df[fold_col].unique())
+		fold_outertestbool = (data_df[fold_col]==current_fold)
 		print(fold_outertestbool)
-		test = data_df.loc[idx[fold_outertestbool]]
+		test = data_df.loc[fold_outertestbool]
 		# test = data_df.iloc[fold_outertestbool, :]
-		train = data_df.loc[idx[~fold_outertestbool]]
+		train = data_df.loc[fold_outertestbool]
 		print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
 	else:  # train test split is done here
 		print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
@@ -86,29 +86,33 @@ def split_train_test_by_fold(fold_col_exist,data_df,fold_col,current_fold, clf_n
 		fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
 		# test = data_df.iloc[kf_nth_split[1], :]
 		# train = data_df.iloc[kf_nth_split[0], :]
-		test = data_df.loc[idx[fold_mask]]
-		train = data_df.loc[idx[~fold_mask]]
+		test = data_df.loc[fold_mask]
+		train = data_df.loc[~fold_mask]
 
 	return train, test, fold_count
 
-def multiidx_dataframe_balance_sampler(dataf):
+def multiidx_dataframe_balance_sampler(dataf, y_col):
 	# UnderSampling majority label
 	rus = RandomUnderSampler(random_state=random_seed)
 	# X_resampled, y_resampled = rus.fit_resample(train.values, train[classAttribute])
 	# Create a numeric index to for undersampler, which will be used to index the dataframe
-	numeric_df_index = dataf.index.get_level_values(idAttribute).values
-	y = dataf.index.get_level_values(classAttribute).values
-	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index.reshape(-1, 1), y)
-	print(numeric_df_index_resampled.shape)
-	return dataf.loc[numeric_df_index_resampled.reshape(-1)]
+	# numeric_df_index = dataf.index.get_level_values(idAttribute).values
+	# y = dataf.index.get_level_values(classAttribute).values
+	numeric_df_index = dataf.index.values
+	y = dataf.loc[:,y_col]
+	numeric_df_index_resampled, _ = rus.fit_resample(numeric_df_index, y)
+	# print(numeric_df_index_resampled.shape)
+	# numeric_df_index_resampled
+	return dataf.loc[numeric_df_index_resampled].reset_index()
 
 def multiidx_dataframe_resampler_wr(dataf):
 	# Resample with replacement
 	# numeric_df_index = dataf.index.get_level_values(idAttribute)
-	numeric_df_index_resampled = resample(dataf, random_state=random_seed)
+	resampled_df = resample(dataf, random_state=random_seed)
+
 	# print(numeric_df_index_resampled)
 	# return dataf.loc[numeric_df_index_resampled]
-	return numeric_df_index_resampled
+	return pd.DataFrame(data=resampled_df, columns=dataf.columns)
 
 def balance_or_resample(dataf_train, dataf_test, bag_count,
 						regression_bool, bl_training_bool,
@@ -128,6 +132,12 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
 		dataf_test = multiidx_dataframe_balance_sampler(dataf_test)
 
 	return dataf_train, dataf_test
+
+def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col):
+	X = dataf.drop(columns=nonfeat_cols)
+	y = dataf.loc[:,y_col]
+	indices = dataf.loc[:,id_col]
+	return X, y, indices
 
 
 if __name__ == "__main__":
@@ -203,7 +213,7 @@ if __name__ == "__main__":
 		data[foldAttribute] = data[foldAttribute].astype(str)
 		index_cols.append(foldAttribute)
 
-	data.set_index(index_cols, inplace=True)
+	# data.set_index(index_cols, inplace=True)
 
 	# setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute))
 	#pd.DataFrame([q.val for q in data], columns = [classAttribute] )
@@ -350,7 +360,11 @@ if __name__ == "__main__":
 						"XGB": XGBClassifier()
 					}
 	classifier = classifiers.get(classifierName)
-	classifier.fit(X=outer_train.values, y=outer_train.index.get_level_values(classAttribute))
+	outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
+																	nonfeat_cols=index_cols,
+																	y_col=classAttribute,
+																	id_col=idAttribute)
+	classifier.fit(X=outer_train_X, y=outer_train_y)
 
 	duration = time() - start
 	durationMinutes = duration / (1e3 * 60)
@@ -380,10 +394,10 @@ if __name__ == "__main__":
 															  input_data=outer_test.values
 															  )
 
-	outer_test_result_df = pd.DataFrame({'id':outer_test.index.get_level_values(idAttribute),
-										 'label':outer_test.index.get_level_values(classAttribute),
+	outer_test_result_df = pd.DataFrame({'id':outer_test[idAttribute],
+										 'label':outer_test[classAttribute],
 										 'prediction': outer_test_prediction,
-										 'fold':outer_test.index.get_level_values(foldAttribute)})
+										 'fold':outer_test[foldAttribute]})
 
 	outer_test_result_df['bag'] = currentBag
 	outer_test_result_df['classifier'] = classifierName
@@ -441,7 +455,12 @@ if __name__ == "__main__":
 
 		start = time()
 		classifier = classifiers.get(classifierName)
-		classifier.fit(inner_train.values, inner_train.index.get_level_values(classAttribute))
+		inner_train_X, inner_train_y, inner_train_id = split_df_X_y_idx(inner_train,
+																		nonfeat_cols=index_cols,
+																		y_col=classAttribute,
+																		id_col=idAttribute)
+		classifier.fit(X=inner_train_X, y=inner_train_y)
+		# classifier.fit(inner_train.values, inner_train.index.get_level_values(classAttribute))
 		inner_test_prediction = common.generic_classifier_predict(clf=classifier,
 																  regression_bool=regression,
 																  input_data=inner_test.values
@@ -453,10 +472,10 @@ if __name__ == "__main__":
 		outputPrefix = "validation-%s-%02d-%02d.csv.gz" % (currentFold, currentNestedFold, currentBag)
 		# outputPrefix = "validation-%s-%02d-%02d.csv" % (currentFold, currentNestedFold, currentBag)
 		nested_cols = ['id','label','prediction','fold','nested_fold','bag','classifier']
-		result_df = pd.DataFrame({'id': inner_test.index.get_level_values(idAttribute),
-								  'label': inner_test.index.get_level_values(classAttribute),
+		result_df = pd.DataFrame({'id': inner_test[idAttribute],
+								  'label': inner_test[classAttribute],
 								  'prediction':inner_test_prediction,
-								  'fold': inner_test.index.get_level_values(foldAttribute),
+								  'fold': inner_test[foldAttribute],
 								  })
 		result_df['nested_fold'] = currentNestedFold
 		result_df['bag'] = currentBag
