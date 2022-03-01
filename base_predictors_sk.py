@@ -79,7 +79,7 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
         print(fold_outertestbool)
         test = data_df.loc[fold_outertestbool]
         # test = data_df.iloc[fold_outertestbool, :]
-        train = data_df.loc[fold_outertestbool]
+        train = data_df.loc[~fold_outertestbool]
         print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
     else:  # train test split is done here
         print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
