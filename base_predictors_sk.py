@@ -233,7 +233,7 @@ if __name__ == "__main__":
         y_ = data[classAttribute]
         y_.loc[~(y_ == predictClassValue)] = 0
         y_.loc[y_ == predictClassValue] = 1
-        data[classAttribute] = y_
+        data[classAttribute] = y_.astype(int)
 
     # data.set_index(index_cols, inplace=True)
 
