@@ -151,7 +151,7 @@ def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col, reg_bool, pred_class_va
         y[~(y==pred_class_val)] = 0
 
     indices = dataf.loc[:, id_col]
-    return X, y, indices
+    return X, y.astype(int), indices
 
 
 if __name__ == "__main__":
