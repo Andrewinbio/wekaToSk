@@ -34,7 +34,7 @@ from xgboost import XGBClassifier, XGBRegressor  # XGB
 from sklearn.svm import SVC, LinearSVR
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import LeaveOneOut, LeaveOneGroupOut
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, StratifiedKFold
 import common
 from sklearn.utils import shuffle, resample
 import os
@@ -71,7 +71,7 @@ def balance(instances):
 #	use sklearn.utils.resample here
 #	use sklearn.feature_selection here in place of Filter from weka
 
-def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count):
+def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count, y_col):
     idx = pd.IndexSlice
     if fold_col_exist:
         fold_count = len(data_df[fold_col].unique())
@@ -83,8 +83,8 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
         print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
     else:  # train test split is done here
         print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
-        kFold = KFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
-        kf_nth_split = list(kFold.split(data_df))[current_fold]
+        kFold = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
+        kf_nth_split = list(kFold.split(data_df, y_col))[current_fold]
         fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
         # test = data_df.iloc[kf_nth_split[1], :]
         # train = data_df.iloc[kf_nth_split[0], :]
@@ -103,6 +103,7 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # y = dataf.index.get_level_values(classAttribute).values
     # numeric_df_index = dataf.index.values.reshape()
     y = dataf.loc[:, y_col]
+    print(y)
     resampled_df, _ = rus.fit_resample(dataf, y)
     # print(numeric_df_index_resampled.shape)
     # numeric_df_index_resampled
@@ -455,8 +456,16 @@ if __name__ == "__main__":
                                                                   fold_count=foldCount
                                                                   )
 
-    inner_cv_kf = KFold(n_splits=nestedFoldCount, shuffle=True, random_state=random_seed)
-    inner_cv_split = inner_cv_kf.split(outer_train)
+    outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
+                                                                    nonfeat_cols=index_cols,
+                                                                    y_col=classAttribute,
+                                                                    id_col=idAttribute,
+                                                                    reg_bool=regression,
+                                                                    pred_class_val=predictClassValue
+                                                                    )
+
+    inner_cv_kf = StratifiedKFold(n_splits=nestedFoldCount, shuffle=True, random_state=random_seed)
+    inner_cv_split = inner_cv_kf.split(outer_train, outer_train_y)
     for currentNestedFold, (inner_train_idx, inner_test_idx) in enumerate(inner_cv_split):
         inner_test = outer_train.iloc[inner_test_idx, :]
         inner_train = outer_train.iloc[inner_train_idx, :]
