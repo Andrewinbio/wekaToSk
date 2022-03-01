@@ -143,7 +143,7 @@ def load_arff_headers(filename):
 
 
 def load_properties(dirname):
-    properties = [_.split('=') for _ in open(dirname + '/weka.properties').readlines()]
+    properties = [_.split('=') for _ in open(dirname + '/sk.properties').readlines()]
     d = {}
     for key, value in properties:
         d[key.strip()] = value.strip()
