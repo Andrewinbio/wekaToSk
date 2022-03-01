@@ -18,7 +18,7 @@ def merged_base_innerCV_by_outerfold(f_list, path):
     for fold in f_list:
         dirname_dfs = []
         for dirname in dirnames:
-            classifier = dirname.split('.')[-1]
+            classifier = dirname.split('-')[-1]
             nested_fold_dfs = []
             for nested_fold in range(nested_fold_count):
                 bag_dfs = []
