@@ -1,0 +1,9 @@
+RF
+SVM
+NB
+LR
+AdaBoost
+DT
+GradientBoosting
+KNN
+XGB
