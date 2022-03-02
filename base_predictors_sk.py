@@ -193,8 +193,8 @@ if __name__ == "__main__":
     workingDir = rootDir
     idAttribute = p_sk.get("idAttribute")
     classAttribute = p_sk.get("classAttribute")
-    balanceTraining = bool(p_sk.get("balanceTraining"))
-    balanceTest = bool(p_sk.get("balanceTest")) 
+    balanceTraining = common.str2bool(p_sk.get("balanceTraining"))
+    balanceTest = common.str2bool(p_sk.get("balanceTest"))
     classLabel = p_sk.get("classLabel")
 
     assert ("foldCount" in p_sk) or ("foldAttribute" in p_sk)
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     foldAttribute = p_sk.get("foldAttribute")
     nestedFoldCount = int(p_sk.get("nestedFoldCount"))
     bagCount = int(p_sk.get("bagCount"))
-    writeModel = bool(p_sk.get("writeModel"))
+    writeModel = common.str2bool(p_sk.get("writeModel"))
 
     # load data, determine if regression or classification
     # source = arff.load(open(inputFilename)) # the arff is now a dictionary
