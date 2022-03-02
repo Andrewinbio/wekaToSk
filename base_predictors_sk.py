@@ -176,6 +176,7 @@ if __name__ == "__main__":
     attr_imp_bool = args.attr_imp_bool
 
     inputFilename = os.path.join(rootDir, "data.arff")
+    data = common.read_arff_to_pandas_df(inputFilename)
 
     # classifierString = argv[5:-1]
     classifierName = args.classifierName
@@ -199,23 +200,26 @@ if __name__ == "__main__":
 
     assert ("foldCount" in p_sk) or ("foldAttribute" in p_sk)
 
-    if ("foldCount" in p_sk):
-        foldCount = int(p_sk.get("foldCount"))
-    else:
-        foldCount = None
-
     foldAttribute = p_sk.get("foldAttribute")
+
+    if ("foldAttribute" in p_sk):
+        foldCount = len(data[foldAttribute].unique())
+    elif ("foldCount" in p_sk):
+        foldCount = int(p_sk.get("foldCount"))
+
+
+
     nestedFoldCount = int(p_sk.get("nestedFoldCount"))
     bagCount = int(p_sk.get("bagCount"))
     if not(p_sk.get("writeModel") == None):
         writeModel = common.str2bool(p_sk.get("writeModel"))
     else:
-        writeModel = False
+        writeModel = None
 
     # load data, determine if regression or classification
     # source = arff.load(open(inputFilename)) # the arff is now a dictionary
     # replace by the custom function to load arff
-    data = common.read_arff_to_pandas_df(inputFilename)  #
+      #
     # data = pd.DataFrame(source['data']) #data stored in pandas dataframe
     # regression = isinstance(data['data'][0][0], float) or isinstance(source['data'][0][0], int) #checks the data to see if it is numeric
     regression = len(data[classAttribute].unique()) > 2  # checks the data to see if it is numeric
