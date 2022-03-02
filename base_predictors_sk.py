@@ -77,7 +77,7 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
         print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
         fold_count = len(data_df[fold_col].unique())
         fold_outertestbool = (data_df[fold_col] == current_fold)
-        print(fold_outertestbool)
+        # print(fold_outertestbool)
         test = data_df.loc[fold_outertestbool]
         # test = data_df.iloc[fold_outertestbool, :]
         train = data_df.loc[~fold_outertestbool]
@@ -104,7 +104,7 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # y = dataf.index.get_level_values(classAttribute).values
     # numeric_df_index = dataf.index.values.reshape()
     y = dataf[y_col]
-    print(y)
+    # print(y)
     resampled_df, _ = rus.fit_resample(dataf, y)
     # print(numeric_df_index_resampled.shape)
     # numeric_df_index_resampled
@@ -130,7 +130,7 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
         # TODO: with replacement
         print(" [%s] generating bag %d\n" % (clf_name, current_bag))
         dataf_train = multiidx_dataframe_resampler_wr(dataf_train)
-        print(dataf_train)
+
 
     if ((not regression_bool) and bl_training_bool):
         print("[%s] balancing training samples \n" % (classifierName))
@@ -140,6 +140,7 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
         print("[%s] balancing test samples\n" % (classifierName))
         dataf_test = multiidx_dataframe_balance_sampler(dataf_test, y_col)
 
+    print(dataf_train, dataf_test)
     return dataf_train, dataf_test
 
 
@@ -196,6 +197,7 @@ if __name__ == "__main__":
     classAttribute = p_sk.get("classAttribute")
     balanceTraining = common.str2bool(p_sk.get("balanceTraining"))
     balanceTest = common.str2bool(p_sk.get("balanceTest"))
+    print('balanceTest:', balanceTest)
     classLabel = p_sk.get("classLabel")
 
     assert ("foldCount" in p_sk) or ("foldAttribute" in p_sk)
@@ -247,7 +249,7 @@ if __name__ == "__main__":
 
     # setattr(data, 'type', classAttribute) # I am unsure if this is a valid alternative to data.setClass(data.attribute(classAttribute))
     # pd.DataFrame([q.val for q in data], columns = [classAttribute] )
-    print(data)
+    # print(data)
     # if (not regression):
     # 	# predictClassIndex = data[data.loc[classAttribute] == predictClassValue].index
     # 	predictClassIndex = data[data.loc[classAttribute] == predictClassValue].index
