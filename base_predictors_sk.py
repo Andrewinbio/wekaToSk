@@ -172,6 +172,7 @@ if __name__ == "__main__":
     parentDir = abspath(args.parentDir)
     print(parentDir)
     rootDir = abspath(args.rootDir)
+    # currentFold = int(args.currentFold)
     currentFold = int(args.currentFold)
     currentBag = args.currentBag
     attr_imp_bool = args.attr_imp_bool
@@ -238,6 +239,7 @@ if __name__ == "__main__":
     if foldAttribute_exist:
         data[foldAttribute] = data[foldAttribute].astype(str)
         index_cols.append(foldAttribute)
+        currentFold = str(currentFold)
 
     if not regression:
         y_ = data[classAttribute]
