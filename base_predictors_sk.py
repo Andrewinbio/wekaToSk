@@ -103,7 +103,7 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # numeric_df_index = dataf.index.get_level_values(idAttribute).values
     # y = dataf.index.get_level_values(classAttribute).values
     # numeric_df_index = dataf.index.values.reshape()
-    y = data_df[y_col]
+    y = dataf[y_col]
     print(y)
     resampled_df, _ = rus.fit_resample(dataf, y)
     # print(numeric_df_index_resampled.shape)
