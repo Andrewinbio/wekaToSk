@@ -196,6 +196,7 @@ def data_dir_list(data_path, excluding_folder = ['analysis', 'feature_rank']):
     fns = [fn for fn in fns if not 'tcca' in fn]
     fns = [fn for fn in fns if not 'pca' in fn]
     fns = [fn for fn in fns if not 'weka.classifiers' in fn]
+    fns = [fn for fn in fns if not 'base-predictor' in fn]
     fns = [data_path + '/' + fn for fn in fns]
     feature_folders = [fn for fn in fns if isdir(fn)]
     return feature_folders
