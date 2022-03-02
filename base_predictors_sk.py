@@ -74,18 +74,20 @@ def balance(instances):
 def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count, y_col):
     idx = pd.IndexSlice
     if fold_col_exist:
+        print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
         fold_count = len(data_df[fold_col].unique())
         fold_outertestbool = (data_df[fold_col] == current_fold)
         print(fold_outertestbool)
         test = data_df.loc[fold_outertestbool]
         # test = data_df.iloc[fold_outertestbool, :]
         train = data_df.loc[~fold_outertestbool]
-        print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
     else:  # train test split is done here
         print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
+        y = data_df[y_col]
         kFold = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
-        kf_nth_split = list(kFold.split(data_df, y_col))[current_fold]
+        kf_nth_split = list(kFold.split(data_df, y))[current_fold]
         fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
+        print('This is the fold mask', kf_nth_split)
         # test = data_df.iloc[kf_nth_split[1], :]
         # train = data_df.iloc[kf_nth_split[0], :]
         test = data_df.loc[fold_mask]
@@ -102,7 +104,7 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # numeric_df_index = dataf.index.get_level_values(idAttribute).values
     # y = dataf.index.get_level_values(classAttribute).values
     # numeric_df_index = dataf.index.values.reshape()
-    y = dataf.loc[:, y_col]
+    y = data_df[y_col]
     print(y)
     resampled_df, _ = rus.fit_resample(dataf, y)
     # print(numeric_df_index_resampled.shape)
@@ -170,7 +172,7 @@ if __name__ == "__main__":
     parentDir = abspath(args.parentDir)
     print(parentDir)
     rootDir = abspath(args.rootDir)
-    currentFold = args.currentFold
+    currentFold = int(args.currentFold)
     currentBag = args.currentBag
     attr_imp_bool = args.attr_imp_bool
 
@@ -193,8 +195,7 @@ if __name__ == "__main__":
     idAttribute = p_sk.get("idAttribute")
     classAttribute = p_sk.get("classAttribute")
     balanceTraining = bool(p_sk.get("balanceTraining"))
-    balanceTest = bool(p_sk.get(
-        "balanceTest"))  # this parameter doesn't appear to be in existing properties files but I have it here anyways
+    balanceTest = bool(p_sk.get("balanceTest")) 
     classLabel = p_sk.get("classLabel")
 
     assert ("foldCount" in p_sk) or ("foldAttribute" in p_sk)
@@ -223,7 +224,8 @@ if __name__ == "__main__":
     # shuffle data, set class variable
     data = shuffle(data, random_state=random_seed)  # shuffles data without replacement
 
-    foldAttribute_exist = (foldAttribute != "")
+    #foldAttribute_exist = (foldAttribute != "") 'foldAttribute' in p
+    foldAttribute_exist = ('foldAttribute' in p)
     index_cols = [idAttribute, classAttribute]
     if foldAttribute_exist:
         data[foldAttribute] = data[foldAttribute].astype(str)
