@@ -207,7 +207,10 @@ if __name__ == "__main__":
     foldAttribute = p_sk.get("foldAttribute")
     nestedFoldCount = int(p_sk.get("nestedFoldCount"))
     bagCount = int(p_sk.get("bagCount"))
-    writeModel = common.str2bool(p_sk.get("writeModel"))
+    if not(p_sk.get("writeModel") == None):
+        writeModel = common.str2bool(p_sk.get("writeModel"))
+    else:
+        writeModel = False
 
     # load data, determine if regression or classification
     # source = arff.load(open(inputFilename)) # the arff is now a dictionary
