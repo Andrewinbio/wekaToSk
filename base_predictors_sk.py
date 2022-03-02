@@ -231,7 +231,7 @@ if __name__ == "__main__":
     data = shuffle(data, random_state=random_seed)  # shuffles data without replacement
 
     #foldAttribute_exist = (foldAttribute != "") 'foldAttribute' in p
-    foldAttribute_exist = ('foldAttribute' in p)
+    foldAttribute_exist = ('foldAttribute' in p_sk)
     index_cols = [idAttribute, classAttribute]
     if foldAttribute_exist:
         data[foldAttribute] = data[foldAttribute].astype(str)
