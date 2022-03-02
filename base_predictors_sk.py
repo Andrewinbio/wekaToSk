@@ -87,7 +87,6 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
         kFold = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
         kf_nth_split = list(kFold.split(data_df, y))[current_fold]
         fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
-        print('This is the fold mask', kf_nth_split)
         # test = data_df.iloc[kf_nth_split[1], :]
         # train = data_df.iloc[kf_nth_split[0], :]
         test = data_df.loc[fold_mask]
