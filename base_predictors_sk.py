@@ -124,13 +124,7 @@ if __name__ == "__main__":
     inputFilename = os.path.join(rootDir, "data.arff")
     data = common.read_arff_to_pandas_df(inputFilename)
 
-    # classifierString = argv[5:-1]
     classifierName = args.classifierName
-
-    # shortClassifierName = classifierName.split("\\.")[-1]
-    # classifierOptions = []
-    # if len(classifierString) > 1:
-    # 	classifierOptions = classifierString[1:-1]
 
     # load data parameters from properties file
     p = configparser.ConfigParser()
@@ -149,21 +143,21 @@ if __name__ == "__main__":
 
     foldAttribute = p_sk.get("foldAttribute")
 
-    if ("foldAttribute" in p_sk):
+    if "foldAttribute" in p_sk:
         foldCount = len(data[foldAttribute].unique())
-    elif ("foldCount" in p_sk):
+    elif "foldCount" in p_sk:
         foldCount = int(p_sk.get("foldCount"))
 
     nestedFoldCount = int(p_sk.get("nestedFoldCount"))
     bagCount = int(p_sk.get("bagCount"))
-    if not (p_sk.get("writeModel") == None):
+    if not p_sk.get("writeModel") is None:
         writeModel = common.str2bool(p_sk.get("writeModel"))
     else:
         writeModel = None
 
     regression = len(data[classAttribute].unique()) > 2  # checks the data to see if it is numeric
 
-    if (not regression):
+    if not regression:
         predictClassValue = p_sk.get("predictClassValue")
 
     # shuffle data, set class variable
@@ -320,7 +314,6 @@ if __name__ == "__main__":
                                                                         pred_class_val=predictClassValue
                                                                         )
         classifier.fit(X=inner_train_X, y=inner_train_y)
-        # classifier.fit(inner_train.values, inner_train.index.get_level_values(classAttribute))
         inner_test_X, inner_test_y, inner_test_id = split_df_X_y_idx(inner_test,
                                                                      nonfeat_cols=index_cols,
                                                                      y_col=classAttribute,
