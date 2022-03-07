@@ -56,8 +56,8 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
     else:  # train test split is done here
         print("[%s] generating folds for %s-fold CV \n" % (clf_name, fold_count))
         y = data_df[y_col]
-        kfold = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
-        kf_nth_split = list(kfold.split(data_df, y))[current_fold]
+        kFold = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
+        kf_nth_split = list(kFold.split(data_df, y))[current_fold]
         fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
         # test = data_df.iloc[kf_nth_split[1], :]
         # train = data_df.iloc[kf_nth_split[0], :]
@@ -115,11 +115,7 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
 def split_df_X_y_idx(dataf, nonfeat_cols, id_col, y_col, reg_bool, pred_class_val):
     X = dataf.drop(columns=nonfeat_cols)
     y = dataf.loc[:, y_col]
-    # if not reg_bool:
-    #     y.loc[~(y == pred_class_val)] = 0
-    #     y.loc[y==pred_class_val] = 1
     indices = dataf.loc[:, id_col]
-    # return X, y.astype(int), indices
     return X, y, indices
 
 
@@ -137,7 +133,6 @@ if __name__ == "__main__":
     parentDir = abspath(args.parentDir)
     print(parentDir)
     rootDir = abspath(args.rootDir)
-    # currentFold = int(args.currentFold)
     currentFold = int(args.currentFold)
     currentBag = args.currentBag
     attr_imp_bool = args.attr_imp_bool
@@ -182,12 +177,6 @@ if __name__ == "__main__":
     else:
         writeModel = None
 
-    # load data, determine if regression or classification
-    # source = arff.load(open(inputFilename)) # the arff is now a dictionary
-    # replace by the custom function to load arff
-    #
-    # data = pd.DataFrame(source['data']) #data stored in pandas dataframe
-    # regression = isinstance(data['data'][0][0], float) or isinstance(source['data'][0][0], int) #checks the data to see if it is numeric
     regression = len(data[classAttribute].unique()) > 2  # checks the data to see if it is numeric
 
     if (not regression):
@@ -264,11 +253,11 @@ if __name__ == "__main__":
 
     # write predictions to csv
     classifierDir = os.path.join(workingDir, 'base-predictor-' + classifierName)
-    if (not exists(classifierDir)):
+    if not exists(classifierDir):
         makedirs(classifierDir, exist_ok=True)
 
     outputPrefix = "predictions-%s-%02d" % (currentFold, currentBag)
-    if (writeModel):
+    if writeModel:
         pickle.dump(classifier, open(os.path.join(classifierDir, outputPrefix + ".sav", 'wb')))
 
     output_cols = ["id", "label", "prediction", "fold", "bag", "classifier"]
