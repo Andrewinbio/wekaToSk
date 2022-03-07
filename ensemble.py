@@ -13,7 +13,6 @@ from os.path import abspath, exists
 from numpy import array, column_stack, append
 from numpy.random import choice, seed
 
-from cf-sandbox
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
 from sklearn.naive_bayes import GaussianNB  # Naive Bayes
 from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
