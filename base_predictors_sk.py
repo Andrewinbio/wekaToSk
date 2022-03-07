@@ -59,8 +59,6 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
         kFold = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=random_seed)
         kf_nth_split = list(kFold.split(data_df, y))[current_fold]
         fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
-        # test = data_df.iloc[kf_nth_split[1], :]
-        # train = data_df.iloc[kf_nth_split[0], :]
         test = data_df.loc[fold_mask]
         train = data_df.loc[~fold_mask]
 
@@ -70,28 +68,14 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
 def multiidx_dataframe_balance_sampler(dataf, y_col):
     # UnderSampling majority label
     rus = RandomUnderSampler(random_state=random_seed)
-    # X_resampled, y_resampled = rus.fit_resample(train.values, train[classAttribute])
-    # Create a numeric index to for undersampler, which will be used to index the dataframe
-    # numeric_df_index = dataf.index.get_level_values(idAttribute).values
-    # y = dataf.index.get_level_values(classAttribute).values
-    # numeric_df_index = dataf.index.values.reshape()
     y = dataf[y_col]
-    # print(y)
     resampled_df, _ = rus.fit_resample(dataf, y)
-    # print(numeric_df_index_resampled.shape)
-    # numeric_df_index_resampled
-    # return dataf.loc[numeric_df_index_resampled].reset_index()
     return pd.DataFrame(data=resampled_df, columns=dataf.columns)
-    # return dataf.loc[numeric_df_index_resampled].reset_index()
 
 
 def multiidx_dataframe_resampler_wr(dataf):
     # Resample with replacement
-    # numeric_df_index = dataf.index.get_level_values(idAttribute)
     resampled_df = resample(dataf, random_state=random_seed)
-
-    # print(numeric_df_index_resampled)
-    # return dataf.loc[numeric_df_index_resampled]
     return pd.DataFrame(data=resampled_df, columns=dataf.columns)
 
 
@@ -145,7 +129,7 @@ if __name__ == "__main__":
 
     # shortClassifierName = classifierName.split("\\.")[-1]
     # classifierOptions = []
-    # if (len(classifierString) > 1):
+    # if len(classifierString) > 1:
     # 	classifierOptions = classifierString[1:-1]
 
     # load data parameters from properties file
