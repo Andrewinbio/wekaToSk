@@ -13,6 +13,7 @@ from os.path import abspath, exists
 from numpy import array, column_stack, append
 from numpy.random import choice, seed
 
+from cf-sandbox
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
 from sklearn.naive_bayes import GaussianNB  # Naive Bayes
 from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
@@ -36,6 +37,9 @@ import numpy as np
 import seaborn as sns
 from sklearn.inspection import permutation_importance
 
+sys.path.insert(1, '../cf-sandbox/')
+
+import utils_stacking as ustk
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -357,7 +361,8 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "DT.S": DecisionTreeClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier()
+        "XGB.S": XGBClassifier(),
+        "CF.S": ustk.CFStacker()
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
