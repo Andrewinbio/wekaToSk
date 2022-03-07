@@ -18,11 +18,12 @@ from sklearn.naive_bayes import GaussianNB  # Naive Bayes
 from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
 from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor  # Adaboost
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor  # Decision Tree
-from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor  # Logit Boost with parameter(loss='deviance')
+from sklearn.ensemble import GradientBoostingClassifier, \
+    GradientBoostingRegressor  # Logit Boost with parameter(loss='deviance')
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor  # KNN
 
 from sklearn.metrics import fbeta_score, make_scorer
-from xgboost import XGBClassifier, XGBRegressor # XGB
+from xgboost import XGBClassifier, XGBRegressor  # XGB
 from sklearn.svm import SVC, LinearSVR
 
 import sklearn
@@ -34,7 +35,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from sklearn.inspection import permutation_importance
-
 
 
 def str2bool(v):
@@ -89,9 +89,10 @@ def select_candidate_enhanced(train_df, train_labels, best_classifiers, ensemble
         best_candidate = best_classifiers.index.values[i]
     return best_candidate
 
+
 def selection(fold, seedval, path, agg,
-                           regression=False, greater_is_better=False,
-                           scoring_func=common.f_max):
+              regression=False, greater_is_better=False,
+              scoring_func=common.f_max):
     seed(seedval)
     initial_ensemble_size = 2
     max_ensemble_size = 50
@@ -126,6 +127,7 @@ def selection(fold, seedval, path, agg,
            get_predictions(train_df, best_ensemble, fold, seedval), \
            best_ensemble, train_df
 
+
 def thres_fmax(train_label_df, train_pred_df, testing_bool=False):
     if testing_bool:
         fmax_training = common.fmeasure_score(train_label_df, train_pred_df)
@@ -134,6 +136,7 @@ def thres_fmax(train_label_df, train_pred_df, testing_bool=False):
         thres = None
 
     return thres
+
 
 def CES_classifier(path, fold_count=range(5), agg=1, rank=False):
     assert exists(path)
@@ -176,21 +179,21 @@ def CES_classifier(path, fold_count=range(5), agg=1, rank=False):
     auprc = common.auprc(predictions_df.label, predictions_df.prediction)
     fmax = (common.fmeasure_score(predictions_df.label, predictions_df.prediction, thres=thres))
 
-    predictions_only_df = predictions_df.loc[:,['prediction']]
-    predictions_only_df.rename(columns={'prediction':'CES'}, inplace=True)
+    predictions_only_df = predictions_df.loc[:, ['prediction']]
+    predictions_only_df.rename(columns={'prediction': 'CES'}, inplace=True)
     print(predictions_only_df)
     if rank:
         frequency_bp_selected = best_ensembles[0].value_counts()
-        local_model_weight_df = pd.DataFrame(data=np.zeros((1,len(train_df.columns))), columns=train_df.columns, index=[0])
+        local_model_weight_df = pd.DataFrame(data=np.zeros((1, len(train_df.columns))), columns=train_df.columns,
+                                             index=[0])
         for bp, freq in frequency_bp_selected.items():
             local_model_weight_df[bp] = freq
         local_model_weight_df['ensemble_method'] = 'CES'
     else:
         local_model_weight_df = None
-    return {'f-measure':fmax, 'auc':float(auc), 'auprc':auprc,
+    return {'f-measure': fmax, 'auc': float(auc), 'auprc': auprc,
             'model_weight': local_model_weight_df,
             'predictions': predictions_only_df}
-
 
 
 def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=False):
@@ -253,7 +256,6 @@ def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=Fa
             'predictions': pred_out_df}
 
 
-
 def bestbase_classifier(path, fold_count=range(5), agg=1, rank=False):
     assert exists(path)
     if not exists('%s/analysis' % path):
@@ -270,7 +272,7 @@ def bestbase_classifier(path, fold_count=range(5), agg=1, rank=False):
 
     fmax_list = [common.fmeasure_score(labels, predictions.iloc[:, i])['F'] for i in range(len(predictions.columns))]
     argmax_bp_idx = np.argmax(fmax_list)
-    best_bp_predictions = predictions.iloc[:,[argmax_bp_idx]]
+    best_bp_predictions = predictions.iloc[:, [argmax_bp_idx]]
     best_fmax = max(fmax_list)
     best_auc = sklearn.metrics.roc_auc_score(labels, best_bp_predictions)
     best_auprc = common.auprc(labels, best_bp_predictions)
@@ -280,6 +282,7 @@ def bestbase_classifier(path, fold_count=range(5), agg=1, rank=False):
 
     return {'f-measure': best_fmax, 'auc': best_auc,
             'auprc': best_auprc, 'predictions': best_bp_predictions}
+
 
 def stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df,
                            regression=False):
@@ -296,14 +299,13 @@ def stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df,
             test_predictions = test_predictions[:, 1]
             train_predictions = train_predictions[:, 1]
 
-
-
     df = pd.DataFrame(
-        {'fold': fold, 'id': test_df.index.get_level_values('id'), 'label': test_labels, 'prediction': test_predictions})
+        {'fold': fold, 'id': test_df.index.get_level_values('id'), 'label': test_labels,
+         'prediction': test_predictions})
     # print('stacking_df:')
     # print(df)
-    return {'testing_df':df, "training": [train_labels, train_predictions], 'train_dfs': [train_df, train_labels],
-            'stacked_df':stacked_df}
+    return {'testing_df': df, "training": [train_labels, train_predictions], 'train_dfs': [train_df, train_labels],
+            'stacked_df': stacked_df}
 
 
 def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
@@ -318,8 +320,6 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     aggregated_dict = {'CES': CES_classifier,
                        'Mean': aggregating_ensemble,
                        'best base': bestbase_classifier}
-
-
 
     for key, val in aggregated_dict.items():
 
@@ -338,7 +338,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                 auprc_perf = perf['auprc']
                 print('[{}] Finished evaluating model ############################'.format(key))
                 print('[{}] F-max score is {}.'.format(key, fmax_perf))
-                print('[{}] AUC score is {}.'.format(key, auc_perf) )
+                print('[{}] AUC score is {}.'.format(key, auc_perf))
                 print('[{}] AUPRC score is {}.'.format(key, auprc_perf))
                 predictions_dataframes.append(perf['predictions'])
                 dfs.append(pd.DataFrame(data=[[dn, fmax_perf, key, auc_perf, auprc_perf]], columns=cols, index=[0]))
@@ -349,19 +349,19 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-                     "RF.S": RandomForestClassifier(),
-                     "SVM.S": SVC(kernel='linear', probability=True),
-                     "NB.S": GaussianNB(),
-                     "LR.S": LogisticRegression(),
-                     "AdaBoost.S": AdaBoostClassifier(),
-                     "DT.S": DecisionTreeClassifier(),
-                     "GradientBoosting.S": GradientBoostingClassifier(),
-                     "KNN.S": KNeighborsClassifier(),
-                     "XGB.S": XGBClassifier()
-                    }
-    df_cols = ['f_train_base','f_test_base', 'fold', 'stacker',
+        "RF.S": RandomForestClassifier(),
+        "SVM.S": SVC(kernel='linear', probability=True),
+        "NB.S": GaussianNB(),
+        "LR.S": LogisticRegression(),
+        "AdaBoost.S": AdaBoostClassifier(),
+        "DT.S": DecisionTreeClassifier(),
+        "GradientBoosting.S": GradientBoostingClassifier(),
+        "KNN.S": KNeighborsClassifier(),
+        "XGB.S": XGBClassifier()
+    }
+    df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
-    stacked_df = pd.DataFrame(columns= df_cols)
+    stacked_df = pd.DataFrame(columns=df_cols)
 
     for i, (stacker_name, stacker) in enumerate(stackers_dict.items()):
         if (rank and (stacker_name == ens_for_rank)) or (not rank):
@@ -385,11 +385,11 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                 print(stacker.predict_proba(training_dfs.values))
                 n_repeats = 100
                 stacker_pi = permutation_importance(estimator=stacker,
-                                                   X=training_dfs.values,
-                                                   y=training_labels.values,
-                                               n_repeats=n_repeats,
-                                                random_state=0,
-                                                   scoring = auprc_sklearn
+                                                    X=training_dfs.values,
+                                                    y=training_labels.values,
+                                                    n_repeats=n_repeats,
+                                                    random_state=0,
+                                                    scoring=auprc_sklearn
                                                     )
                 pi_df = pd.DataFrame(data=[stacker_pi.importances_mean], columns=training_dfs.columns, index=[0])
                 pi_df['ensemble_method'] = stacker_name
@@ -413,20 +413,17 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                 print('[%s] AUPRC score is %s.' % (stacker_name, auprc))
                 # print('stacking:')
                 predictions_df.drop(columns=['fold'], inplace=True)
-                predictions_df.rename(columns={'prediction':stacker_name}, inplace=True)
+                predictions_df.rename(columns={'prediction': stacker_name}, inplace=True)
                 predictions_df.set_index(['id', 'label'], inplace=True)
                 # print(predictions_df)
                 predictions_dataframes.append(predictions_df)
             df = pd.DataFrame(data=[[dn, fmax['F'], stacker_name, auc, auprc]], columns=cols, index=[0])
             dfs.append(df)
 
-
-
     if rank is True:
         # print(local_model_weight_dfs)
         local_mr_df = pd.concat(local_model_weight_dfs)
         local_mr_df.to_csv(os.path.join(analysis_path, 'local_model_ranks.csv'))
-
 
     """ Save results """
     if rank is False:
@@ -435,22 +432,25 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         predictions_dataframe.to_csv(os.path.join(analysis_path, "predictions.csv"))
         dfs.to_csv(os.path.join(analysis_path, "performance.csv"), index=False)
 
+
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
 
     fmax_sklearn = make_scorer(common.f_max, greater_is_better=True, needs_proba=True)
     auprc_sklearn = make_scorer(common.auprc, greater_is_better=True, needs_proba=True)
-    ### parse arguments
+    # parse arguments
     parser = argparse.ArgumentParser(description='Ensemble script of EI')
     parser.add_argument('--path', '-P', type=str, required=True, help='Path of the multimodal data')
     parser.add_argument('--fold', '-F', type=int, default=5, help='cross-validation fold')
     parser.add_argument('--aggregate', '-A', type=int, default=1, help='if aggregate is needed, feed bagcount, else 1')
-    parser.add_argument('--rank', type=str2bool, default='False', help='Boolean of getting local model ranking or not (default:False)')
-    parser.add_argument('--ens_for_rank', type=str, default='Choose one of the ensemble', help='Choose the ensemble for EI interpretation')
+    parser.add_argument('--rank', type=str2bool, default='False',
+                        help='Boolean of getting local model ranking or not (default:False)')
+    parser.add_argument('--ens_for_rank', type=str, default='Choose one of the ensemble',
+                        help='Choose the ensemble for EI interpretation')
     args = parser.parse_args()
     data_path = abspath(args.path)
     if args.rank:
-        data_path = os.path.join(data_path,'feature_rank')
+        data_path = os.path.join(data_path, 'feature_rank')
 
     feature_folders = common.data_dir_list(data_path)
     if len(feature_folders) == 0:
@@ -460,7 +460,7 @@ if __name__ == "__main__":
     p = load_properties_sk(data_path)
     assert ('foldAttribute' in p) or ('foldCount' in p)
     if 'foldAttribute' in p:
-        df = common.read_arff_to_pandas_df(os.path.join(feature_folders[0],'data.arff'))
+        df = common.read_arff_to_pandas_df(os.path.join(feature_folders[0], 'data.arff'))
         fold_values = df[p['foldAttribute']].unique()
     else:
         fold_values = range(int(p['foldCount']))
