@@ -26,20 +26,6 @@ import argparse
 
 random_seed = 42
 
-#def dump(instances, filename):
-#    w = open(filename, 'w')
-#    w.write(str(instances))
-#    w.write('\n')
-#    w.close()
-
-# the balance function below serves the purpose of subsampling
-# of a random uniform distribution of
-# the data and is later used on the train and test sets
-#def balance(instances):
-#    tempnp = instances.to_numpy()
-#    tempnp.random.uniform(low=0.0, high=1.0)  # uni
-#    return pd.DataFrame(tempnp)
-
 def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count, y_col):
     idx = pd.IndexSlice
     if fold_col_exist:
@@ -105,7 +91,7 @@ if __name__ == "__main__":
     parser.add_argument('--rootDir', type=str, required=True, help='Path of root')
     parser.add_argument('--currentFold', type=str, required=True, help='Outer fold')
     parser.add_argument('--currentBag', type=int, default=1, help='if aggregate is needed, feed bagcount, else 1')
-    parser.add_argument('--attr_imp_bool', type=common.str2bool, default=False, help='Run Feature importance or not')
+    parser.add_argument('--attr_imp_bool', type=common.str2bool, default=False, help='Run feature importance or not')
     parser.add_argument('--classifierName', type=str, required=True, help='Name of the classifier in classifier.py')
     args = parser.parse_args()
 
