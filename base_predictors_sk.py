@@ -26,21 +26,20 @@ import argparse
 
 random_seed = 42
 
-
-def dump(instances, filename):
-    w = open(filename, 'w')
-    w.write(str(instances))
-    w.write('\n')
-    w.close()
+#def dump(instances, filename):
+#    w = open(filename, 'w')
+#    w.write(str(instances))
+#    w.write('\n')
+#    w.close()
 
 
 # the balance function below serves the purpose of subsampling
 # of a random uniform distribution of
 # the data and is later used on the train and test sets
-def balance(instances):
-    tempnp = instances.to_numpy()
-    tempnp.random.uniform(low=0.0, high=1.0)  # uni
-    return pd.DataFrame(tempnp)
+#def balance(instances):
+#    tempnp = instances.to_numpy()
+#    tempnp.random.uniform(low=0.0, high=1.0)  # uni
+#    return pd.DataFrame(tempnp)
 
 
 def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count, y_col):
@@ -61,7 +60,6 @@ def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, cl
         fold_mask = np.array(range(data_df.shape[0])) == kf_nth_split[1]
         test = data_df.loc[fold_mask]
         train = data_df.loc[~fold_mask]
-
     return train, test, fold_count
 
 
