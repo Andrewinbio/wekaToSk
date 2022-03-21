@@ -364,8 +364,8 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "DT.S": DecisionTreeClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier(),
-        "CF.S": ustk.CFStacker()
+        "XGB.S": XGBClassifier()#,
+        #"CF.S": ustk.CFStacker()
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
