@@ -167,7 +167,7 @@ if __name__ == "__main__":
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
         sh_fn = 'run_%s_%s.sh' % (data_source_dir, data_name)
-        fn = open(lsf_fn, 'w')
+        fn = open(sh_fn, 'w')
         fn.write('#!/bin/bash')
         fn.write('parallel < {}\n'.format(jobs_fn))
         fn.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
