@@ -102,13 +102,14 @@ if __name__ == "__main__":
     predictors_path = data_path + '/classifiers_sk.txt'
     assert exists(predictors_path)
     predictors = {}
+    predictors = {}
     with open(predictors_path) as f:
         for line in f:
             if line.startswith('#'):
                 continue
             else:
-                (abbrev, predictor) = line.split('|')
-                predictors[abbrev.strip()] = predictor.strip()
+                (abbrev, module, predictor) = line.split('|')
+                predictors[abbrev.strip()] = {'module': module.strip(), 'predictor': predictor.strip()}
     classifiers = predictors.keys()
     print('Base Classifiers:', list(classifiers))
 

@@ -177,8 +177,11 @@ if __name__ == "__main__":
     predictors = {}
     with open(f"{parentDir}/classifiers_sk.txt") as f:
         for line in f:
-            (abbrev, module, predictor) = line.split('|')
-            predictors[abbrev.strip()] = {'module': module.strip(), 'predictor': predictor.strip()}
+            if line.startswith('#'):
+                continue
+            else:
+                (abbrev, module, predictor) = line.split('|')
+                predictors[abbrev.strip()] = {'module': module.strip(), 'predictor': predictor.strip()}
 
     predictor_dict = predictors.get(classifierName)
     predictor_module = importlib.import_module(predictor_dict[module])
