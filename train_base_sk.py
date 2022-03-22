@@ -15,7 +15,6 @@ from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
-from joblib import parallel_backend
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -78,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--node', '-N', type=str, default='16', help='number of node requested')
     parser.add_argument('--time', '-T', type=str, default='20:00', help='number of hours requested')
     parser.add_argument('--memory', '-M', type=str, default='20000', help='memory requested in MB')
-    parser.add_argument('--parallel', type=str, default='hpc', help='parallelize using joblib or hpc')
+    parser.add_argument('--hpc', type=str, default='minerva', help='parallelize using joblib or hpc')
     parser.add_argument('--fold', '-F', type=int, default=5, help='number of cross-validation fold')
     parser.add_argument('--rank', type=str2bool, default='False', help='getting attribute importance')
     # parser.add_argument('--create_rank_dir', type=str2bool, default='False', help='getting attribute importance')
@@ -131,7 +130,7 @@ if __name__ == "__main__":
     label_col = p['classAttribute']
     jobs_fn = "temp_train_base_{}_{}.jobs".format(data_source_dir, data_name)
     job_file = open(jobs_fn, 'w')
-    #if not args.parallel == 'hpc': # don't think we need this
+    #if not args.hpc == 'minerva': # don't think we need this
         #job_file.write('module load python\n')
 
     def preprocessing(jf):
@@ -142,7 +141,7 @@ if __name__ == "__main__":
             jf.write('python base_predictors_sk.py --parentDir {} --rootDir {} --currentFold {} --currentBag {} --classifierName {} --attr_imp_bool {}\n'.format(
                 data_path, project_path, fold, bag, classifier, args.rank))
 
-        if not args.parallel == 'hpc':
+        if not args.hpc == 'minerva':
             jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
                 data_path, args.rank, data_path, args.rank))
 
@@ -152,7 +151,7 @@ if __name__ == "__main__":
     job_file.close()
 
     ### submit to hpc if args.hpc == 'hpc'
-    if args.parallel == 'hpc':
+    if args.hpc == 'minerva':
         lsf_fn = 'run_%s_%s.lsf' % (data_source_dir, data_name)
         fn = open(lsf_fn, 'w')
         fn.write(
@@ -168,7 +167,7 @@ if __name__ == "__main__":
         system('bsub < %s' % lsf_fn)
         # system('rm %s' % lsf_fn)
     ### use joblib if args.hpc == 'joblib'
-    if args.parallel == 'joblib':
+    if args.hpc == 'parallel':
         system('nohup sh %s &' % jobs_fn)
         system('rm %s' % jobs_fn)
 
