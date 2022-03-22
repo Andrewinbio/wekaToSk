@@ -27,7 +27,7 @@ def str2bool(v):
 def create_pseudoTestdata(data_dir, feat_folders, original_dir):
     new_feat_folders = []
 
-    os.system('cp {} {}'.format(os.path.join(original_dir, 'classifiers.txt'),
+    os.system('cp {} {}'.format(os.path.join(original_dir, 'classifiers_sk.txt'),
                                 data_dir))
     os.system('cp {} {}'.format(os.path.join(original_dir,'sk.properties'),
                                 data_dir))
@@ -61,7 +61,7 @@ def create_pseudoTestdata(data_dir, feat_folders, original_dir):
         if not exists(new_feat_dir):
             os.mkdir(new_feat_dir)
             feat_df['fold'] = feat_df['fold'].astype(int)
-            os.system('cp {} {}'.format(os.path.join(original_dir, 'classifiers.txt'),
+            os.system('cp {} {}'.format(os.path.join(original_dir, 'classifiers_sk.txt'),
                                         new_feat_dir))
             os.system('cp {} {}'.format(os.path.join(original_dir, 'sk.properties'),
                                         new_feat_dir))
@@ -94,11 +94,12 @@ if __name__ == "__main__":
     p = load_properties_sk(data_path)
     bag_values = range(int(p['bagCount']))
 
-    ### get the list of base classifiers
+    ### get the list of base predictors
+
     classifiers_fn = data_path + '/classifiers_sk.txt'
     assert exists(classifiers_fn)
     classifiers = filter(lambda x: not x.startswith('#'), open(classifiers_fn).readlines())
-    classifiers = [_.strip() for _ in classifiers]
+    classifiers = [abbrev.split() for (abbrev, predictor) in classifiers]
     print('Base Classifiers:', classifiers)
 
     ### get paths of the list of features
