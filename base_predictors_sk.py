@@ -178,7 +178,7 @@ if __name__ == "__main__":
     with open(f"{parentDir}/classifiers_sk.txt") as f:
         for line in f:
             (abbrev, predictor) = line.split('|')
-            predictors[abbrev.strip()] = eval(predictor.strip())
+            predictors[abbrev.strip()] = predictor.strip()
 
     #classifiers = {
     #    "RF": RandomForestClassifier(),
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     #    "KNN": KNeighborsClassifier(),
     #    "XGB": XGBClassifier()
     #}
-    classifier = predictors.get(classifierName)
+    classifier = importlib.import_module(predictors.get(classifierName))
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
@@ -199,7 +199,7 @@ if __name__ == "__main__":
                                                                     reg_bool=regression,
                                                                     pred_class_val=predictClassValue
                                                                     )
-    classifier.fit(X=outer_train_X, y=outer_train_y)
+    classifier().fit(X=outer_train_X, y=outer_train_y)
 
     duration = time() - start
     durationMinutes = duration / (1e3 * 60)
