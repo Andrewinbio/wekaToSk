@@ -277,7 +277,6 @@ if __name__ == "__main__":
                                                       clf_name=classifierName,
                                                       current_bag=currentBag,
                                                       y_col=classAttribute)
-
         print("[{} inner {}] fold: {} bag: {} training size: {} test size: {}\n".format(classifierName,
                                                                                         currentNestedFold,
                                                                                         currentFold,
