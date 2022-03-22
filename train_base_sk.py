@@ -99,7 +99,7 @@ if __name__ == "__main__":
     classifiers_fn = data_path + '/classifiers_sk.txt'
     assert exists(classifiers_fn)
     classifiers = filter(lambda x: not x.startswith('#'), open(classifiers_fn).readlines())
-    classifiers = [abbrev.split() for (abbrev, predictor) in classifiers]
+    classifiers = [abbrev for (abbrev, predictor) in classifiers.split()]
     print('Base Classifiers:', classifiers)
 
     ### get paths of the list of features
