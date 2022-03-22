@@ -278,7 +278,7 @@ if __name__ == "__main__":
                                                                                         inner_test.shape[0]))
 
         start = time()
-        classifier = predictors.get(classifierName)
+        classifier = getattr(predictor_module, predictor_dict['predictor'])()#predictor_dict['parameters'])
         inner_train_X, inner_train_y, inner_train_id = split_df_X_y_idx(inner_train,
                                                                         nonfeat_cols=index_cols,
                                                                         y_col=classAttribute,
