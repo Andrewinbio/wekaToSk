@@ -169,12 +169,10 @@ if __name__ == "__main__":
         # system('rm %s' % lsf_fn)
     ### use joblib if args.hpc == 'joblib'
     if args.parallel == 'joblib':
-        with parallel_backend('threading', n_jobs=int(args.node)):
-            system('sh %s' % jobs_fn)
-            system('rm %s' % jobs_fn)
-        end = time()
+        system('nohup sh %s &' % jobs_fn)
+        system('rm %s' % jobs_fn)
 
-    ### run it sequentially otherwise
+    ### run sequentially otherwise
     else:
         system('sh %s' % jobs_fn)
         system('rm %s' % jobs_fn)
