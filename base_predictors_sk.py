@@ -194,7 +194,7 @@ if __name__ == "__main__":
             #import eval(predictor)
             predictors[abbrev.strip()] = eval(predictor.strip())
 
-    print(predictors)
+    #print(predictors)
 
     #classifiers = {
     #    "RF": RandomForestClassifier(),
