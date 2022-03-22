@@ -166,7 +166,7 @@ if __name__ == "__main__":
         # system('rm %s' % lsf_fn)
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
-        system('parallel -j 16 sh %s' % jobs_fn)
+        system('parallel < %s' % jobs_fn)
         #system('nohup sh %s &' % jobs_fn)
         system('rm %s' % jobs_fn)
 
