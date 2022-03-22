@@ -108,8 +108,10 @@ if __name__ == "__main__":
             if line.startswith('#'):
                 continue
             else:
-                (abbrev, module, predictor) = line.split('|')
-                predictors[abbrev.strip()] = {'module': module.strip(), 'predictor': predictor.strip()}
+                (abbrev, module, predictor, parameters) = line.split('|')
+                predictors[abbrev.strip()] = {'module': module.strip(),
+                                              'predictor': predictor.strip(),
+                                              'parameters': parameters.strip()}
     classifiers = predictors.keys()
     print('Base Classifiers:', list(classifiers))
 
