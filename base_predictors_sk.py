@@ -76,7 +76,6 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
     if not regression_bool and bl_test_bool:
         print("[%s] balancing test samples\n" % classifierName)
         dataf_test = multiidx_dataframe_balance_sampler(dataf_test, y_col)
-    #print(dataf_train, dataf_test)
     return dataf_train, dataf_test
 
 
@@ -99,7 +98,6 @@ if __name__ == "__main__":
 
     # parse options
     parentDir = abspath(args.parentDir)
-    print(parentDir)
     rootDir = abspath(args.rootDir)
     currentFold = int(args.currentFold)
     currentBag = args.currentBag
@@ -113,14 +111,12 @@ if __name__ == "__main__":
     # load data parameters from properties file
     p = configparser.ConfigParser()
     p.read(os.path.join(parentDir, 'sk.properties'))  # formerly weka.properties
-    print(p['sk'])
     p_sk = p['sk']
     workingDir = rootDir
     idAttribute = p_sk.get("idAttribute")
     classAttribute = p_sk.get("classAttribute")
     balanceTraining = common.str2bool(p_sk.get("balanceTraining"))
     balanceTest = common.str2bool(p_sk.get("balanceTest"))
-    print('balanceTest:', balanceTest)
     classLabel = p_sk.get("classLabel")
 
     assert ("foldCount" in p_sk) or ("foldAttribute" in p_sk)
@@ -191,10 +187,7 @@ if __name__ == "__main__":
     with open(f"{parentDir}/classifiers_sk.txt") as f:
         for line in f:
             (abbrev, predictor) = line.split('|')
-            #import eval(predictor)
             predictors[abbrev.strip()] = eval(predictor.strip())
-
-    #print(predictors)
 
     #classifiers = {
     #    "RF": RandomForestClassifier(),
