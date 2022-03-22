@@ -168,6 +168,7 @@ if __name__ == "__main__":
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
         sh_fn = 'run_%s_%s.sh' % (data_source_dir, data_name)
+        print('hello')
         fn = open(sh_fn, 'w+')
         fn.write('#!/bin/bash')
         fn.write('parallel < {}\n'.format(jobs_fn))
