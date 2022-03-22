@@ -23,8 +23,7 @@ bioRxiv. Preprint. 2020.05.29.123497; doi: https://doi.org/10.1101/2020.05.29.12
     xgboost==1.5.0
     numpy==1.20.3
     pandas==1.3.4
-    argparse==1.1
-    scipy==1.3.1
+    scipy==1.7.1
 
 ### High performance computing
 
