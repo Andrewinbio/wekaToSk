@@ -127,7 +127,7 @@ if __name__ == "__main__":
     id_col = p['idAttribute']
     label_col = p['classAttribute']
     jobs_fn = "temp_train_base_{}_{}.jobs".format(data_source_dir, data_name)
-    job_file = open(jobs_fn, 'w+')
+    job_file = open(jobs_fn, 'w')
     #if not args.hpc == 'minerva': # don't think we need this
         #job_file.write('module load python\n')
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
             jf.write('python base_predictors_sk.py --parentDir {} --rootDir {} --currentFold {} --currentBag {} --classifierName {} --attr_imp_bool {}\n'.format(
                 data_path, project_path, fold, bag, classifier, args.rank))
 
-        if not args.hpc == 'minerva':
+        if not args.hpc == 'minerva' or args.hpc == 'parallel':
             jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
                 data_path, args.rank, data_path, args.rank))
 
