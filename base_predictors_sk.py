@@ -190,7 +190,7 @@ if __name__ == "__main__":
     if predictor_dict['parameters'] == '':
         classifier = getattr(predictor_module, predictor_dict['predictor'])()
     else:
-        classifier = getattr(predictor_module, predictor_dict['predictor'])(exec(predictor_dict['parameters']))
+        classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters'])
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
