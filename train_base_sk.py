@@ -105,7 +105,7 @@ if __name__ == "__main__":
                 continue
             else:
                 (abbrev, predictor) = line.split()
-                predictors[abbrev] = eval(predictor)
+                predictors[abbrev] = predictor
 
     classifiers = predictors.keys()
     print('Base Classifiers:', classifiers)
