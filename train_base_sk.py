@@ -127,7 +127,7 @@ if __name__ == "__main__":
     id_col = p['idAttribute']
     label_col = p['classAttribute']
     jobs_fn = "temp_train_base_{}_{}.jobs".format(data_source_dir, data_name)
-    job_file = open(jobs_fn, 'w+')
+    job_file = open(jobs_fn, 'w')
     #if not args.hpc == 'minerva': # don't think we need this
         #job_file.write('module load python\n')
 
@@ -168,15 +168,15 @@ if __name__ == "__main__":
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
         sh_fn = 'run_%s_%s.sh' % (data_source_dir, data_name)
-        fn = open(sh_fn, 'w+')
+        fn = open(sh_fn, 'w')
         fn.write('#!/bin/bash\n')
         fn.write('parallel < {}\n'.format(jobs_fn))
         fn.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
             data_path, args.rank, data_path, args.rank))
         fn.close()
         system('sh %s' % sh_fn)
-        #system('nohup sh %s &' % jobs_fn)
-        #system('rm %s' % sh_fn)
+        system('rm %s' % sh_fn)
+        system('rm %s' % jobs_fn)
 
     ### run sequentially otherwise
     else:
