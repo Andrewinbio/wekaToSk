@@ -107,7 +107,7 @@ if __name__ == "__main__":
                 (abbrev, predictor) = line.split('|')
                 predictors[abbrev.strip()] = predictor.strip()
     classifiers = predictors.keys()
-    print('Base Classifiers:', classifiers)
+    print('Base Classifiers:', list(classifiers))
 
     ### get paths of the list of features
     fns = listdir(data_path)
