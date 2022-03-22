@@ -15,6 +15,7 @@ from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
+from joblib import parallel_backend
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -150,7 +151,7 @@ if __name__ == "__main__":
     job_file = preprocessing(job_file)
     job_file.close()
 
-    ### submit to hpc if args.hpc != False
+    ### submit to hpc if args.hpc == 'hpc'
     if args.parallel == 'hpc':
         lsf_fn = 'run_%s_%s.lsf' % (data_source_dir, data_name)
         fn = open(lsf_fn, 'w')
@@ -166,6 +167,12 @@ if __name__ == "__main__":
         fn.close()
         system('bsub < %s' % lsf_fn)
         # system('rm %s' % lsf_fn)
+    ### use joblib if args.hpc == 'joblib'
+    if args.parallel == 'joblib':
+        with parallel_backend('threading', n_jobs=int(args.node)):
+            system('sh %s' % jobs_fn)
+            system('rm %s' % jobs_fn)
+        end = time()
 
     ### run it sequentially otherwise
     else:
