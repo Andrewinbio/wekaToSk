@@ -140,8 +140,8 @@ if __name__ == "__main__":
                 data_path, project_path, fold, bag, classifier, args.rank))
 
         if not (args.hpc == 'minerva' and args.hpc == 'parallel'):
-            jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
-                data_path, args.rank, data_path, args.rank))
+            #jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
+                #data_path, args.rank, data_path, args.rank))
 
         return jf
 
