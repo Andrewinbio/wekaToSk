@@ -156,7 +156,6 @@ if __name__ == "__main__":
             '#!/bin/bash\n#BSUB -J EI-%s\n#BSUB -P acc_pandeg01a\n#BSUB -q %s\n#BSUB -n %s\n#BSUB -sp 100\n#BSUB -W %s\n#BSUB -o %s.stdout\n#BSUB -eo %s.stderr\n#BSUB -R rusage[mem=20000]\n' % (
             data_name, args.queue, args.node, args.time, data_source_dir, data_source_dir))
         fn.write('module load python\nmodule load selfsched\n')
-
         fn.write('mpirun selfsched < {}\n'.format(jobs_fn))
         # fn.write('rm {}\n'.format(jobs_fn))
         fn.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
