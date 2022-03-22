@@ -101,6 +101,7 @@ if __name__ == "__main__":
     predictors = {}
     with open(predictors_path) as f:
         for line in f:
+            print(line)
             if line.startswith('#'):
                 continue
             else:
