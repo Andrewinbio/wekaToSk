@@ -187,8 +187,10 @@ if __name__ == "__main__":
 
     predictor_dict = predictors.get(classifierName)
     predictor_module = importlib.import_module(predictor_dict['module'])
-    classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters']).remove('')
-    print('This is',classifier)
+    if predictor_dict['parameters'] == '':
+        classifier = getattr(predictor_module, predictor_dict['predictor'])()
+    else:
+        classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters'])
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
@@ -278,7 +280,10 @@ if __name__ == "__main__":
                                                                                         inner_test.shape[0]))
 
         start = time()
-        classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters'])
+        if predictor_dict['parameters'] == '':
+            classifier = getattr(predictor_module, predictor_dict['predictor'])()
+        else:
+            classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters'])
         inner_train_X, inner_train_y, inner_train_id = split_df_X_y_idx(inner_train,
                                                                         nonfeat_cols=index_cols,
                                                                         y_col=classAttribute,

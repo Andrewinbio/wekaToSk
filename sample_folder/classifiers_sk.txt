@@ -1,10 +1,10 @@
 # key | module | predictor | parameters #
-AdaBoost | sklearn.ensemble | AdaBoostClassifier |
-DT | sklearn.tree | DecisionTreeClassifier |
-GradientBoosting | sklearn.ensemble | GradientBoostingClassifier |
-KNN | sklearn.neighbors | KNeighborsClassifier |
-LR | sklearn.linear_model | LogisticRegression |
-NB | sklearn.naive_bayes | GaussianNB |
+AdaBoost | sklearn.ensemble | AdaBoostClassifier | *
+DT | sklearn.tree | DecisionTreeClassifier | *
+GradientBoosting | sklearn.ensemble | GradientBoostingClassifier | *
+KNN | sklearn.neighbors | KNeighborsClassifier | base_estimator=None
+LR | sklearn.linear_model | LogisticRegression | base_estimator=None
+NB | sklearn.naive_bayes | GaussianNB | base_estimator=None
 RF | sklearn.ensemble | RandomForestClassifier |
 SVM | sklearn.svm | SVC | kernel='linear', probability=True
 XGB | xgboost | XGBClassifier | use_label_encoder=False
