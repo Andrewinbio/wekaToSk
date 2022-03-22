@@ -185,6 +185,12 @@ if __name__ == "__main__":
 
     # *******need to build classifier here*******
 
+    predictors = {}
+    with open("predictors.txt") as f:
+        for line in f:
+            (abbrev, predictor) = line.split()
+            [abbrev] = predictor
+
     classifiers = {
         "RF": RandomForestClassifier(),
         "SVM": SVC(kernel='linear', probability=True),
