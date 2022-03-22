@@ -177,21 +177,13 @@ if __name__ == "__main__":
     predictors = {}
     with open(f"{parentDir}/classifiers_sk.txt") as f:
         for line in f:
-            (abbrev, predictor) = line.split('|')
-            predictors[abbrev.strip()] = predictor.strip()
+            (abbrev, module, predictor) = line.split('|')
+            predictors[abbrev.strip()] = {'module': module.strip(), 'predictor': predictor.strip()}
 
-    #classifiers = {
-    #    "RF": RandomForestClassifier(),
-    #    "SVM": SVC(kernel='linear', probability=True),
-    #    "NB": GaussianNB(),
-    #    "LR": LogisticRegression(),
-    #    "AdaBoost": AdaBoostClassifier(),
-    #    "DT": DecisionTreeClassifier(),
-    #    "GradientBoosting": GradientBoostingClassifier(),
-    #    "KNN": KNeighborsClassifier(),
-    #    "XGB": XGBClassifier()
-    #}
-    classifier = importlib.import_module(predictors.get(classifierName))
+    predictor_dict = predictors.get(classifierName)
+    predictor_module = importlib.import_module(predictor_dict[module])
+    classifier = predictor_module.predictor_dict['predictor']
+
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
@@ -199,7 +191,7 @@ if __name__ == "__main__":
                                                                     reg_bool=regression,
                                                                     pred_class_val=predictClassValue
                                                                     )
-    classifier().fit(X=outer_train_X, y=outer_train_y)
+    classifier.fit(X=outer_train_X, y=outer_train_y)
 
     duration = time() - start
     durationMinutes = duration / (1e3 * 60)
