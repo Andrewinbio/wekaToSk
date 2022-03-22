@@ -6,5 +6,5 @@ LR | sklearn.linear_model.LogisticRegression()
 NB | sklearn.naive_bayes.GaussianNB()
 RF | sklearn.ensemble.RandomForestClassifier()
 SVM | sklearn.svm.SVC(kernel='linear', probability=True)
-XGB | xgboost.XGBClassifier()
+XGB | xgboost.XGBClassifier(use_label_encoder=False)
 
