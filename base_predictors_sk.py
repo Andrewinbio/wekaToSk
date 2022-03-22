@@ -192,7 +192,6 @@ if __name__ == "__main__":
     #    "XGB": XGBClassifier()
     #}
     classifier = predictors.get(classifierName)
-    import eval(predictors[classifier])
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
