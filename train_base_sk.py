@@ -77,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--node', '-N', type=str, default='16', help='number of node requested')
     parser.add_argument('--time', '-T', type=str, default='20:00', help='number of hours requested')
     parser.add_argument('--memory', '-M', type=str, default='20000', help='memory requested in MB')
-    parser.add_argument('--hpc', type=str, default='minerva', help='parallelize using minerva or other')
+    parser.add_argument('--hpc', type=str, default='minerva', help='parallelize using minerva or GNU parallel')
     parser.add_argument('--fold', '-F', type=int, default=5, help='number of cross-validation fold')
     parser.add_argument('--rank', type=str2bool, default='False', help='getting attribute importance')
     # parser.add_argument('--create_rank_dir', type=str2bool, default='False', help='getting attribute importance')
@@ -166,7 +166,7 @@ if __name__ == "__main__":
         # system('rm %s' % lsf_fn)
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
-        system('parallel -j %s' % jobs_fn)
+        system('parallel -j sh %s' % jobs_fn)
         #system('nohup sh %s &' % jobs_fn)
         system('rm %s' % jobs_fn)
 
