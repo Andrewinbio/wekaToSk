@@ -5,6 +5,7 @@ import pickle
 import configparser
 import pandas as pd
 import numpy as np
+import sklearn
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.naive_bayes import GaussianNB
