@@ -96,10 +96,18 @@ if __name__ == "__main__":
 
     ### get the list of base predictors
 
-    classifiers_fn = data_path + '/classifiers_sk.txt'
-    assert exists(classifiers_fn)
-    classifiers = filter(lambda x: not x.startswith('#'), open(classifiers_fn).readlines())
-    classifiers = [abbrev for (abbrev, predictor) in classifiers.split()]
+    predictors_path = data_path + '/classifiers_sk.txt'
+    assert exists(predictors_path)
+    predictors = {}
+    with open(predictors_path) as f:
+        for line in f:
+            if line.startswith('#'):
+                continue
+            else:
+                (abbrev, predictor) = line.split()
+                predictors[abbrev] = eval(predictor)
+
+    classifiers = predictors.keys()
     print('Base Classifiers:', classifiers)
 
     ### get paths of the list of features
