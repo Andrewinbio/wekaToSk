@@ -5,8 +5,6 @@ import pickle
 import configparser
 import pandas as pd
 import numpy as np
-import sklearn
-import xgboost
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import StratifiedKFold
 import common
@@ -14,6 +12,10 @@ from sklearn.utils import shuffle, resample
 import os
 from sklearn.inspection import permutation_importance
 import argparse
+import importlib
+
+sklearn = importlib.import_module('sklearn')
+xgboost = importlib.import_module('xgboost')
 
 random_seed = 42
 
@@ -190,6 +192,7 @@ if __name__ == "__main__":
     #    "XGB": XGBClassifier()
     #}
     classifier = predictors.get(classifierName)
+    import eval(predictors[classifier])
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
