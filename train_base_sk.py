@@ -77,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--node', '-N', type=str, default='16', help='number of node requested')
     parser.add_argument('--time', '-T', type=str, default='20:00', help='number of hours requested')
     parser.add_argument('--memory', '-M', type=str, default='20000', help='memory requested in MB')
-    parser.add_argument('--hpc', type=str, default='minerva', help='parallelize either using minerva or nohup')
+    parser.add_argument('--hpc', type=str, default='minerva', help='parallelize either using minerva or GNU parallel')
     parser.add_argument('--fold', '-F', type=int, default=5, help='number of cross-validation fold')
     parser.add_argument('--rank', type=str2bool, default='False', help='getting attribute importance')
     # parser.add_argument('--create_rank_dir', type=str2bool, default='False', help='getting attribute importance')
@@ -158,14 +158,14 @@ if __name__ == "__main__":
             data_name, args.queue, args.node, args.time, data_source_dir, data_source_dir))
         fn.write('module load python\nmodule load selfsched\n')
         fn.write('mpirun selfsched < {}\n'.format(jobs_fn))
-        # fn.write('rm {}\n'.format(jobs_fn))
         fn.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
         data_path, args.rank, data_path, args.rank))
         fn.close()
         system('bsub < %s' % lsf_fn)
         system('rm %s' % lsf_fn)
         system('rm %s' % jobs_fn)
-    ### use joblib if args.hpc == 'joblib'
+
+    ### use GNU parallel if args.hpc == 'parallel'
     if args.hpc == 'parallel':
         sh_fn = 'run_%s_%s.sh' % (data_source_dir, data_name)
         fn = open(sh_fn, 'w')
