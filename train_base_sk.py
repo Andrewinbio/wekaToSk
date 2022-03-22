@@ -130,8 +130,8 @@ if __name__ == "__main__":
     label_col = p['classAttribute']
     jobs_fn = "temp_train_base_{}_{}.jobs".format(data_source_dir, data_name)
     job_file = open(jobs_fn, 'w')
-    if not args.parallel == 'hpc':
-        job_file.write('module load python\n')
+    #if not args.parallel == 'hpc': # don't think we need this
+        #job_file.write('module load python\n')
 
     def preprocessing(jf):
         all_parameters = list(product(feature_folders, classifiers, fold_values, bag_values))
