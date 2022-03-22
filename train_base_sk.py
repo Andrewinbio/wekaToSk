@@ -139,7 +139,7 @@ if __name__ == "__main__":
             jf.write('python base_predictors_sk.py --parentDir {} --rootDir {} --currentFold {} --currentBag {} --classifierName {} --attr_imp_bool {}\n'.format(
                 data_path, project_path, fold, bag, classifier, args.rank))
 
-        if not (args.hpc == 'minerva' and args.hpc == 'parallel'):
+        if (not args.hpc == 'minerva') and (not args.hpc == 'parallel'):
             #jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
                 #data_path, args.rank, data_path, args.rank))
             print(args.hpc)
