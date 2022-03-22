@@ -15,6 +15,8 @@ from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
+sklearn = importlib.import_module('sklearn')
+xgboost = importlib.import_module('xgboost')
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
