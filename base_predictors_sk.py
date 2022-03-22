@@ -189,7 +189,10 @@ if __name__ == "__main__":
     with open(f"{parentDir}/classifiers_sk.txt") as f:
         for line in f:
             (abbrev, predictor) = line.split()
+            import eval(predictor)
             predictors[abbrev] = eval(predictor)
+
+    print(predictors)
 
     #classifiers = {
     #    "RF": RandomForestClassifier(),
