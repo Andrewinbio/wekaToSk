@@ -104,6 +104,7 @@ if __name__ == "__main__":
             if line.startswith('#'):
                 continue
             else:
+                print(line.split())
                 (abbrev, predictor) = line.split()
                 predictors[abbrev] = predictor
 
