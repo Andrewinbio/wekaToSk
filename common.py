@@ -2,24 +2,11 @@ from numpy import argmax, argmin, argsort, corrcoef, mean, nanmax, sqrt, triu_in
 from pandas import DataFrame, concat, read_csv
 from scipy.io.arff import loadarff
 import sklearn.metrics
-import numpy as np
 import os
-from os.path import exists,abspath,isdir,dirname
-from sys import argv
-from os import listdir,environ
+from os.path import isdir
+from os import listdir
 import pandas as pd
 import argparse
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
-from sklearn.naive_bayes import GaussianNB  # Naive Bayes
-from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
-from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor  # Adaboost
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor  # Decision Tree
-from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor  # Logit Boost with parameter(loss='deviance')
-from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor  # KNN
-
-from sklearn.metrics import fbeta_score, make_scorer
-from xgboost import XGBClassifier, XGBRegressor # XGB
-from sklearn.svm import SVC, LinearSVR
 import configparser
 
 
@@ -30,18 +17,6 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
-
-classifiers = {
-					"RF": RandomForestClassifier(),
-					"SVM": SVC(kernel='linear', probability=True),
-					"NB": GaussianNB(),
-					"LR": LogisticRegression(),
-					"AdaBoost": AdaBoostClassifier(),
-					"DT": DecisionTreeClassifier(),
-					"GradientBoosting": GradientBoostingClassifier(),
-					"KNN": KNeighborsClassifier(),
-					"XGB": XGBClassifier()
-				}
 
 def generic_classifier_predict(clf, regression_bool, input_data):
     if hasattr(clf, "predict_proba") and (not regression_bool):
@@ -61,7 +36,7 @@ def argsortbest(x):
 def average_pearson_score(x):
     if isinstance(x, DataFrame):
         x = x.values
-    rho = corrcoef(x, rowvar = 0)
+    rho = corrcoef(x, rowvar=False)
     return mean(abs(rho[triu_indices_from(rho, 1)]))
 
 
@@ -195,7 +170,6 @@ def data_dir_list(data_path, excluding_folder = ['analysis', 'feature_rank']):
     fns = [fn for fn in fns if not fn in excluding_folder]
     fns = [fn for fn in fns if not 'tcca' in fn]
     fns = [fn for fn in fns if not 'pca' in fn]
-    fns = [fn for fn in fns if not 'weka.classifiers' in fn]
     fns = [fn for fn in fns if not 'base-predictor' in fn]
     fns = [data_path + '/' + fn for fn in fns]
     feature_folders = [fn for fn in fns if isdir(fn)]
