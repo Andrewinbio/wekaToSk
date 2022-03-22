@@ -77,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--node', '-N', type=str, default='16', help='number of node requested')
     parser.add_argument('--time', '-T', type=str, default='20:00', help='number of hours requested')
     parser.add_argument('--memory', '-M', type=str, default='20000', help='memory requsted in MB')
-    parser.add_argument('--hpc', type=str2bool, default='true', help='use HPC cluster or not')
+    parser.add_argument('--parallel', type=str2bool, default='hpc', help='parallelize using joblib or hpc')
     parser.add_argument('--fold', '-F', type=int, default=5, help='number of cross-validation fold')
     parser.add_argument('--rank', type=str2bool, default='False', help='getting attribute importance')
     # parser.add_argument('--create_rank_dir', type=str2bool, default='False', help='getting attribute importance')
@@ -121,25 +121,6 @@ if __name__ == "__main__":
                                                            # create_rank_dir=args.create_rank_dir,
                                                            )
 
-
-    # ### get paths of the list of features
-    # fns = listdir(data_path)
-    # excluding_folder = ['analysis', 'feature_rank']
-    # fns = [fn for fn in fns if not fn in excluding_folder]
-    # fns = [fn for fn in fns if not 'tcca' in fn]
-    # fns = [data_path + '/' + fn for fn in fns]
-    # feature_folders = [fn for fn in fns if isdir(fn)]
-
-
-
-
-    # assert len(feature_folders) > 0
-
-    # get fold, id and label attribute
-
-
-
-
     if 'foldAttribute' in p:
         df = read_arff_to_pandas_df(feature_folders[0] + '/data.arff')
         fold_values = list(df[p['foldAttribute']].unique())
@@ -149,7 +130,7 @@ if __name__ == "__main__":
     label_col = p['classAttribute']
     jobs_fn = "temp_train_base_{}_{}.jobs".format(data_source_dir, data_name)
     job_file = open(jobs_fn, 'w')
-    if not args.hpc:
+    if not args.parallel == 'hpc':
         job_file.write('module load python\n')
 
     def preprocessing(jf):
@@ -160,7 +141,7 @@ if __name__ == "__main__":
             jf.write('python base_predictors_sk.py --parentDir {} --rootDir {} --currentFold {} --currentBag {} --classifierName {} --attr_imp_bool {}\n'.format(
                 data_path, project_path, fold, bag, classifier, args.rank))
 
-        if not args.hpc:
+        if not args.parallel == 'hpc':
             jf.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
                 data_path, args.rank, data_path, args.rank))
 
@@ -170,7 +151,7 @@ if __name__ == "__main__":
     job_file.close()
 
     ### submit to hpc if args.hpc != False
-    if args.hpc:
+    if args.parallel == 'hpc':
         lsf_fn = 'run_%s_%s.lsf' % (data_source_dir, data_name)
         fn = open(lsf_fn, 'w')
         fn.write(
@@ -191,5 +172,5 @@ if __name__ == "__main__":
         system('sh %s' % jobs_fn)
         system('rm %s' % jobs_fn)
     end = time()
-    if not args.hpc:
+    if not args.parallel == 'hpc':
         print('Elapsed time is: %s seconds' % (end - start))
