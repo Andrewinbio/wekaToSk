@@ -7,3 +7,4 @@ NB | sklearn.naive_bayes.GaussianNB()
 RF | sklearn.ensemble.RandomForestClassifier()
 SVM | sklearn.svm.SVC(kernel='linear', probability=True)
 XGB | xgboost.XGBClassifier()
+
