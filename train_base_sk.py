@@ -100,8 +100,8 @@ if __name__ == "__main__":
     assert exists(predictors_path)
     predictors = {}
     with open(predictors_path) as f:
+        print('This is f', f)
         for line in f:
-            print(line)
             if line.startswith('#'):
                 continue
             else:
