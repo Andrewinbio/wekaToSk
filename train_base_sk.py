@@ -15,6 +15,7 @@ from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
+import importlib
 sklearn = importlib.import_module('sklearn')
 xgboost = importlib.import_module('xgboost')
 
