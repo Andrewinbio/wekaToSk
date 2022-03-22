@@ -187,7 +187,7 @@ if __name__ == "__main__":
 
     predictor_dict = predictors.get(classifierName)
     predictor_module = importlib.import_module(predictor_dict['module'])
-    classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters'])
+    classifier = getattr(predictor_module, predictor_dict['predictor'])()#predictor_dict['parameters'])
     print('This is',classifier)
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
