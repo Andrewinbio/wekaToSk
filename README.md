@@ -18,11 +18,11 @@ bioRxiv. Preprint. 2020.05.29.123497; doi: https://doi.org/10.1101/2020.05.29.12
 
 ### Install python libraries:
 
-    python==3.7.4
-    scikit-learn==0.22
-    xgboost==1.2.0
-    numpy==1.19.5
-    pandas==0.25.3
+    python==3.9.7
+    scikit-learn==0.24.2
+    xgboost==1.5.0
+    numpy==1.20.3
+    pandas==1.3.4
     argparse==1.1
     scipy==1.3.1
 
@@ -131,7 +131,7 @@ We used 10 standard binary classification algorithms, such as support vector mac
 
 Here are the base classifier included in `classifier.txt`, which are used in `train_base.py`.
 
-| Base Classifier Name | Weka Class Name |
+| Base Classifier Name | sklearn Class Name |
 |-----------------|-----------------|
 | AdaBoost | sklearn.ensemble.AdaBoostClassifier |
 | Decision Tree | sklearn.tree.DecisionTreeClassifier |
