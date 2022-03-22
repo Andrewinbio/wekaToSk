@@ -74,7 +74,7 @@ def balance_or_resample(dataf_train, dataf_test, bag_count,
     if not regression_bool and bl_test_bool:
         print("[%s] balancing test samples\n" % classifierName)
         dataf_test = multiidx_dataframe_balance_sampler(dataf_test, y_col)
-    print(dataf_train, dataf_test)
+    #print(dataf_train, dataf_test)
     return dataf_train, dataf_test
 
 
