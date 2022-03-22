@@ -186,23 +186,23 @@ if __name__ == "__main__":
     # *******need to build classifier here*******
 
     predictors = {}
-    with open("predictors.txt") as f:
+    with open("classifiers_sk.txt") as f:
         for line in f:
             (abbrev, predictor) = line.split()
-            [abbrev] = predictor
+            predictors[abbrev] = eval(predictor)
 
-    classifiers = {
-        "RF": RandomForestClassifier(),
-        "SVM": SVC(kernel='linear', probability=True),
-        "NB": GaussianNB(),
-        "LR": LogisticRegression(),
-        "AdaBoost": AdaBoostClassifier(),
-        "DT": DecisionTreeClassifier(),
-        "GradientBoosting": GradientBoostingClassifier(),
-        "KNN": KNeighborsClassifier(),
-        "XGB": XGBClassifier()
-    }
-    classifier = classifiers.get(classifierName)
+    #classifiers = {
+    #    "RF": RandomForestClassifier(),
+    #    "SVM": SVC(kernel='linear', probability=True),
+    #    "NB": GaussianNB(),
+    #    "LR": LogisticRegression(),
+    #    "AdaBoost": AdaBoostClassifier(),
+    #    "DT": DecisionTreeClassifier(),
+    #    "GradientBoosting": GradientBoostingClassifier(),
+    #    "KNN": KNeighborsClassifier(),
+    #    "XGB": XGBClassifier()
+    #}
+    classifier = predictors.get(classifierName)
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
