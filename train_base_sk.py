@@ -121,25 +121,6 @@ if __name__ == "__main__":
                                                            # create_rank_dir=args.create_rank_dir,
                                                            )
 
-
-    # ### get paths of the list of features
-    # fns = listdir(data_path)
-    # excluding_folder = ['analysis', 'feature_rank']
-    # fns = [fn for fn in fns if not fn in excluding_folder]
-    # fns = [fn for fn in fns if not 'tcca' in fn]
-    # fns = [data_path + '/' + fn for fn in fns]
-    # feature_folders = [fn for fn in fns if isdir(fn)]
-
-
-
-
-    # assert len(feature_folders) > 0
-
-    # get fold, id and label attribute
-
-
-
-
     if 'foldAttribute' in p:
         df = read_arff_to_pandas_df(feature_folders[0] + '/data.arff')
         fold_values = list(df[p['foldAttribute']].unique())
