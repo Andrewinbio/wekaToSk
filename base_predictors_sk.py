@@ -182,9 +182,9 @@ if __name__ == "__main__":
             else:
                 (abbrev, module, predictor) = line.split('|')
                 predictors[abbrev.strip()] = {'module': module.strip(), 'predictor': predictor.strip()}
-                print(predictors)
 
     predictor_dict = predictors.get(classifierName)
+    print(predictor_dict)
     predictor_module = importlib.import_module(predictor_dict[module])
     classifier = predictor_module.predictor_dict['predictor']
 
