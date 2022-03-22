@@ -188,9 +188,9 @@ if __name__ == "__main__":
     predictors = {}
     with open(f"{parentDir}/classifiers_sk.txt") as f:
         for line in f:
-            (abbrev, predictor) = line.split()
+            (abbrev, predictor) = line.split('|')
             #import eval(predictor)
-            predictors[abbrev] = eval(predictor)
+            predictors[abbrev.strip()] = eval(predictor.strip())
 
     print(predictors)
 
