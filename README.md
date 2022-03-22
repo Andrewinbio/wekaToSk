@@ -27,20 +27,20 @@ bioRxiv. Preprint. 2020.05.29.123497; doi: https://doi.org/10.1101/2020.05.29.12
 
 ### High performance computing
 
-EI features HPC options for fast training of base classifiers via parallelisation. By default EI is designed to run on Mount Sinai's HPC (minerva), and no additional packages are needed for this. For general use parallelisation, we provide an alternative implementation using GNU parallel. For this option follow installation instructions at (https://www.gnu.org/software/parallel/).
+EI features HPC options for fast training of base predictors via parallelisation. By default EI is designed to run on Mount Sinai's HPC (minerva), and no additional packages are needed for this. For general use parallelisation, we provide an alternative implementation using GNU parallel. For this option follow installation instructions at (https://www.gnu.org/software/parallel/).
 
 ## Data
 
 Under the data path, 2 files and a list of feature folders are expected: 
 
-1. classifiers.txt
-This file specifies the list of base classifiers. See the sample_data/classifiers.txt as an example.
+1. predictors.txt
+This file specifies the list of base predictors. See the sample_data/predictors.txt as an example.
 
 2. sk.properties
-This file specifies the list of properties that are parsed for training/testing of base classifiers. See the sample_data/sk.properties as an example.
+This file specifies the list of properties that are parsed for training/testing of base predictors. See the sample_data/sk.properties as an example.
 
 3. Folders for feature sets
-This is a list of folders under the main data path. Each of them originally contains only one file named as data.arff. The .arff files are the input feature matrices and labels for training/testing Weka base classifiers. Indices and labels of .arff files should be aligned across all feature sets. 
+This is a list of folders under the main data path. Each of them originally contains only one file named as data.arff. The .arff files are the input feature matrices and labels for training/testing sklearn base predictors. Indices and labels of .arff files should be aligned across all feature sets. 
 
 `sample_folder` of this repository is an example for reference.
 
@@ -60,7 +60,7 @@ Due to IRB constraints, we are currently unable to publicly share the COVID-19 E
 
 ## Run the pipeline
 
-### Train base classifiers
+### Train base predictors
 
 Arguments of train_base.py:
 
