@@ -163,11 +163,19 @@ if __name__ == "__main__":
         data_path, args.rank, data_path, args.rank))
         fn.close()
         system('bsub < %s' % lsf_fn)
-        # system('rm %s' % lsf_fn)
+        system('rm %s' % lsf_fn)
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
+        sh_fn = 'run_%s_%s.sh' % (data_source_dir, data_name)
+        fn = open(lsf_fn, 'w')
+        fn.write('#!/bin/bash')
+        fn.write('parallel < {}\n'.format(jobs_fn))
+        fn.write('python combine_individual_feature_preds.py %s %s\npython combine_feature_predicts.py %s %s\n' % (
+            data_path, args.rank, data_path, args.rank))
+        fn.close()
+        system('sh %s' % sh_fn)
         #system('parallel < %s' % jobs_fn) # not working correctly
-        system('nohup sh %s &' % jobs_fn)
+        #system('nohup sh %s &' % jobs_fn)
         system('rm %s' % jobs_fn)
 
     ### run sequentially otherwise
