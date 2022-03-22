@@ -163,6 +163,7 @@ if __name__ == "__main__":
         fn.close()
         system('bsub < %s' % lsf_fn)
         system('rm %s' % lsf_fn)
+        system('rm %s' % jobs_fn)
     ### use joblib if args.hpc == 'joblib'
     if args.hpc == 'parallel':
         sh_fn = 'run_%s_%s.sh' % (data_source_dir, data_name)
@@ -175,7 +176,7 @@ if __name__ == "__main__":
         system('sh %s' % sh_fn)
         #system('parallel < %s' % jobs_fn) # not working correctly
         #system('nohup sh %s &' % jobs_fn)
-        system('rm %s' % jobs_fn)
+        system('rm %s' % sh_fn)
 
     ### run sequentially otherwise
     else:
