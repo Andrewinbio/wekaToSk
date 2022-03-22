@@ -186,7 +186,8 @@ if __name__ == "__main__":
     # *******need to build classifier here*******
 
     predictors = {}
-    with open("classifiers_sk.txt") as f:
+    print('This is', rootDir)
+    with open(f"{rootDir}/classifiers_sk.txt") as f:
         for line in f:
             (abbrev, predictor) = line.split()
             predictors[abbrev] = eval(predictor)
