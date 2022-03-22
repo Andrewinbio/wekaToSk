@@ -6,6 +6,7 @@ import configparser
 import pandas as pd
 import numpy as np
 import sklearn
+import xgboost
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.naive_bayes import GaussianNB
