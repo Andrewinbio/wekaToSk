@@ -1,7 +1,7 @@
 '''
 	Scripts to train base classifiers in a nested cross-validation structure.
 	See README.md for detailed information.
-	@author: Yan-Chak Li, Linhua Wang
+	@author: Yan-Chak Li, Jamie Bennett, Linhua Wang
 '''
 from os.path import isdir
 from os import listdir
@@ -93,8 +93,6 @@ if __name__ == "__main__":
     ### get scikit-learn properties from sk.properties
     p = load_properties_sk(data_path)
     bag_values = range(int(p['bagCount']))
-
-
 
     ### get the list of base classifiers
     classifiers_fn = data_path + '/classifiers_sk.txt'

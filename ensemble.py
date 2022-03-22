@@ -2,7 +2,7 @@
 	Scripts to ensemble classifiers in a nested cross-validation structure by \\
 	mean, CES, and stacking by numerous classification algorithms in sklearn/xgboost library
 	See README.md for detailed information.
-	@author: Yan-Chak Li, Linhua Wang
+	@author: Yan-Chak Li, Jamie Bennett, Linhua Wang
 '''
 import common
 import pandas as pd
