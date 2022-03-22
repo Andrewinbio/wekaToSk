@@ -181,7 +181,7 @@ if __name__ == "__main__":
     ### run sequentially otherwise
     else:
         system('sh %s' % jobs_fn)
-        system('rm %s' % jobs_fn)
+        #system('rm %s' % jobs_fn)
     end = time()
     if not args.hpc == 'minerva':
         print('Elapsed time is: %s seconds' % (end - start))
