@@ -170,7 +170,7 @@ if __name__ == "__main__":
     start = time()
 
     # import classifier
-    predictors_path = parentDir + '/define_base_predictors'
+    predictors_path = parentDir + '/define_base_predictors.py'
     assert exists(predictors_path)
     bp_spec = spec_from_file_location('predictors', predictors_path)
     bp_module = module_from_spec(bp_spec)
