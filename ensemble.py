@@ -464,7 +464,6 @@ if __name__ == "__main__":
     if len(feature_folders) == 0:
         feature_folders = common.data_dir_list(os.path.join(data_path, '../'))
     # assert len(feature_folders) > 0
-    ### get basic properties from weka.properties
     p = load_properties_sk(data_path)
     assert ('foldAttribute' in p) or ('foldCount' in p)
     if 'foldAttribute' in p:
