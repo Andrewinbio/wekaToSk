@@ -99,8 +99,7 @@ if __name__ == "__main__":
 
     predictors_path = data_path + '/define_base_predictors.py'
     assert exists(predictors_path)
-    predictor_module_string = data_path+'.define_base_predictors'
-    base_predictors_module = importlib.import_module(predictor_module_string)
+    base_predictors_module = importlib.import_module(f'{data_path}.define_base_predictors')
     predictors = base_predictors_module.predictors
     classifiers = predictors.keys()
     print('Base Classifiers:', list(classifiers))
