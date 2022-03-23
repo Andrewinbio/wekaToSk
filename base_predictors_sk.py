@@ -170,7 +170,8 @@ if __name__ == "__main__":
     start = time()
 
     # import classifier
-    base_predictors_module = importlib.import_module(f"{parentDir}.define_base_predictors")
+    predictors_path = parentDir + '/define_base_predictors'
+    base_predictors_module = importlib.import_module(predictors_path.replace('/', '.'))
     predictors = base_predictors_module.predictors
     classifier = predictors[classifierName]
 
