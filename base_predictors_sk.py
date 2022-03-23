@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     # load data parameters from properties file
     p = configparser.ConfigParser()
-    p.read(os.path.join(parentDir, 'sk.properties'))  # formerly weka.properties
+    p.read(os.path.join(parentDir, 'sk.properties'))
     p_sk = p['sk']
     workingDir = rootDir
     idAttribute = p_sk.get("idAttribute")

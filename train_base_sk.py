@@ -28,7 +28,7 @@ def str2bool(v):
 def create_pseudoTestdata(data_dir, feat_folders, original_dir):
     new_feat_folders = []
 
-    os.system('cp {} {}'.format(os.path.join(original_dir, 'classifiers_sk.txt'),
+    os.system('cp {} {}'.format(os.path.join(original_dir, 'define_base_predictors.py'),
                                 data_dir))
     os.system('cp {} {}'.format(os.path.join(original_dir,'sk.properties'),
                                 data_dir))
@@ -62,7 +62,7 @@ def create_pseudoTestdata(data_dir, feat_folders, original_dir):
         if not exists(new_feat_dir):
             os.mkdir(new_feat_dir)
             feat_df['fold'] = feat_df['fold'].astype(int)
-            os.system('cp {} {}'.format(os.path.join(original_dir, 'classifiers_sk.txt'),
+            os.system('cp {} {}'.format(os.path.join(original_dir, 'define_base_predictors.py'),
                                         new_feat_dir))
             os.system('cp {} {}'.format(os.path.join(original_dir, 'sk.properties'),
                                         new_feat_dir))
@@ -97,9 +97,9 @@ if __name__ == "__main__":
 
     ### get the list of base predictors
 
-    predictors_path = data_path + '/classifiers_sk.txt'
+    predictors_path = data_path + '/define_base_predictors.py'
     assert exists(predictors_path)
-    base_predictors_module = importlib.import_module(f"{parentDir}.define_base_predictors")
+    base_predictors_module = importlib.import_module(f"{data_path}.define_base_predictors")
     predictors = base_predictors_module.predictors
     classifiers = predictors.keys()
     print('Base Classifiers:', list(classifiers))
