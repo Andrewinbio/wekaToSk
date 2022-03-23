@@ -172,7 +172,7 @@ def check_dir_n_mkdir(path):
         os.mkdir(path)
 
 
-def data_dir_list(data_path, excluding_folder=['analysis', 'feature_rank']):
+def data_dir_list(data_path, excluding_folder=['analysis', 'feature_rank', '__pycache__']):
     fns = listdir(data_path)
     fns = [fn for fn in fns if not fn in excluding_folder]
     fns = [fn for fn in fns if not 'tcca' in fn]
