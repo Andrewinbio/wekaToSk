@@ -172,6 +172,7 @@ if __name__ == "__main__":
     # import classifier
     predictors_path = parentDir + '/define_base_predictors'
     base_predictors_module = spec_from_file_location('predictors', predictors_path)
+    print(base_predictors_module)
     predictors = base_predictors_module.predictors
     classifier = predictors[classifierName]
 
