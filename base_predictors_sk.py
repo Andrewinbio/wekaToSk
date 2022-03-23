@@ -12,7 +12,7 @@ from sklearn.utils import shuffle, resample
 import os
 from sklearn.inspection import permutation_importance
 import argparse
-from importlib.util import spec_from_file_location
+from importlib.util import spec_from_file_location, module_from_spec
 
 random_seed = 42
 
@@ -171,8 +171,10 @@ if __name__ == "__main__":
 
     # import classifier
     predictors_path = parentDir + '/define_base_predictors'
-    base_predictors_module = spec_from_file_location('predictors', predictors_path)
-    predictors = base_predictors_module.predictors
+    bp_spec = spec_from_file_location('predictors', predictors_path)
+    bp_module = module_from_spec(bp_spec)
+    bp_spec.loader.exec_module(bp_module)
+    predictors = bp_module.predictors
     classifier = predictors[classifierName]
 
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,

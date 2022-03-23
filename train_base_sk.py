@@ -15,7 +15,7 @@ from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
-from importlib.util import spec_from_file_location
+from importlib.util import spec_from_file_location, module_from_spec
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -99,9 +99,10 @@ if __name__ == "__main__":
 
     predictors_path = data_path + '/define_base_predictors.py'
     assert exists(predictors_path)
-    base_predictors_module = spec_from_file_location('predictors', predictors_path)
-    print('This is', base_predictors_module)
-    predictors = base_predictors_module.predictors
+    bp_spec = spec_from_file_location('predictors', predictors_path)
+    bp_module = module_from_spec(bp_spec)
+    bp_spec.loader.exec_module(bp_module)
+    predictors = bp_module.predictors
     classifiers = predictors.keys()
     print('Base Classifiers:', list(classifiers))
 
