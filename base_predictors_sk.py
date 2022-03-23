@@ -171,7 +171,7 @@ if __name__ == "__main__":
 
     # import classifier
     predictors_path = parentDir + '/define_base_predictors'
-    base_predictors_module = importlib.import_module(predictors_path.replace('/', '.'))
+    base_predictors_module = importlib.import_module(predictors_path.replace('/', '.')[1:])
     predictors = base_predictors_module.predictors
     classifier = predictors[classifierName]
 
