@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     ### get paths of the list of features
     fns = listdir(data_path)
-    excluding_folder = ['analysis', 'feature_rank']
+    excluding_folder = ['analysis', 'feature_rank', '__pycache__']
     fns = [fn for fn in fns if not fn in excluding_folder]
     fns = [fn for fn in fns if not 'tcca' in fn]
     fns = [data_path + '/' + fn for fn in fns]
