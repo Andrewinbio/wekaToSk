@@ -14,9 +14,6 @@ from sklearn.inspection import permutation_importance
 import argparse
 import importlib
 
-sklearn = importlib.import_module('sklearn')
-xgboost = importlib.import_module('xgboost')
-
 random_seed = 42
 
 def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count, y_col):
@@ -173,7 +170,8 @@ if __name__ == "__main__":
     start = time()
 
     # import classifier
-    base_predictors_module = importlib.import_module(f"{parentDir}.define_base_predictors")
+    predictor_module_string = parentDir + '.define_base_predictors'
+    base_predictors_module = importlib.import_module(predictor_module_string)
     predictors = base_predictors_module.predictors
     classifier = predictors[classifierName]
 
