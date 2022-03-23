@@ -174,23 +174,10 @@ if __name__ == "__main__":
 
     # *******need to build classifier here*******
 
-    predictors = {}
-    with open(f"{parentDir}/classifiers_sk.txt") as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            else:
-                (abbrev, module, predictor, parameters) = line.split('|')
-                predictors[abbrev.strip()] = {'module': module.strip(),
-                                              'predictor': predictor.strip(),
-                                              'parameters': parameters.strip()}
+    base_predictors_module = importlib.import_module(f"{parentDir}.define_base_predictors")
+    predictors = base_predictors_module.predictors
+    classifier = predictors[classifierName]
 
-    predictor_dict = predictors.get(classifierName)
-    predictor_module = importlib.import_module(predictor_dict['module'])
-    if predictor_dict['parameters'] == '':
-        classifier = getattr(predictor_module, predictor_dict['predictor'])()
-    else:
-        classifier = getattr(predictor_module, predictor_dict['predictor'])(predictor_dict['parameters'])
     outer_train_X, outer_train_y, outer_train_id = split_df_X_y_idx(outer_train,
                                                                     nonfeat_cols=index_cols,
                                                                     y_col=classAttribute,
@@ -280,10 +267,7 @@ if __name__ == "__main__":
                                                                                         inner_test.shape[0]))
 
         start = time()
-        if predictor_dict['parameters'] == '':
-            classifier = getattr(predictor_module, predictor_dict['predictor'])()
-        else:
-            classifier = getattr(predictor_module, predictor_dict['predictor'])(exec(predictor_dict['parameters']))
+        classifier = predictors[classifierName]
         inner_train_X, inner_train_y, inner_train_id = split_df_X_y_idx(inner_train,
                                                                         nonfeat_cols=index_cols,
                                                                         y_col=classAttribute,
