@@ -1,3 +1,4 @@
+from sklearn.ensemble import AdaBoostClassifier
 # key | module | predictor | parameters #
 AdaBoost | sklearn.ensemble | AdaBoostClassifier | *
 DT | sklearn.tree | DecisionTreeClassifier | *
