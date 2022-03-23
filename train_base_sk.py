@@ -15,9 +15,7 @@ from common import load_properties, read_arff_to_pandas_df, load_properties_sk
 from time import time
 import generate_data
 import numpy as np
-#import importlib
-#sklearn = importlib.import_module('sklearn')
-#xgboost = importlib.import_module('xgboost')
+import importlib
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -101,17 +99,8 @@ if __name__ == "__main__":
 
     predictors_path = data_path + '/classifiers_sk.txt'
     assert exists(predictors_path)
-    predictors = {}
-    predictors = {}
-    with open(predictors_path) as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            else:
-                (abbrev, module, predictor, parameters) = line.split('|')
-                predictors[abbrev.strip()] = {'module': module.strip(),
-                                              'predictor': predictor.strip(),
-                                              'parameters': parameters.strip()}
+    base_predictors_module = importlib.import_module(f"{parentDir}.define_base_predictors")
+    predictors = base_predictors_module.predictors
     classifiers = predictors.keys()
     print('Base Classifiers:', list(classifiers))
 

@@ -172,8 +172,7 @@ if __name__ == "__main__":
         outer_test.shape[0]))
     start = time()
 
-    # *******need to build classifier here*******
-
+    # import classifier
     base_predictors_module = importlib.import_module(f"{parentDir}.define_base_predictors")
     predictors = base_predictors_module.predictors
     classifier = predictors[classifierName]
