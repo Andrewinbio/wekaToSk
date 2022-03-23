@@ -171,6 +171,7 @@ if __name__ == "__main__":
 
     # import classifier
     predictors_path = parentDir + '/define_base_predictors'
+    assert exists(predictors_path)
     bp_spec = spec_from_file_location('predictors', predictors_path)
     bp_module = module_from_spec(bp_spec)
     bp_spec.loader.exec_module(bp_module)
