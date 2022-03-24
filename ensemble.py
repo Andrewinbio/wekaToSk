@@ -39,7 +39,8 @@ import sys
 
 sys.path.insert(1, '../cf-sandbox/')
 
-#import utils_stacking as ustk
+
+# import utils_stacking as ustk
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -363,8 +364,8 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "DT.S": DecisionTreeClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier()#,
-        #"CF.S": ustk.CFStacker()
+        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error'), #
+        # "CF.S": ustk.CFStacker()
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']

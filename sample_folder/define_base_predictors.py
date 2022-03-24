@@ -15,4 +15,4 @@ predictors = {'AdaBoost': AdaBoostClassifier(),
               'NB': GaussianNB(),
               'RF': RandomForestClassifier(),
               'SVM': SVC(kernel='linear', probability=True),
-              'XGB': XGBClassifier(use_label_encoder=False)}
+              'XGB': XGBClassifier(use_label_encoder=False, eval_metric='error')}
