@@ -176,7 +176,6 @@ def CES_classifier(path, fold_count=range(5), agg=1, rank=False):
     predictions_df = pd.concat(predictions_dfs)
     predictions_df['method'] = method
     predictions_df['metric'] = 'fmax'
-    print(predictions_df)
     predictions_df.to_csv('%s/analysis/selection-%s-%s.csv' % (path, method, 'fmax'), index=False)
 
     auc = sklearn.metrics.roc_auc_score(predictions_df.label, predictions_df.prediction)

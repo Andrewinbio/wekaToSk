@@ -45,7 +45,6 @@ if __name__ == "__main__":
 
     imp_base_features['bag'] = '0'
     imp_base_features[bp_name_col_bfdf] = imp_base_features[['modality', 'classifier', 'bag']].agg('.'.join, axis=1)
-    # print(imp_base_features)
 
     multiplied_rank_col = 'product_rank'
     # Sort the base predictors rank by descending order (Higher values = top feature)
@@ -64,7 +63,6 @@ if __name__ == "__main__":
                                                                                                       ascending=False)
         bf_ranks = imp_base_features.loc[bf_df_matched_bool, 'bf_descending_rank']
 
-        # print(bf_ranks*bp_rank)
         imp_base_features.loc[bf_df_matched_bool, multiplied_rank_col] = bf_ranks * bp_rank
 
     imp_base_predictors.to_csv(os.path.join(analysis_path, 'LMR_sorted.csv'))
