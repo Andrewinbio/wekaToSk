@@ -14,7 +14,6 @@ from pandas import concat, read_csv
 
 def merged_base_innerCV_by_outerfold(f_list, path):
     dirnames = sorted(filter(isdir, glob('%s/base-predictor-*' % path)))
-    print(dirnames)
     for fold in f_list:
         dirname_dfs = []
         for dirname in dirnames:
@@ -26,7 +25,6 @@ def merged_base_innerCV_by_outerfold(f_list, path):
                     filename = '%s/validation-%s-%02i-%02i.csv.gz' % (dirname, fold, nested_fold, bag)
                     try:
                         df = read_csv(filename, index_col=[0, 1], compression='gzip', engine='python')
-                        # print(df)
                         df = df[['prediction']]
                         df.rename(columns={'prediction': '%s.%s' % (classifier, bag)}, inplace=True)
                         bag_dfs.append(df)
