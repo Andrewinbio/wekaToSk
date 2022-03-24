@@ -44,7 +44,6 @@ def merged_base_innerCV_by_outerfold(f_list, path):
             attribute_imp_dfs = []
             for bag in range(bag_count):
                 if attr_imp_bool.lower() == 'true':
-                    # print('running attribute imp1')
                     attribute_imp_filename = '%s/attribute_imp-%s-%02i.csv.gz' % (dirname, fold, bag)
                 filename = '%s/predictions-%s-%02i.csv.gz' % (dirname, fold, bag)
 
@@ -74,7 +73,6 @@ def combine_individual(path):
 
 data_folder = abspath(argv[1])
 attr_imp_bool = argv[2]
-print(attr_imp_bool)
 feature_folders = data_dir_list(data_folder)
 # data_name = data_folder.split('/')[-1]
 # fns = listdir(data_folder)
