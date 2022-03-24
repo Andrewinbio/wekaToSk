@@ -185,7 +185,7 @@ def CES_classifier(path, fold_count=range(5), agg=1, rank=False):
 
     predictions_only_df = predictions_df.loc[:, ['prediction']]
     predictions_only_df.rename(columns={'prediction': 'CES'}, inplace=True)
-    print(predictions_only_df)
+    #print(predictions_only_df)
     if rank:
         frequency_bp_selected = best_ensembles[0].value_counts()
         local_model_weight_df = pd.DataFrame(data=np.zeros((1, len(train_df.columns))), columns=train_df.columns,
@@ -246,7 +246,7 @@ def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=Fa
     # print()
     pred_out_df = predictions.to_frame()
     pred_out_df.columns = ['Mean']
-    print(pred_out_df)
+    #print(pred_out_df)
     if rank:
         local_model_weight_df = pd.DataFrame(data=np.ones((1, len(train_df.columns))),
                                              columns=train_df.columns,
@@ -280,9 +280,9 @@ def bestbase_classifier(path, fold_count=range(5), agg=1, rank=False):
     best_fmax = max(fmax_list)
     best_auc = sklearn.metrics.roc_auc_score(labels, best_bp_predictions)
     best_auprc = common.auprc(labels, best_bp_predictions)
-    print('best_bp')
+    #print('best_bp')
     best_bp_predictions.columns = ['best base']
-    print(best_bp_predictions)
+    #print(best_bp_predictions)
 
     return {'f-measure': best_fmax, 'auc': best_auc,
             'auprc': best_auprc, 'predictions': best_bp_predictions}
@@ -386,11 +386,11 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
             predictions_dfs = [s['testing_df'] for s in stacking_output]
             if rank:
                 training_dfs = stacking_output[0]['train_dfs'][0]
-                print(training_dfs)
+                #print(training_dfs)
                 training_labels = pd.DataFrame({'label': stacking_output[0]['train_dfs'][1]})
-                print(training_labels)
+                #print(training_labels)
                 stacker.fit(training_dfs.values, training_labels.values)
-                print(stacker.predict_proba(training_dfs.values))
+                #print(stacker.predict_proba(training_dfs.values))
                 n_repeats = 100
                 stacker_pi = permutation_importance(estimator=stacker,
                                                     X=training_dfs.values,
