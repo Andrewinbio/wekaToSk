@@ -21,6 +21,7 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor  # Decisi
 from sklearn.ensemble import GradientBoostingClassifier, \
     GradientBoostingRegressor  # Logit Boost with parameter(loss='deviance')
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor  # KNN
+from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import fbeta_score, make_scorer
 from xgboost import XGBClassifier, XGBRegressor  # XGB
@@ -38,7 +39,6 @@ from sklearn.inspection import permutation_importance
 import sys
 
 sys.path.insert(1, '../cf-sandbox/')
-
 
 # import utils_stacking as ustk
 
@@ -362,6 +362,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "LR.S": LogisticRegression(),
         "AdaBoost.S": AdaBoostClassifier(),
         "DT.S": DecisionTreeClassifier(),
+        "MLP": MLPClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
         "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error'), #
