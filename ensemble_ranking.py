@@ -91,5 +91,5 @@ if __name__ == "__main__":
     base_feature_rank_df['final_rank'] = base_feature_rank_df['rank_product_score'].rank(ascending=True)
     base_feature_rank_df.sort_values(by=['final_rank'], inplace=True)
     print('The top 10 features of EI model({}):'.format(ensemble))
-    print(base_feature_rank_df.head(10))
+    #print(base_feature_rank_df.head(10))
     base_feature_rank_df.to_csv(os.path.join(analysis_path, 'ensemble_feature_rank.csv'))
