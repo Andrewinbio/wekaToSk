@@ -2,7 +2,7 @@
 	Scripts to ensemble classifiers in a nested cross-validation structure by \\
 	mean, CES, and stacking by numerous classification algorithms in sklearn/xgboost library
 	See README.md for detailed information.
-	@author: Yan-Chak Li, Jamie Bennett, Linhua Wang
+	@author: Yan-Chak Li, Andrew DePass, Jamie Bennett, Linhua Wang
 '''
 import common
 import pandas as pd
@@ -38,9 +38,9 @@ import seaborn as sns
 from sklearn.inspection import permutation_importance
 import sys
 
-sys.path.insert(1, '../cf-sandbox/')
+sys.path.insert(1, '../cf/')
 
-# import utils_stacking as ustk
+from cf import cf_stacker
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
