@@ -318,7 +318,7 @@ if __name__ == "__main__":
         attribute_importance = dict(permutation_importance(estimator=classifierName,
                                                            X=outer_train.values,
                                                            y=outer_train_y,
-                                                           njobs=-1))
+                                                           n_jobs=-1))
         outputPrefix = "attribute_imp-%s-%02d" % (currentFold, currentBag)
         importances = attribute_importance.pop("importances")
         attribute_importances_df = pd.DataFrame.from_dict(attribute_importance)
