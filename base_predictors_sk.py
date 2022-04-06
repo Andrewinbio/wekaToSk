@@ -316,7 +316,7 @@ if __name__ == "__main__":
                                                                       y_col=classAttribute
                                                                       )
         attribute_importance = dict(permutation_importance(estimator=classifier,
-                                                           X=outer_train.values,
+                                                           X=outer_train_X,
                                                            y=outer_train_y,
                                                            n_jobs=-1))
         outputPrefix = "attribute_imp-%s-%02d" % (currentFold, currentBag)
