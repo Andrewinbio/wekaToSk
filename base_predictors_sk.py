@@ -315,7 +315,7 @@ if __name__ == "__main__":
                                                                       fold_count=foldCount,
                                                                       y_col=classAttribute
                                                                       )
-        attribute_importance = dict(permutation_importance(estimator=classifierName,
+        attribute_importance = dict(permutation_importance(estimator=classifier,
                                                            X=outer_train.values,
                                                            y=outer_train_y,
                                                            n_jobs=-1))
