@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import argparse
@@ -39,14 +40,11 @@ if __name__ == "__main__":
     imp_base_predictors = imp_base_predictors.iloc[1:]
     imp_base_predictors['bp_name'] = imp_base_predictors.index
 
-
-    imp_base_features = pd.read_csv(bfpath, compression = 'gzip')
+    imp_base_features = pd.read_csv(bfpath, compression='gzip')
     imp_base_features = imp_base_features.loc[imp_base_features['fold'] == 1]
 
-
     imp_base_features['bag'] = '0'
-    imp_base_features[bp_name_col_bfdf] = imp_base_features[['modality','classifier','bag']].agg('.'.join, axis=1)
-    # print(imp_base_features)
+    imp_base_features[bp_name_col_bfdf] = imp_base_features[['modality', 'classifier', 'bag']].agg('.'.join, axis=1)
 
     multiplied_rank_col = 'product_rank'
     # Sort the base predictors rank by descending order (Higher values = top feature)
@@ -57,18 +55,18 @@ if __name__ == "__main__":
         bp_name = bp[bp_name_col_bpdf]
         bp_rank = bp['bp_descending_rank']
         bf_df_matched_bool = imp_base_features[bp_name_col_bfdf] == bp_name
-        bf_in_bp = imp_base_features.loc[bf_df_matched_bool,:]
+        bf_in_bp = imp_base_features.loc[bf_df_matched_bool, :]
 
         # Sort the base features from each base predictors by descending order (Higher values = top feature)
 
-        imp_base_features.loc[bf_df_matched_bool, 'bf_descending_rank'] = bf_in_bp[bfdf_imp_col].rank(pct=True, ascending=False)
+        imp_base_features.loc[bf_df_matched_bool, 'bf_descending_rank'] = bf_in_bp[bfdf_imp_col].rank(pct=True,
+                                                                                                      ascending=False)
         bf_ranks = imp_base_features.loc[bf_df_matched_bool, 'bf_descending_rank']
 
-        # print(bf_ranks*bp_rank)
-        imp_base_features.loc[bf_df_matched_bool, multiplied_rank_col] = bf_ranks*bp_rank
+        imp_base_features.loc[bf_df_matched_bool, multiplied_rank_col] = bf_ranks * bp_rank
 
-    imp_base_predictors.to_csv(os.path.join(analysis_path,'LMR_sorted.csv'))
-    imp_base_features.to_csv(os.path.join(analysis_path,'LFR_sorted.csv'))
+    imp_base_predictors.to_csv(os.path.join(analysis_path, 'LMR_sorted.csv'))
+    imp_base_features.to_csv(os.path.join(analysis_path, 'LFR_sorted.csv'))
 
     base_features_list = imp_base_features[bfdf_feature_col].unique().tolist()
     base_feature_rank_agg = {}
@@ -93,11 +91,5 @@ if __name__ == "__main__":
     base_feature_rank_df['final_rank'] = base_feature_rank_df['rank_product_score'].rank(ascending=True)
     base_feature_rank_df.sort_values(by=['final_rank'], inplace=True)
     print('The top 10 features of EI model({}):'.format(ensemble))
-    print(base_feature_rank_df.head(10))
-    base_feature_rank_df.to_csv(os.path.join(analysis_path,'ensemble_feature_rank.csv'))
-
-
-
-
-
-
+    #print(base_feature_rank_df.head(10))
+    base_feature_rank_df.to_csv(os.path.join(analysis_path, 'ensemble_feature_rank.csv'))
