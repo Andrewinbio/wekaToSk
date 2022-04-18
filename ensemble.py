@@ -356,6 +356,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
+        "CF.S": cf_stacker(),
         "RF.S": RandomForestClassifier(),
         "SVM.S": SVC(kernel='linear', probability=True),
         "NB.S": GaussianNB(),
@@ -365,8 +366,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "MLP": MLPClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error'),
-        "CF.S": cf_stacker()
+        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
