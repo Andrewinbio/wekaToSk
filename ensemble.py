@@ -353,7 +353,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S": cf_stacker(base_estimator=SVR(C=1, epsilon=0.1),
+        "CF.S1": cf_stacker(base_estimator=SVR(C=1, epsilon=0.1),
                            latent_dimension=5,
                            threshold=0.75,
                            alpha_nmf=0.05,
@@ -361,7 +361,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            use_probs=False,
                            nmf=True,
                            return_probs=True),
-        "CF.S": cf_stacker(base_estimator=LinearRegression(),
+        "CF.S2": cf_stacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=0.75,
                            alpha_nmf=0.05,
@@ -369,7 +369,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            use_probs=False,
                            nmf=True,
                            return_probs=True),
-        "CF.S": cf_stacker(base_estimator=LinearRegression(),
+        "CF.S3": cf_stacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=0.75,
                            alpha_nmf=0.05,
@@ -397,7 +397,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
             print('[%s] Start building model ################################' % (stacker_name))
             stacking_output = []
             for fold in f_list:
-                if stacker_name == "CF.S": # fix this issue is classifier
+                if stacker_name[-1] == "CF.S": # fix this issue is classifier
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df, regression=True)
                 else:
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
