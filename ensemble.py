@@ -38,7 +38,9 @@ import seaborn as sns
 from sklearn.inspection import permutation_importance
 import sys
 
-#from cf import cf_stacker
+sys.path.insert(1, '../cf-stacker/')
+
+from cf_stacker import
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
