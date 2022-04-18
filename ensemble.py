@@ -366,7 +366,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            threshold=0.5,
                            alpha_nmf=1,
                            max_iter_nmf=500,
-                           use_probs=True,
+                           use_probs=False,
                            nmf=True,
                            return_probs=True),
         "CF.S3": cf_stacker(base_estimator=LinearRegression(),
