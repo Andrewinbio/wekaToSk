@@ -40,7 +40,7 @@ import sys
 
 sys.path.insert(1, '../cf-stacker/')
 
-from cf_stacker import
+from cf_stacker import cf_stacker
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
