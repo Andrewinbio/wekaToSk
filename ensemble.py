@@ -299,6 +299,7 @@ def stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df,
     else:
         test_predictions = stacker.predict(test_df)
         train_predictions = stacker.predict(train_df)
+        print(test_predictions.shape)
         if regression is False:
             test_predictions = test_predictions[:, 1]
             train_predictions = train_predictions[:, 1]
