@@ -25,7 +25,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import fbeta_score, make_scorer
 from xgboost import XGBClassifier, XGBRegressor  # XGB
-from sklearn.svm import SVC, LinearSVR
+from sklearn.svm import SVC, LinearSVR, SVR
 
 import sklearn
 import warnings
@@ -356,7 +356,8 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S": cf_stacker(),
+        "CF.S": cf_stacker(base_estimator=SVR(C=1, epsilon=0.1, max_iter=200),
+                           latent_dimension=5),
         "RF.S": RandomForestClassifier(),
         "SVM.S": SVC(kernel='linear', probability=True),
         "NB.S": GaussianNB(),
