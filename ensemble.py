@@ -365,8 +365,8 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "MLP": MLPClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error'), #
-        # "CF.S": ustk.CFStacker()
+        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error'),
+        "CF.S": cf_stacker()
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
