@@ -38,8 +38,6 @@ import seaborn as sns
 from sklearn.inspection import permutation_importance
 import sys
 
-sys.path.insert(1, '../cf/')
-
 #from cf import cf_stacker
 
 def str2bool(v):
