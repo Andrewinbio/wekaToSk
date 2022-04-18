@@ -377,7 +377,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
             print('[%s] Start building model ################################' % (stacker_name))
             stacking_output = []
             for fold in f_list:
-                if stacker_name == "CF.S":
+                if stacker_name == "CF.S": # fix this issue is classifier
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df, regression=True)
                 else:
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
