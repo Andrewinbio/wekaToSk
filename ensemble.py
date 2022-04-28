@@ -367,7 +367,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            alpha_nmf=1,
                            max_iter_nmf=500,
                            use_probs=False,
-                           nmf=False,
+                           nmf=True,
                            return_probs=True),
         "CF.S3": cf_stacker(base_estimator=SVR(),#C=1, epsilon=0.1, max_iter=200),
                            latent_dimension=5,
