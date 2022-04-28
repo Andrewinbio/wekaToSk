@@ -377,16 +377,16 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            use_probs=False,
                            nmf=True,
                            return_probs=True),
-        # "RF.S": RandomForestClassifier(),
-        # "SVM.S": SVC(kernel='linear', probability=True),
-        # "NB.S": GaussianNB(),
-        # "LR.S": LogisticRegression(),
-        # "AdaBoost.S": AdaBoostClassifier(),
-        # "DT.S": DecisionTreeClassifier(),
-        # "MLP": MLPClassifier(),
-        # "GradientBoosting.S": GradientBoostingClassifier(),
-        # "KNN.S": KNeighborsClassifier(),
-        # "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
+         "RF.S": RandomForestClassifier(),
+         "SVM.S": SVC(kernel='linear', probability=True),
+         "NB.S": GaussianNB(),
+         "LR.S": LogisticRegression(),
+         "AdaBoost.S": AdaBoostClassifier(),
+         "DT.S": DecisionTreeClassifier(),
+         "MLP": MLPClassifier(),
+         "GradientBoosting.S": GradientBoostingClassifier(),
+         "KNN.S": KNeighborsClassifier(),
+         "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
