@@ -361,7 +361,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            use_probs=False,
                            nmf=False,
                            return_probs=True,
-                           method="mean"),
+                           method="median"),
         "CF.S2": cf_stacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=0.6,
@@ -370,7 +370,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            use_probs=False,
                            nmf=True,
                            return_probs=True,
-                           method="mean"),
+                           method="median"),
         "CF.S3": cf_stacker(base_estimator=LinearRegression(),
                             latent_dimension=4,
                             threshold=0.6,
@@ -379,7 +379,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                             use_probs=False,
                             nmf=True,
                             return_probs=True,
-                            method="mean")
+                            method="median")
         # "CF.S3": cf_stacker(base_estimator=LinearRegression(),
         #                    latent_dimension=5,
         #                    threshold=0.6,
