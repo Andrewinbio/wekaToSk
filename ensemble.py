@@ -38,8 +38,6 @@ import seaborn as sns
 from sklearn.inspection import permutation_importance
 import sys
 
-np.random.seed(31415)
-
 sys.path.insert(1, '../cf-stacker/')
 
 from cf_stacker import cf_stacker
