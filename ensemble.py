@@ -400,7 +400,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
             print('[%s] Start building model ################################' % (stacker_name))
             stacking_output = []
             for fold in f_list:
-                if stacker_name[:-1] == "CF.S": # fix this issue in classifier
+                if stacker_name[:4] == "CF.S": # fix this issue in classifier
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df, regression=True)
                 else:
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
