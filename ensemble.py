@@ -353,7 +353,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-without-NMF": cf_stacker(base_estimator=LogisticRegression(),
+        "CF.S-without-NMF": cf_stacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=0.6,
                            alpha_nmf=1,
@@ -362,7 +362,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            nmf=False,
                            return_probs=True,
                            method="median"),
-        "CF.S": cf_stacker(base_estimator=LogisticRegression(),
+        "CF.S": cf_stacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=0.6,
                            alpha_nmf=1,
@@ -401,7 +401,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
             stacking_output = []
             for fold in f_list:
                 if stacker_name[:4] == "CF.S": # fix this issue in classifier
-                    stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
+                    stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df, regression=True)
                 else:
                     stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
                 stacked_df = stack.pop('stacked_df')
