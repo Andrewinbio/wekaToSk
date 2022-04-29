@@ -371,7 +371,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            nmf=True,
                            return_probs=True,
                            method="median"),
-        "CF.S-SVM": cf_stacker(base_estimator=SVR(max_iter=500),
+        "CF.S-SVM": cf_stacker(base_estimator=SVR(max_iter=200),
                            latent_dimension=5,
                            threshold=0.6,
                            alpha_nmf=1,
