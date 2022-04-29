@@ -362,7 +362,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         #                    nmf=False,
         #                    return_probs=True,
         #                    method="median"),
-        "CF.S": cf_stacker(base_estimator=LogisticRegression(),
+        "CF.S": cf_stacker(base_estimator=SVC(),
                            latent_dimension=5,
                            threshold=0.65,
                            alpha_nmf=1,
