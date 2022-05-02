@@ -378,7 +378,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            max_iter_nmf=500,
                            nmf=True,
                            return_probs=True,
-                           method="lr"),
+                           method='lr'),
          "RF.S": RandomForestClassifier(),
          "SVM.S": SVC(kernel='linear', probability=True),
          "NB.S": GaussianNB(),
