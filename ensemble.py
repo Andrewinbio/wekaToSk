@@ -370,7 +370,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            l1_ratio_nmf=0.0,
                            nmf=True,
                            return_probs=True,
-                           method="median"),
+                           method="lr"),
         "CF.S-LR2": CFStacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=2,
