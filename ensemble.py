@@ -291,7 +291,7 @@ def bestbase_classifier(path, fold_count=range(5), agg=1, rank=False):
 def stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df,
                            regression=False):
     train_df, train_labels, test_df, test_labels = common.read_fold(path, fold)
-    np.random.seed(74326); stacker = stacker.fit(train_df, train_labels)
+    stacker = stacker.fit(train_df, train_labels)
 
     if hasattr(stacker, "predict_proba") and (not regression):
         test_predictions = stacker.predict_proba(test_df)[:, 1]
