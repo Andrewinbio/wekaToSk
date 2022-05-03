@@ -385,6 +385,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
          # "SVM.S": SVC(kernel='linear', probability=True),
          # "NB.S": GaussianNB(),
          "LR.S": LogisticRegression(),
+         "LR.S2": LogisticRegression(),
          # "AdaBoost.S": AdaBoostClassifier(),
          # "DT.S": DecisionTreeClassifier(),
          # "MLP": MLPClassifier(),
