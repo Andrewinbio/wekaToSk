@@ -369,7 +369,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            tol_nmf=0.0000001,
                            l1_ratio_nmf=0.0,
                            nmf=True,
-                           return_probs=True,
+                           return_probs=False,
                            method="lr"),
          # "RF.S": RandomForestClassifier(),
          # "SVM.S": SVC(kernel='linear', probability=True),
