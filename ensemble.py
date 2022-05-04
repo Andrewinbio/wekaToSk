@@ -361,7 +361,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            nmf=False,
                            return_probs=True,
                            method="median"),
-        "CF.S-LR": CFStacker(base_estimator=KNeighborsRegressor(),
+        "CF.S-LR": CFStacker(base_estimator=LogisticRegression(),
                            latent_dimension=5,
                            threshold=0.5,
                            alpha_nmf=0.75,
