@@ -15,7 +15,7 @@ from numpy.random import choice, seed
 
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor  # Random Forest
 from sklearn.naive_bayes import GaussianNB  # Naive Bayes
-from sklearn.linear_model import LogisticRegression, LinearRegression  # LR
+from sklearn.linear_model import LogisticRegression, LinearRegression, ElasticNet  # LR
 from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor  # Adaboost
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor  # Decision Tree
 from sklearn.ensemble import GradientBoostingClassifier, \
@@ -353,7 +353,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
+        "CF.S-without-NMF": CFStacker(base_estimator=ElasticNet(),
                            latent_dimension=5,
                            threshold=0.6,
                            alpha_nmf=0.75,
