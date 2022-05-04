@@ -353,17 +353,17 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-without-NMF": CFStacker(base_estimator=LogisticRegression(),
+        "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
-                           threshold=0.5,
+                           threshold=0.6,
                            alpha_nmf=0.75,
                            max_iter_nmf=500,
                            nmf=False,
                            return_probs=True,
                            method="mean"),
-        "CF.S-LR": CFStacker(base_estimator=LogisticRegression(),
+        "CF.S-LR": CFStacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
-                           threshold=0.5,
+                           threshold=0.6,
                            alpha_nmf=0.75,
                            max_iter_nmf=500,
                            tol_nmf=0.00001,
