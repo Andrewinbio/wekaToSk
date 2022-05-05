@@ -426,7 +426,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
 
             predictions_df = pd.concat(predictions_dfs)
 
-            accuracy = sklearn.metrics.accuracy_score(predictions_df.label, int(predictions_df.prediction))
+            accuracy = sklearn.metrics.accuracy_score(predictions_df.label, np.round(predictions_df.prediction))
             fmax = common.fmeasure_score(predictions_df.label, predictions_df.prediction, thres)
             auc = sklearn.metrics.roc_auc_score(predictions_df.label, predictions_df.prediction)
             auprc = common.auprc(predictions_df.label, predictions_df.prediction)
