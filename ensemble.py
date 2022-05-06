@@ -364,7 +364,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "CF.S-LR": CFStacker(base_estimator=LogisticRegression(),
                            latent_dimension=5,
                            threshold=0.6,
-                           alpha_nmf=0.1,
+                           alpha_nmf=0.5,
                            max_iter_nmf=500,
                            tol_nmf=0.00001,
                            l1_ratio_nmf=0.0,
