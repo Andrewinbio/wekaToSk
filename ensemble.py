@@ -372,7 +372,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            return_probs=True,
                            method="lr"),
          # "RF.S": RandomForestClassifier(),
-         # "SVM.S": SVC(kernel='linear', probability=True),
+         "SVM.S": SVC(kernel='linear', probability=True),
          # "NB.S": GaussianNB(),
          "LR.S": LogisticRegression(),
          # "AdaBoost.S": AdaBoostClassifier(),
