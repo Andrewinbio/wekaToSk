@@ -352,7 +352,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     if not exists(analysis_path):
         mkdir(analysis_path)
     """ Stacking Ensemble """
-    stackers_dict = {        "LR.S": LogisticRegression(),
+    stackers_dict = {
         "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
                            threshold=2,
@@ -374,6 +374,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         # "RF.S": RandomForestClassifier(),
         "SVM.S": SVC(kernel='linear', probability=True),
         # "NB.S": GaussianNB(),
+        "LR.S": LogisticRegression(),
         # "AdaBoost.S": AdaBoostClassifier(),
         # "DT.S": DecisionTreeClassifier(),
         # "MLP": MLPClassifier(),
