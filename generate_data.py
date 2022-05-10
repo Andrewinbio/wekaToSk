@@ -134,7 +134,7 @@ if __name__ == "__main__":
     if not exists(scratch_data_dir):
         mkdir(scratch_data_dir)
 
-    os.system('cp sample_folder/classifiers.txt {}'.format(scratch_data_dir[:-1]))
+    os.system('cp sample_folder/classifiers_sk.txt {}'.format(scratch_data_dir[:-1]))
     os.system('cp sample_folder/sk.properties {}'.format(scratch_data_dir[:-1]))
 
     # for f in features:
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             mkdir(f_dir)
         if len(features) > 1:
             dest_dir = scratch_data_dir + feature
-            os.system('cp sample_folder/classifiers.txt {}'.format(dest_dir))
+            os.system('cp sample_folder/classifiers_sk.txt {}'.format(dest_dir))
             os.system('cp sample_folder/sk.properties {}'.format(dest_dir))
 
 
