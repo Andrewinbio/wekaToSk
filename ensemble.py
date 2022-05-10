@@ -25,7 +25,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import fbeta_score, make_scorer
 from xgboost import XGBClassifier, XGBRegressor  # XGB
-from sklearn.svm import SVC, LinearSVR
+from sklearn.svm import SVC, LinearSVR, SVR
 
 import sklearn
 import warnings
@@ -38,9 +38,9 @@ import seaborn as sns
 from sklearn.inspection import permutation_importance
 import sys
 
-sys.path.insert(1, '../cf/')
+sys.path.insert(1, '../cf-stacker/')
 
-#from cf import cf_stacker
+from cf_stacker import CFStacker
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -291,10 +291,7 @@ def bestbase_classifier(path, fold_count=range(5), agg=1, rank=False):
 def stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df,
                            regression=False):
     train_df, train_labels, test_df, test_labels = common.read_fold(path, fold)
-    if stacker_name == 'CF.S':
-        stacker = stacker.fit(train_df, train_labels)
-    else:
-        stacker = stacker.fit(train_df, train_labels)
+    stacker = stacker.fit(train_df, train_labels)
 
     if hasattr(stacker, "predict_proba") and (not regression):
         test_predictions = stacker.predict_proba(test_df)[:, 1]
@@ -356,17 +353,34 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "RF.S": RandomForestClassifier(),
+        "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
+                           latent_dimension=5,
+                           threshold=0.9,
+                           alpha_nmf=1,
+                           max_iter_nmf=500,
+                           nmf=False,
+                           return_probs=True,
+                           method="mean"),
+        "CF.S-NMF": CFStacker(base_estimator=LinearRegression(),
+                           latent_dimension=5,
+                           threshold=2,
+                           alpha_nmf=0.5,
+                           max_iter_nmf=500,
+                           tol_nmf=0.0001,
+                           l1_ratio_nmf=0.0,
+                           nmf=True,
+                           return_probs=True,
+                           method="lr"),
+        # "RF.S": RandomForestClassifier(),
         "SVM.S": SVC(kernel='linear', probability=True),
-        "NB.S": GaussianNB(),
+        # "NB.S": GaussianNB(),
         "LR.S": LogisticRegression(),
-        "AdaBoost.S": AdaBoostClassifier(),
-        "DT.S": DecisionTreeClassifier(),
-        "MLP": MLPClassifier(),
-        "GradientBoosting.S": GradientBoostingClassifier(),
-        "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error'), #
-        # "CF.S": ustk.CFStacker()
+        # "AdaBoost.S": AdaBoostClassifier(),
+        # "DT.S": DecisionTreeClassifier(),
+        # "MLP": MLPClassifier(),
+        # "GradientBoosting.S": GradientBoostingClassifier(),
+        # "KNN.S": KNeighborsClassifier(),
+        # "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
@@ -377,7 +391,10 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
             print('[%s] Start building model ################################' % (stacker_name))
             stacking_output = []
             for fold in f_list:
-                stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
+                if stacker_name[:4] == "CF.S": # fix this issue in classifier
+                    stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df, regression=True)
+                else:
+                    stack = stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df)
                 stacked_df = stack.pop('stacked_df')
                 if rank:
                     if fold == 1:
@@ -409,6 +426,9 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
 
             predictions_df = pd.concat(predictions_dfs)
 
+            accuracy = sklearn.metrics.accuracy_score(predictions_df.label, np.round(predictions_df.prediction))
+            precision = sklearn.metrics.precision_score(predictions_df.label, np.round(predictions_df.prediction))
+            recall = sklearn.metrics.recall_score(predictions_df.label, np.round(predictions_df.prediction))
             fmax = common.fmeasure_score(predictions_df.label, predictions_df.prediction, thres)
             auc = sklearn.metrics.roc_auc_score(predictions_df.label, predictions_df.prediction)
             auprc = common.auprc(predictions_df.label, predictions_df.prediction)
@@ -420,6 +440,9 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                     print('[%s] Recall score is %s.' % (stacker_name, fmax['R']))
                 print('[%s] AUC score is %s.' % (stacker_name, auc))
                 print('[%s] AUPRC score is %s.' % (stacker_name, auprc))
+                print('[%s] Accuracy score is %s.' % (stacker_name, accuracy))
+                print('[%s] Precision score is %s.' % (stacker_name, precision))
+                print('[%s] Recall score is %s.' % (stacker_name, recall))
                 # print('stacking:')
                 predictions_df.drop(columns=['fold'], inplace=True)
                 predictions_df.rename(columns={'prediction': stacker_name}, inplace=True)
