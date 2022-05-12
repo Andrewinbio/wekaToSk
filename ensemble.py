@@ -321,7 +321,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     predictions_dataframes = []
 
     local_model_weight_dfs = []
-    aggregated_dict = {'CES': CES_classifier,
+    aggregated_dict = {#'CES': CES_classifier,
                        'Mean': aggregating_ensemble,
                        'best base': bestbase_classifier}
 
