@@ -184,7 +184,7 @@ if __name__ == "__main__":
                                                                     reg_bool=regression,
                                                                     pred_class_val=predictClassValue
                                                                     )
-    #classifier.fit(X=outer_train_X, y=outer_train_y)
+    classifier.fit(X=outer_train_X, y=outer_train_y)
 
     duration = time() - start
     durationMinutes = duration / (1e3 * 60)
