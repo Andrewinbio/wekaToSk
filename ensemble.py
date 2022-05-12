@@ -341,7 +341,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                 auc_perf = perf['auc']
                 auprc_perf = perf['auprc']
                 print('[{}] Finished evaluating model ############################'.format(key))
-                print('[{}] F-max score is {}.'.format(key, fmax_perf))
+                print('[{}] F-measure score is {}.'.format(key, fmax_perf))
                 print('[{}] AUC score is {}.'.format(key, auc_perf))
                 print('[{}] AUPRC score is {}.'.format(key, auprc_perf))
                 predictions_dataframes.append(perf['predictions'])
