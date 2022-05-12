@@ -25,7 +25,7 @@ def generic_classifier_predict(clf, regression_bool, input_data):
     else:
         test_predictions = clf.predict(input_data)
         if regression_bool is False:
-            test_predictions = test_predictions[:, 1]
+            test_predictions = test_predictions#[:, 1]
 
     return test_predictions
 
