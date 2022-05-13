@@ -44,9 +44,10 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     return pd.DataFrame(data=resampled_df, columns=dataf.columns)
 
 
-def multiidx_dataframe_resampler_wr(dataf):
+def multiidx_dataframe_resampler_wr(dataf, bag):
     # Resample with replacement
-    resampled_df = resample(dataf)#, random_state=random_seed)
+    random_seed2 = random_seed + bag
+    resampled_df = resample(dataf, random_state=random_seed2)
     return pd.DataFrame(data=resampled_df, columns=dataf.columns)
 
 
