@@ -321,7 +321,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     predictions_dataframes = []
 
     local_model_weight_dfs = []
-    aggregated_dict = {'CES': CES_classifier,
+    aggregated_dict = {#'CES': CES_classifier,
                        'Mean': aggregating_ensemble,
                        'best base': bestbase_classifier}
 
@@ -341,7 +341,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                 auc_perf = perf['auc']
                 auprc_perf = perf['auprc']
                 print('[{}] Finished evaluating model ############################'.format(key))
-                print('[{}] F-max score is {}.'.format(key, fmax_perf))
+                print('[{}] F-measure score is {}.'.format(key, fmax_perf))
                 print('[{}] AUC score is {}.'.format(key, auc_perf))
                 print('[{}] AUPRC score is {}.'.format(key, auprc_perf))
                 predictions_dataframes.append(perf['predictions'])
@@ -355,7 +355,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     stackers_dict = {
         "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
-                           threshold=0.9,
+                           threshold=0.5,
                            alpha_nmf=1,
                            max_iter_nmf=500,
                            nmf=False,
@@ -363,18 +363,18 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            method="mean"),
         "CF.S-NMF": CFStacker(base_estimator=LinearRegression(),
                            latent_dimension=5,
-                           threshold=2,
-                           alpha_nmf=0.5,
+                           threshold=0.5,
+                           alpha_nmf=1,
                            max_iter_nmf=500,
                            tol_nmf=0.0001,
                            l1_ratio_nmf=0.0,
                            nmf=True,
                            return_probs=True,
-                           method="lr"),
+                           method="mean"),
         # "RF.S": RandomForestClassifier(),
-        "SVM.S": SVC(kernel='linear', probability=True),
+        # "SVM.S": SVC(kernel='linear', probability=True),
         # "NB.S": GaussianNB(),
-        "LR.S": LogisticRegression(),
+        # "LR.S": LogisticRegression(),
         # "AdaBoost.S": AdaBoostClassifier(),
         # "DT.S": DecisionTreeClassifier(),
         # "MLP": MLPClassifier(),
