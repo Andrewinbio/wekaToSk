@@ -132,7 +132,6 @@ if __name__ == "__main__":
     id_col = p['idAttribute']
     label_col = p['classAttribute']
     jobs_fn = "temp_train_base_{}_{}.jobs".format(data_source_dir, data_name)
-    print(jobs_fn)
     job_file = open(jobs_fn, 'w')
     #if not args.hpc == 'minerva': # don't think we need this
         #job_file.write('module load python\n')
