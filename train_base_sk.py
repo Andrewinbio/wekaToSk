@@ -152,7 +152,7 @@ if __name__ == "__main__":
     job_file = preprocessing(job_file)
     job_file.close()
 
-    ### submit to hpc if args.hpc == 'hpc'
+    ### submit to minerva if args.hpc == 'minerva'
     if args.hpc == 'minerva':
         lsf_fn = 'run_%s_%s.lsf' % (data_source_dir, data_name)
         fn = open(lsf_fn, 'w')
