@@ -196,7 +196,7 @@ def read_arff_to_pandas_df(arff_path):
     # Strips the newline character
     for line_idx, line in enumerate(Lines):
         # if line_idx > num_col
-        if '@attribute' in line:
+        if '@attribute' in line.lower():
             columns.append(line.strip().split(' ')[1])
 
     df.columns = columns
