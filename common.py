@@ -1,4 +1,4 @@
-from numpy import argmax, argmin, argsort, corrcoef, mean, nanmax, sqrt, triu_indices_from, where
+from numpy import nanargmax, argmax, argmin, argsort, corrcoef, mean, nanmax, sqrt, triu_indices_from, where
 from pandas import DataFrame, concat, read_csv
 from scipy.io.arff import loadarff
 import sklearn.metrics
@@ -65,7 +65,7 @@ def fmeasure_score(labels, predictions, thres=None, beta=1.0, pos_label=1):
         precision, recall, threshold = sklearn.metrics.precision_recall_curve(labels, predictions,
                                                                               pos_label=pos_label)
         f1 = (1 + beta ** 2) * (precision * recall) / ((beta ** 2 * precision) + recall)
-        arg_max = argmax(f1)
+        arg_max = nanargmax(f1)
         # print(threshold)
         # if len(threshold[where(f1 == nanmax(f1))]) > 1:
         #     opt_threshold = threshold[where(f1 == nanmax(f1))][0]
