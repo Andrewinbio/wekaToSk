@@ -25,7 +25,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import fbeta_score, make_scorer
 from xgboost import XGBClassifier, XGBRegressor  # XGB
-from sklearn.svm import SVC, LinearSVR, SVR
+from sklearn.svm import SVC, LinearSVC, LinearSVR, SVR
 
 import sklearn
 import warnings
@@ -372,7 +372,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         #                    return_probs=True,
         #                    method="lr"),
         "RF.S": RandomForestClassifier(),
-        "SVM.S": SVC(kernel='linear', probability=True),
+        "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
         "LR.S": LogisticRegression(),
         "AdaBoost.S": AdaBoostClassifier(),
