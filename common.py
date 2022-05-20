@@ -65,12 +65,18 @@ def fmeasure_score(labels, predictions, thres=None, beta=1.0, pos_label=1):
         precision, recall, threshold = sklearn.metrics.precision_recall_curve(labels, predictions,
                                                                               pos_label=pos_label)
         f1 = (1 + beta ** 2) * (precision * recall) / ((beta ** 2 * precision) + recall)
+        argmax = np.argmax(f1)
         # print(threshold)
-        if len(threshold[where(f1 == nanmax(f1))]) > 1:
-            opt_threshold = threshold[where(f1 == nanmax(f1))][0]
-        else:
-            opt_threshold = threshold[where(f1 == nanmax(f1))]
-        return {'F': nanmax(f1), 'thres': opt_threshold}
+        # if len(threshold[where(f1 == nanmax(f1))]) > 1:
+        #     opt_threshold = threshold[where(f1 == nanmax(f1))][0]
+        # else:
+        #     opt_threshold = threshold[where(f1 == nanmax(f1))]
+        opt_threshold = threshold[argmax] if argmax < len(threshold) else 1.0
+        fmax = f1[argmax]
+        pmax = precision[argmax]  # precision at which f is maximised
+        rmax = recall[argmax]  # recall at which f is maximised
+        # fmax = nanmax(f1)
+        return {'F': fmax, 'thres': opt_threshold, 'P': pmax, 'R': rmax}
 
     else:
         predictions[predictions > thres] = 1
