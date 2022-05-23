@@ -362,7 +362,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            return_probs=True,
                            method="mean"),
         "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
-                           latent_dimension=5,
+                           latent_dimension=2,
                            threshold=0.5,
                            alpha_nmf=1,
                            max_iter_nmf=500,
