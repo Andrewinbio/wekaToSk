@@ -426,7 +426,6 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
 
             predictions_df = pd.concat(predictions_dfs)
 
-            accuracy = sklearn.metrics.accuracy_score(predictions_df.label, np.round(predictions_df.prediction))
             fmax = common.fmeasure_score(predictions_df.label, predictions_df.prediction, thres)
             auc = sklearn.metrics.roc_auc_score(predictions_df.label, predictions_df.prediction)
             auprc = common.auprc(predictions_df.label, predictions_df.prediction)
@@ -438,7 +437,6 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                     print('[%s] Recall score is %s.' % (stacker_name, fmax['R']))
                 print('[%s] AUC score is %s.' % (stacker_name, auc))
                 print('[%s] AUPRC score is %s.' % (stacker_name, auprc))
-                print('[%s] Accuracy score is %s.' % (stacker_name, accuracy))
                 # print('stacking:')
                 predictions_df.drop(columns=['fold'], inplace=True)
                 predictions_df.rename(columns={'prediction': stacker_name}, inplace=True)
