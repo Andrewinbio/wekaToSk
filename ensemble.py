@@ -353,7 +353,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-without-NMF": CFStacker(base_estimator=Ridge(alpha=.5),
+        "CF.S-without-NMF": CFStacker(base_estimator=Ridge(alpha=.0),
                            latent_dimension=5,
                            threshold=0.5,
                            alpha_nmf=1,
