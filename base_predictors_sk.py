@@ -139,9 +139,8 @@ if __name__ == "__main__":
 
     if not regression:
         y_ = data[classAttribute]
-        print('The class value is ', predictClassValue)
-        y_.loc[~(y_ == predictClassValue)] = 0
-        y_.loc[y_ == predictClassValue] = 1
+        y_.loc[~(str(y_) == str(predictClassValue))] = 0
+        y_.loc[str(y_) == str(predictClassValue)] = 1
         data[classAttribute] = y_.astype(int)
 
     outer_train, outer_test, foldCount = split_train_test_by_fold(fold_col_exist=foldAttribute_exist,
