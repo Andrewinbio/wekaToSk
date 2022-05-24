@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     if not regression:
         y_ = data[classAttribute]
-        print(predictClassValue)
+        print('The class value is ', predictClassValue)
         y_.loc[~(y_ == predictClassValue)] = 0
         y_.loc[y_ == predictClassValue] = 1
         data[classAttribute] = y_.astype(int)
