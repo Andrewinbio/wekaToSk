@@ -40,7 +40,6 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # UnderSampling majority label
     rus = RandomUnderSampler(random_state=random_seed)
     y = dataf[y_col]
-    print(np.max(y))
     resampled_df, _ = rus.fit_resample(dataf, y)
     return pd.DataFrame(data=resampled_df, columns=dataf.columns)
 
@@ -140,6 +139,7 @@ if __name__ == "__main__":
 
     if not regression:
         y_ = data[classAttribute]
+        print(y_)
         y_.loc[~(y_ == predictClassValue)] = 0
         y_.loc[y_ == predictClassValue] = 1
         data[classAttribute] = y_.astype(int)
