@@ -356,7 +356,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     stackers_dict = {
         "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
                                       latent_dimension=5,
-                                      threshold=0.7,
+                                      threshold=0.625,
                                       alpha_nmf=0.0,
                                       max_iter_nmf=500,
                                       nmf=False,
@@ -364,7 +364,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                       method="mean"),
         "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
                                latent_dimension=5,
-                               threshold=0.7,
+                               threshold=0.625,
                                alpha_nmf=0.0,
                                max_iter_nmf=500,
                                tol_nmf=0.0001,
