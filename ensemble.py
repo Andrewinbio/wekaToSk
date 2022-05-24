@@ -366,7 +366,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                            threshold=0.55,
                            alpha_nmf=0.0,
                            max_iter_nmf=50,
-                           tol_nmf=0.00001,
+                           tol_nmf=0.0000001,
                            l1_ratio_nmf=0.0,
                            nmf=True,
                            return_probs=True,
