@@ -40,7 +40,7 @@ def multiidx_dataframe_balance_sampler(dataf, y_col):
     # UnderSampling majority label
     rus = RandomUnderSampler(random_state=random_seed)
     y = dataf[y_col]
-    print(y)
+    print(np.max(y))
     resampled_df, _ = rus.fit_resample(dataf, y)
     return pd.DataFrame(data=resampled_df, columns=dataf.columns)
 
