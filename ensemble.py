@@ -372,16 +372,16 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         #                        nmf=True,
         #                        return_probs=True,
         #                        method="mean"),
-        "RF.S": RandomForestClassifier(),
-        "SVM.S": LinearSVC(),
+        # "RF.S": RandomForestClassifier(),
+        # "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
         "LR.S": LogisticRegression(),
-        "AdaBoost.S": AdaBoostClassifier(),
+        # "AdaBoost.S": AdaBoostClassifier(),
         "DT.S": DecisionTreeClassifier(),
         "MLP": MLPClassifier(),
-        "GradientBoosting.S": GradientBoostingClassifier(),
+        # "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
-        "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
+        # "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
     }
     df_cols = ['f_train_base', 'f_test_base', 'fold', 'stacker',
                'feat_imp', 'base_data', 'base_cls', 'base_bag']
