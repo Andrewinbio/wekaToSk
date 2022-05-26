@@ -20,7 +20,7 @@ random_seed = 42
 def split_train_test_by_fold(fold_col_exist, data_df, fold_col, current_fold, clf_name, fold_count, y_col):
     idx = pd.IndexSlice
     if fold_col_exist:
-        print("[%s] generating %s folds for leave-one-value-out CV\n" % (clf_name, fold_count))
+        print("[%s] generating folds for %s-fold CV\n" % (clf_name, fold_count))
         fold_count = len(data_df[fold_col].unique())
         fold_outertestbool = (data_df[fold_col] == current_fold)
         test = data_df.loc[fold_outertestbool]
