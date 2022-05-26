@@ -418,7 +418,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "LR.S": LogisticRegression(),
         "AdaBoost.S": AdaBoostClassifier(),
         "DT.S": DecisionTreeClassifier(),
-        # "MLP": MLPClassifier(),
+         # "MLP": MLPClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
         "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
