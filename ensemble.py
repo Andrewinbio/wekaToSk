@@ -365,7 +365,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
                                latent_dimension=10,
                                threshold=0.6,
-                               alpha_nmf=1.0,
+                               alpha_nmf=0.0,
                                max_iter_nmf=500,
                                tol_nmf=0.0001,
                                l1_ratio_nmf=0.0,
@@ -418,7 +418,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "LR.S": LogisticRegression(),
         "AdaBoost.S": AdaBoostClassifier(),
         "DT.S": DecisionTreeClassifier(),
-        "MLP": MLPClassifier(),
+        # "MLP": MLPClassifier(),
         "GradientBoosting.S": GradientBoostingClassifier(),
         "KNN.S": KNeighborsClassifier(),
         "XGB.S": XGBClassifier(use_label_encoder=False, eval_metric='error')
