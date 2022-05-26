@@ -21,10 +21,10 @@ def str2bool(v):
 
 def generic_classifier_predict(clf, regression_bool, input_data):
     if hasattr(clf, "predict_proba") and (not regression_bool):
-        print(clf, ": predict_proba")
+        print(clf, ": predict_proba ###########################################################")
         test_predictions = clf.predict_proba(input_data)[:, 1]
     else:
-        print(clf, ": predict")
+        print(clf, ": predict ##############################################################")
         test_predictions = clf.predict(input_data)
         # if regression_bool is False:
         #     test_predictions = test_predictions[:, 1]
