@@ -295,11 +295,9 @@ def stacked_generalization(path, stacker_name, stacker, fold, agg, stacked_df,
     stacker = stacker.fit(train_df, train_labels)
 
     if hasattr(stacker, "predict_proba") and (not regression):
-        print(stacker, ": predict_prob")
         test_predictions = stacker.predict_proba(test_df)[:, 1]
         train_predictions = stacker.predict_proba(train_df)[:, 1]
     else:
-        print(stacker, ": predict")
         test_predictions = stacker.predict(test_df)
         train_predictions = stacker.predict(train_df)
         # if regression is False:
@@ -356,7 +354,6 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "DT.S": DecisionTreeClassifier(),
         # "CF.S-without-NMF": CFStacker(base_estimator=LinearRegression(),
         #                               latent_dimension=5,
         #                               threshold=0.08,
