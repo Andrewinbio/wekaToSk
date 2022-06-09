@@ -359,7 +359,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                matrix_factorization=True,
                                max_iter=1000,
                                tol=0.01,
-                               lamW=0.0,
+                               lamW=0.01,
                                lamH=0.0,
                                method="mean",
                                learning_rate=0.1),
