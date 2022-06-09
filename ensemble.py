@@ -362,7 +362,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                lamW=0.0,
                                lamH=0.0,
                                method="mean",
-                               learning_rate=0.05),
+                               learning_rate=0.1),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
