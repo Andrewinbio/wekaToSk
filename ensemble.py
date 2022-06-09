@@ -357,7 +357,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
                                latent_dim=20,
                                matrix_factorization=True,
-                               max_iter=500,
+                               max_iter=5000,
                                tol=0.001,
                                lamW=0.0,
                                lamH=0.0,
