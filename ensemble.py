@@ -355,14 +355,14 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     """ Stacking Ensemble """
     stackers_dict = {
         "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
-                               latent_dim=1000,
+                               latent_dim=200,
                                matrix_factorization=True,
                                max_iter=5000,
                                tol=0.001,
                                lamW=0.0,
                                lamH=0.0,
                                method="mean",
-                               learning_rate=0.1),
+                               learning_rate=1),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
