@@ -358,7 +358,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                latent_dim=10,
                                matrix_factorization=True,
                                max_iter=100,
-                               tol=0.05,
+                               tol=0.01,
                                lamW=0.0,
                                lamH=0.0,
                                method="mean",
