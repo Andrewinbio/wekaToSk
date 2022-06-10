@@ -201,7 +201,7 @@ def CES_classifier(path, fold_count=range(5), agg=1, rank=False):
             'predictions': predictions_only_df}
 
 
-def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=False):
+def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=True):
     def _unbag_mean(df, agg=agg):
         df = common.unbag(df, agg)
         return df.mean(axis=1)
@@ -330,7 +330,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
 
         if (rank and (key == ens_for_rank)) or (not rank):
             print('[{}] Start building model #################################'.format(key))
-            perf = val(path, fold_values, agg, rank, median=True)
+            perf = val(path, fold_values, agg, rank)
             if key != 'best base':
                 fmax_perf = perf['f-measure']['F']
                 if rank:
