@@ -324,6 +324,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     local_model_weight_dfs = []
     aggregated_dict = {  # 'CES': CES_classifier,
         'Mean': aggregating_ensemble,
+        'Median': aggregating_ensemble(median=True),
         'best base': bestbase_classifier}
 
     for key, val in aggregated_dict.items():
