@@ -354,15 +354,12 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
-                               latent_dim=10,
-                               matrix_factorization=True,
-                               max_iter=300,
-                               tol=0.001,
-                               lamW=0.00,
-                               lamH=0.00,
-                               method="mean",
-                               learning_rate=0.001),
+        "CF.S-NMF1": MatrixFactorizationClassifier(latent_dim = 1,
+                                                   max_iter=200,
+                                                   learning_rate=0.001,
+                                                   tol=0.01,
+                                                   lamW=0.0,
+                                                   lamH=0.0),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
