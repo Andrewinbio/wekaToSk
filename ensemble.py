@@ -40,7 +40,7 @@ import sys
 
 sys.path.insert(1, '../cf-stacker/')
 
-from cf_stacker3 import CFStacker
+from cf_stacker3 import MatrixFactorizationClassifier
 
 
 def str2bool(v):
