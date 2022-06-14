@@ -41,7 +41,7 @@ import sys
 sys.path.insert(1, '../cf-stacker/')
 
 from cf_stacker3 import MatrixFactorizationClassifier
-from cf_stacker2 import CFStacker
+
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -354,12 +354,12 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
-                               latent_dim=10,
-                               max_iter=200,
-                               learning_rate=0.05,
-                               tol=0.05,
-                               method="median"),
+        "CF.S-NMF1": MatrixFactorizationClassifier(latent_dim=3,
+                                                   max_iter=200,
+                                                   learning_rate=0.05,
+                                                   tol=0.05,
+                                                   lam=0.0,
+                                                   method="median"),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
