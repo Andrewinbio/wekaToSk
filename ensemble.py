@@ -358,7 +358,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                                    max_iter=2000,
                                                    learning_rate=0.0001,
                                                    tol=0.05,
-                                                   lam=0.5,
+                                                   lam=0.0,
                                                    method="median"),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
