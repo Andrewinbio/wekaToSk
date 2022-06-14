@@ -354,7 +354,8 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         mkdir(analysis_path)
     """ Stacking Ensemble """
     stackers_dict = {
-        "CF.S-NMF1": CFStacker(latent_dim=10,
+        "CF.S-NMF1": CFStacker(base_estimator=LinearRegression(),
+                               latent_dim=10,
                                max_iter=200,
                                learning_rate=0.05,
                                tol=0.05,
