@@ -355,10 +355,10 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     """ Stacking Ensemble """
     stackers_dict = {
         "CF.S-NMF1": MatrixFactorizationClassifier(latent_dim=10,
-                                                   max_iter=1000,
+                                                   max_iter=2000,
                                                    learning_rate=0.0001,
                                                    tol=0.05,
-                                                   lam=0.1,
+                                                   lam=0.5,
                                                    method="median"),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
