@@ -201,7 +201,7 @@ def CES_classifier(path, fold_count=range(5), agg=1, rank=False):
             'predictions': predictions_only_df}
 
 
-def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=True):
+def aggregating_ensemble(path, fold_count=range(5), agg=1, rank=False, median=False):
     def _unbag_mean(df, agg=agg):
         df = common.unbag(df, agg)
         return df.mean(axis=1)
@@ -359,7 +359,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                                    learning_rate=0.001,
                                                    tol=0.000001,
                                                    lam=0.05,
-                                                   method="median"),
+                                                   method="mean"),
         "RF.S": RandomForestClassifier(),
         "SVM.S": LinearSVC(),
         "NB.S": GaussianNB(),
