@@ -357,7 +357,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "CF.S-NMF1": MatrixFactorizationClassifier(latent_dim=10,
                                                    max_iter=5000,
                                                    learning_rate=0.001,
-                                                   tol=0.001,
+                                                   tol=0.00000000001,
                                                    lam=0.0,
                                                    method="mean"),
         "RF.S": RandomForestClassifier(),
