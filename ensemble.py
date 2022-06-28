@@ -356,7 +356,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
     stackers_dict = {
         "CF.S-NMF1": MatrixFactorizationClassifier(latent_dim=10,
                                                    max_iter=1000,
-                                                   learning_rate=0.0001,
+                                                   learning_rate=0.0005,
                                                    tol=0.1,
                                                    lam=0.0,
                                                    method="lr"),
