@@ -40,7 +40,7 @@ import sys
 
 sys.path.insert(1, '../cf-stacker/')
 
-from cf_stacker5 import MatrixFactorizationClassifier
+from cf_stacker6 import MatrixFactorizationClassifier
 
 
 def str2bool(v):
@@ -359,8 +359,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
                                                    max_iter=1000,
                                                    learning_rate=0.001,
                                                    tol=0.0000000001,
-                                                   lam_WH=0.0,
-                                                   lam_omega=0.5),
+                                                   lam_WH=0.0),
         # "CF.S-NMF2": MatrixFactorizationClassifier(latent_dim=10,
         #                                            max_iter=500,
         #                                            learning_rate=0.001,
