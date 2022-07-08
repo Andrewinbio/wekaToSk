@@ -357,7 +357,7 @@ def main_classification(path, f_list, agg=1, rank=False, ens_for_rank=''):
         "CF.S-NMF1": MatrixFactorizationClassifier(latent_dim=20,
                                                    alpha=0.01,
                                                    max_iter=1000,
-                                                   learning_rate=0.01,
+                                                   learning_rate=0.005,
                                                    tol=0.0000000001,
                                                    lam_WH=0.05,
                                                    lam_omega=0.0),
